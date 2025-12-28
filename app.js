@@ -92,3 +92,40 @@ function loadServices() {
     container.appendChild(div);
   });
 }
+
+const popup = document.getElementById("popup");
+const openPopup = document.getElementById("openPopup");
+const closePopup = document.getElementById("closePopup");
+
+openPopup.onclick = () => popup.style.display = "block";
+closePopup.onclick = () => popup.style.display = "none";
+
+document.getElementById("sendWhatsapp").onclick = () => {
+  const nom = document.getElementById("nom").value;
+  const ville = document.getElementById("ville").value;
+  const participation = document.getElementById("participation").value;
+
+  if (!nom || !ville) {
+    alert("Tanpri ranpli tout chan yo");
+    return;
+  }
+
+  const message = `
+BONJOU 👋
+Mwen ta renmen patisipe nan KONKOU REDAKSYON AN.
+
+👤 Non : ${nom}
+📍 Vil : ${ville}
+✍️ Patisipasyon : ${participation}
+
+Mèsi.
+
+Lè enskripsyon fin valide n'ap voye kòd patisipan w lan  ba ou.
+  `;
+
+  const phone = "509XXXXXXXX"; // 🔴 METE NUMERO WHATSAPP OU LA
+  const url = `https://wa.me/${40488401}?text=${encodeURIComponent(message)}`;
+
+  window.open(url, "_blank");
+};
+        
