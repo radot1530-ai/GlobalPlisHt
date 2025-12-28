@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin – Concours</title>
+  <style>
+    body { font-family: Arial; background:#f4f4f4; padding:20px }
+    input, textarea, button {
+      display:block; width:100%; margin:8px 0; padding:8px;
+    }
+    .card {
+      background:#fff; padding:10px; margin:10px 0; border-radius:6px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>🔐 Panel Admin – Concours</h2>
+
+<input id="code" placeholder="Code participant (ex: AYT-001)">
+<input id="nom" placeholder="Nom complet">
+<input id="ville" placeholder="Ville">
+<textarea id="texte" placeholder="Résumé / Projet"></textarea>
+<button id="add">➕ Ajouter participant</button>
+
+<h3>📋 Participants</h3>
+<div id="liste"></div>
+<!-- Firebase v12.7 CDN -->
+<script type="module" src="https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js"></script>
+<script type="module" src="https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js"></script>
+<script type="module" src="admin.js"></script>
+</body>
+</html>
