@@ -1,61 +1,83 @@
-<!DOCTYPE html>
-<html lang="ht">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KayLakay - Ajan Imobilye Entelijan</title>
-  <link rel="stylesheet" href="style.css">
-  <meta name="google-site-verification" content="PrxPqMcoQBWmO0C7qQ7aOKnPspVv4YxBMnoxXD2Rmd4" />
-  <meta name="description" content="Platfòm KayLakay pou jwenn kay, tè, ak sèvis ann Ayiti. Lwe, achte oswa poste anons imobilye fasil.">
-<meta name="keywords" content="kay, lwe kay ayiti, vann kay ayiti, tè, Store Ayiti, jaden, sèvis, imobilye ayiti, kaylakay">
-<meta name="author" content="KayLakay">
-</head>
-<body>
-  <header class="navbar">
-    <div class="logo-container">
-      <img src="image/Screenshot_20251030-162215.png" alt="KayLakay Logo" class="logo-img">
-  </div>
-  <h5 class="tabo" > BR-00 MFU : Lokasyon, Acha & Sèvis</h5>
-     <input id="search" type="text" placeholder="Rechèch kay, tè, pwodui, sèvis...">
-  <nav class="tabs">
-   
-    <button class="tab active" data-tab="accueil">Kay</button>
-    <button class="tab" data-tab="terres">Tè</button>
-    <button class="tab" data-tab="services">Sèvis</button>
-    <button class="tab" data-tab="agents">Ajoute +</button>
-  </nav>
-</header>
+<!DOCTYPE html>  <html lang="ht">  
+<head>  
+  <meta charset="UTF-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+  <title>Global Plis Ayiti - Sèvis</title>  
+  <link rel="stylesheet" href="style.css">  
+  <!-- Favicon pou onglet -->
+<link rel="icon" href="https://globalplisht.onrender.com/image/IMG_20251228_113951.png.png" type="image/png">
 
-<main>
-  <!-- PAGE ACCUEIL -->
-<section id="konkou" class="tab-content">
-    <h2></h2>
-  </section>
-  <section id="accueil" class="tab-content active">
-    <h2></h2>
-  </section>
+<!-- Open Graph (Facebook, WhatsApp) -->
+<meta property="og:title" content="Global Plis Ayiti">
+<meta property="og:description" content="Yon platfòm, plizyè solisyon: Konkou, Biznis, Imobilye, Teknoloji, Sèvis.">
+<meta property="og:image" content="https://globalplisht.onrender.com/image/logo.png">
+<meta property="og:url" content="https://globalplisht.onrender.com/">
+<meta property="og:type" content="website">
 
-  <!-- AUTRES PAGES -->
-  <section id="terres" class="tab-content">
-    <h2>🌿 Tè ak Jaden</h2>
-    <p>Tè ki disponib pou lwe oswa pou vann...</p>
-  </section>
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Global Plis Ayiti">
+<meta name="twitter:description" content="Yon platfòm, plizyè solisyon: Konkou, Biznis, Imobilye, Teknoloji, Sèvis.">
+<meta name="twitter:image" content="https://globalplisht.onrender.com/image/IMG_20251228_113951.png.png">
+</head>  
+<body>  
+  <header class="navbar">  
+    <div class="logo-container">  
+      <img src="/image/IMG_20251228_113951.png" alt="KayLakay Logo" class="logo-img">  
+  </div>  
+     <h5 class="tabo" > GP-+ MFU : Lokasyon, Acha & Sèvis</h5>  
+     <input type="text" placeholder="Rechèch kay, tè, pwodui, sèvis...">  
+  <nav class="tabs">  
+   <button class="tab active" data-tab="konkou">Konkou</button>  
+    <button class="tab" data-tab="accueil">Kay</button>  
+    <button class="tab" data-tab="terres">Tè</button>  
+    <button class="tab" data-tab="services">Store</button>  
+    <button class="tab" data-tab="agents">Ajoute +</button>  
+  </nav>  
+</header>  <main>  
+  <!-- PAGE ACCUEIL -->  
+  <section id="konkou" class="tab-content active">  
+<div class="container">  
+    <img src="/image/IMG_20251228_125843.png" alt="Flyer Konkou" class="flyer">  <button class="buttons" id="openPopup">📝 ENSKRI KOUNYE A</button>
 
-  <section id="services" class="tab-content">
-    <h2>🔧 Sèvis disponib</h2>
-    <p>Pwodui & materyèl ak lòt sèvis pwofesyonèl.</p>
-  </section>
+  </div>    <!-- POPUP -->    <div id="popup" class="popup">  
+    <div class="popup-content">  
+      <span id="closePopup">&times;</span>  <h2>Enskripsyon Konkou</h2>  
 
-  <section id="agents" class="tab-content">
-    <footer class="tabo"><h3 class="tabo">Pou w ajoute pwodui pa w ! oubyen pou plis enfòmasyon.</h3><h4><p>Kontakte nou pa:</p>
-     <a href="https://wa.me/+50940488401"  target="blank" class="whatsapp-btn">💬 Ale sou WhatsApp</a>
+  <input type="text" id="nom" placeholder="Non konplè" required>  
+  <input type="text" id="ville" placeholder="Vil ou" required>  
 
-<p><a href="mailto:radot1530@gmail.com" target="_blank" class="email-btn"> 📧 Email</a></p>
-    <p>Rankontre ajan imobilye ki sètifye pa Nou.</p></h4></footer>
-  </section>
-<footer class="footer"><h5> © 2025 Kay & Sèvis & Acha .  Bright Rise Ht . MFU</h5></footer>
-</main>
-<script src="data.js"></script>
-<script src="app.js"></script>
-</body>
+  <select id="participation">  
+    <option value="Wi">Wi, mwen vle patisipe</option>  
+    <option value="Non">Non, mwen vle plis enfòmasyon</option>  
+  </select>  
+
+  <button class="buttons" id="sendWhatsapp">📲 Voye sou WhatsApp</button>  
+</div>
+
+  </div>  
+<h2>🗳️ Vote pou patisipan yo</h2>  <input type="text" id="search" placeholder="Antre kòd patisipan (ex: P001)">  
+<div id="list"></div>  
+</section>    <section id="accueil" class="tab-content">  
+  </section>    <!-- AUTRES PAGES -->    <section id="terres" class="tab-content">  
+    <h2>🌿 Tè ak Jaden</h2>  
+    <p>Tè ki disponib pou lwe oswa pou vann...</p>  
+  </section>    <section id="services" class="tab-content">  
+    <h2>🔧 Sèvis disponib</h2>  
+    <p>Pwodui & materyèl ak lòt sèvis pwofesyonèl.</p>  
+  </section>    <section id="agents" class="tab-content">  
+    <footer class="tabo"><h3 class="tabo">Pou w ajoute pwodui pa w ! oubyen pou plis enfòmasyon.</h3><h4><p>Kontakte nou pa:</p>  
+     <a href="https://wa.me/+50940488401"  target="blank" class="whatsapp-btn">💬 Ale sou WhatsApp</a>  <p><a href="mailto:radot1530@gmail.com" target="_blank" class="email-btn"> 📧 Email</a></p>  
+    <p>Rankontre ajan imobilye ki sètifye pa Nou.</p></h4></footer>  
+  </section>  
+<footer class="footer"><h5> © 2025 Kay & Sèvis & Acha .  Global Plus Ht . MFU</h5></footer>  
+</main>  
+<!-- Firebase v12.7 CDN -->  
+<!-- Firebase v12.7 CDN -->  
+<script type="module" src="https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js"></script>  
+<script type="module" src="https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js"></script>  
+<!-- App JS -->  
+<script type="module" src="konkou.js"></script>  
+<script src="data.js"></script>  
+<script src="app.js"></script>  </body>  
 </html>
