@@ -205,5 +205,174 @@ footer{padding:14px;text-align:center;color: black;opacity:1;margin-top:18px}
       #popupDemann button { margin: 5px; padding: 8px 12px; border-radius: 6px; border: none; cursor: pointer; background: darkorange; color: white; font-weight: bold; }
       #fèmenPopup { background: gray; }
 
+header {
+  background: darkgreen;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+section {
+  background: white;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+textarea {
+  min-height: 150px;
+}
+
+button {
+  background: green;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.participant {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+  text-align: center;
+}
+
+.container {
+  margin-top: 30px;
+}
+
+.flyer {
+  width: 100%;
+  max-width:5000px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+}
+
+.buttons {
+  margin-top: 20px;
+  padding: 15px 25px;
+  font-size: 16px;
+  background: #1a7f37;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* POPUP */
+.popup {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+}
+
+.popup-content {
+  background: white;
+  width: 90%;
+  max-width: 350px;
+  margin: 100px auto;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.popup-content input,
+.popup-content select {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+#closePopup {
+  float: right;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* Carte participant */
+.cardss {
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  border-left: 6px solid #0d6efd;
+  transition: transform 0.3s ease;
+  background: lightgoldenrodyellow;
+  overflow: hidden;
+  margin: 20px auto;
+  width: 90%;
+  max-width: 400px;
+}
+
+.cardss:hover {
+  transform: translateY(-3px);
+}
+
+/* NOM DU PARTICIPANT */
+.cardss h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #0d1b2a;
+}
+
+/* CODE PARTICIPANT */
+.cardss .code {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 4px 10px;
+  background: #0d6efd;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 20px;
+  letter-spacing: 1px;
+}
+
+/* RESUME */
+.cardss .resume {
+  margin-top: 10px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #444;
+}
+
+/* TEXTE "Pas de résumé" */
+.cardss .no-resume {
+  font-style: italic;
+  color: #999;
+}
+
+/* VOTES */
+.cardss .votes {
+  margin-top: 12px;
+  font-weight: 600;
+  color: #198754;
+}
+
+/* BOUTON VOTE */
+.cardss button {
+  margin-top: 10px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  background: #198754;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cardss button:hover {
+  background: #157347;
+}
+
 
   
