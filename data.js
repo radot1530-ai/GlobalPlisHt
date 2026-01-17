@@ -1,5 +1,7 @@
 // data.js
 
+// data.js
+
 const kayList = [
 
   {
@@ -97,9 +99,34 @@ const terresList = [
     deskripsyon: "Sèvis renovasyon kay pwofesyonèl",
     imaj: "image/service1.jpg",
     adminwhatsapp: "Achte/Negosye"
-  }]
+  },]
   
-const servicesList = [
+  const servicesList =
+  [
+    { id: 1,
+    tit: "Pòt",
+    pri: "",
+    adresse: "SUD",
+    deskripsyon: "W' ap jwenn plizyè, nan menm design nan",
+    imaj:"image/1768270520982.png",
+    adminwhatsapp: "Achte/Negosye"
+  },
+    { id: 1,
+    tit: "Pòt",
+    pri: "",
+    adresse: "Livraison, Sud",
+    deskripsyon: "Pòt siperyè, si w enterese, klike negosye",
+    imaj:"/image/1768270827447.png",
+    adminwhatsapp: "Achte/Negosye"
+  },
+      { id: 1,
+    tit: "Pòt",
+    pri: "",
+    adresse: "",
+    deskripsyon: "",
+    imaj:"/image/1768271289907.png",
+    adminwhatsapp: "Achte/Negosye"
+  },
   { id: 1,
     tit: "Mayo (fi)",
     pri: "",
@@ -108,7 +135,7 @@ const servicesList = [
     imaj:"/image/Screenshot_20251213-194822.png",
     adminwhatsapp: "Achte/Negosye"
   },
-  { id: 1,
+  { id: 2,
     tit: "Pantalon (Gason)",
     pri: "",
     adresse: "",
@@ -116,8 +143,8 @@ const servicesList = [
     imaj:"/image/Screenshot_20251213-195116.png",
     adminwhatsapp: "Achte/Negosye"
   },
-     { id: 1,
-    tit: " Soulye",
+     { id: 3,
+    tit: "",
     pri: " 3000 HTG",
     adresse: "",
     deskripsyon: "",
@@ -125,7 +152,7 @@ const servicesList = [
     adminwhatsapp: "Achte/Negosye"
   },
   
-   { id: 1,
+   { id: 4,
     tit: " Tenis klasik",
     pri: " 3000 HTG",
     adresse: " Haïti/ P-au-P",
@@ -134,7 +161,7 @@ const servicesList = [
     adminwhatsapp: "Achte/Negosye"
   },
   {
-    id: 1,
+    id: 5,
     tit: " Abiman ",
     pri: "",
     adresse: " Lòt modèl yo poko disponib ",
@@ -143,7 +170,7 @@ const servicesList = [
     adminwhatsapp: "Achte/Negosye"
   },
   {
-    id: 1,
+    id: 5,
     tit: "Kamera Profesyonèl",
     pri: "",
     adresse: "... , Ayiti",
@@ -152,7 +179,7 @@ const servicesList = [
     adminwhatsapp: "Achte/Negosye"
   },
   {
-    id: 1,
+    id: 7,
     tit: "Renovasyon kay",
     pri: "$100 / jou",
     adresse: "Pòtoprens",
@@ -161,4 +188,34 @@ const servicesList = [
     adminwhatsapp:"Achte/Negosye"
   }
 
+]
+const DATA_SERVICES = [
+  {
+    id: 8,
+    categorie: "Bijoutri",
+    titre: "Bag an ajan",
+    prix: "2500 HTG",
+    image: "image/bijou.jpg"
+  },
+  {
+    id: 9,
+    categorie: "Rad",
+    titre: "T-shirt lokal",
+    prix: "1200 HTG",
+    image: "image/tshirt.jpg"
+  },
+  {
+    id: 10,
+    categorie: "Teknoloji",
+    titre: "Chargeur rapid",
+    prix: "1800 HTG",
+    image: "image/chargeur.jpg"
+  },
+  {
+    id: 11,
+    categorie: "Services",
+    titre: "Réparation téléphone",
+    prix: "Selon service",
+    image: "image/repair.jpg"
+  }
 ];
