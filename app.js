@@ -82,7 +82,7 @@ function loadServices() {
     const div = document.createElement("div");
     div.className = "property-card";
     div.innerHTML = `
-    <img src="${serv.imaj}" alt="${serv.tit}" class="property-img">
+    <img src="${serv.imaj}" alt="${serv.tit}" class="flyer">
       <h3>${serv.tit}</h3>
       <p>${serv.deskripsyon}</p>
       <p><strong>${serv.pri}</strong></p>
