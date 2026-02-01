@@ -1,11 +1,11 @@
-<!DOCTYPE html>  <html lang="ht">  
+<!DOCTYPE html> 
+<html lang="ht">
 <head>  
   <meta charset="UTF-8">  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">  
   <title>Global Plis Ayiti - Sèvis</title>  
   <link rel="stylesheet" href="style.css">  
   <!-- Favicon pou onglet -->
-    <!-- Favicon pou onglet -->
 <link rel="icon" href="https://globalplisht.onrender.com/image/file_000000006a34722f97672f964277cbb0.png" type="image/png">
 
 <!-- Open Graph (Facebook, WhatsApp) -->
@@ -20,21 +20,34 @@
 <meta name="twitter:title" content="Global Plis Ayiti">
 <meta name="twitter:description" content="Yon platfòm, plizyè solisyon: Konkou, Biznis, Imobilye, Teknoloji, Sèvis.">
 <meta name="twitter:image" content="https://globalplisht.onrender.com/image/file_00000000e08471fdb175d32a2895a6b7.png">
-  <meta name="google-site-verification=zo51JfoyXruII056ThPReP9GR1b2eLgK6OzV9lolC0M ">
-<body>  
-  <header class="navbar">  
-    <div class="logo-container">  
-      <img src="/image/IMG_20251228_113951.png" alt="KayLakay Logo" class="logo-img">  
-  </div>  
-     <h5 class="tabo" > GP-+ MFU : Lokasyon, Acha & Sèvis</h5>  
+</head>  
+
+  <header class="navbar">
     
+  <header class="header">
+  <button id="menuBtn">☰</button>
+</header>
+
+<nav id="menu" class="menu hidden">
+  <a onclick="go('home')">Kay</a>
+  <a onclick="go('store')">Store</a>
+  <a onclick="go('add')">Ajoute</a>
+</nav>
+
+    <div class="logo-container">
+      <img src=/image/1768017763381.png alt="KayLakay Logo" class="logo-img"></div>
+      <input type="text" placeholder="Store, Kategori, Kay, Bijoutri">
+      
+  <nav class="tabs">  
    <button class="tab active" data-tab="konkou">Konkou</button>  
     <button class="tab" data-tab="accueil">Kay</button>  
     <button class="tab" data-tab="terres">Tè</button>  
-    <button class="tab" data-tab="services">Store</button>  
+    <button class="tab" data-tab="ser">Store</button>  
     <button class="tab" data-tab="agents">Ajoute +</button>  
   </nav>  
-</header>  <main>  
+</header>  
+<body>
+<main>  
   <!-- PAGE ACCUEIL -->  
   <section id="konkou" class="tab-content active">  
 <div class="container">  
@@ -62,22 +75,56 @@
   </section>    <!-- AUTRES PAGES -->    <section id="terres" class="tab-content">  
     <h2>🌿 Tè ak Jaden</h2>  
     <p>Tè ki disponib pou lwe oswa pou vann...</p>  
-  </section>    <section id="services" class="tab-content">  
-    <h2>🔧 Sèvis disponib</h2>  
-    <p>Pwodui & materyèl ak lòt sèvis pwofesyonèl.</p>  
-  </section>    <section id="agents" class="tab-content">  
-    <footer class="tabo"><h3 class="tabo">Pou w ajoute pwodui pa w ! oubyen pou plis enfòmasyon.</h3><h4><p>Kontakte nou pa:</p>  
-     <a href="https://wa.me/+50940488401"  target="blank" class="whatsapp-btn">💬 Ale sou WhatsApp</a>  <p><a href="mailto:radot1530@gmail.com" target="_blank" class="email-btn"> 📧 Email</a></p>  
-    <p>Rankontre ajan imobilye ki sètifye pa Nou.</p></h4></footer>  
+  </section>    
+<section id="ser" class="tab-content">
+    <input 
+    type="text" 
+    id="searchService" 
+    placeholder="Rechèch pwodui..."
+    class="search-bar"
+  >
+
+<div id="products" class="box"></div>
+
+<button id="floatingAddBtn" title="Ajouter">
+  ➕
+</button>
+
+</section>
+<section id="agents" class="tab-content"> 
+<!-- LOGIN -->
+
+<div class="box">
+  <h2> Login vandè ...</h2>
+  <input id="code" placeholder="Kòd itilizatè a">
+  <button onclick="login()" class="buttons" >Konekte la </button>
+</div>
+
+<div id="addBox" class="box hidden">
+  <h3>Ajouter un produit</h3>
+  <input id="pname" placeholder="Nom produit">
+  <input id="pprice" placeholder="Prix">
+   <input id="description" placeholder="deskripsyon pwodui a">
+<input class="img" type="file" id="pfile" accept="image/*">
+  <button onclick="addProduct()" class="buttons">Mete pwodui w la </button>
+  <div id="adminBox" class="hidden">
+  <h3>🛠️ Admin Panel</h3>
+  <button onclick="addUser()" class="buttons" class="buttons">➕ Ajouter User</button>
+  <div id="usersBox"></div>
+<!-- Bouton admin pour supprimer un produit -->
+
+</div>
+</div>
+
+  <footer class="tabo"><h5 class="tabo">Pou w ajoute pwodui pa w ! oubyen pou plis enfòmasyon.Kontakte nou pa:</h5>  
+     <a href="https://wa.me/+50940488401"  target="blank" class="whatsapp-btn">💬 Ale sou WhatsApp</a>  <p><a href="mailto:storetechnologie9@gmail.com" target="_blank" class="email-btn"> 📧 Email</a></p>  
+    <h5>Rankontre ajan imobilye ki sètifye pa Nou.</h5></footer>  
   </section>  
 <footer class="footer"><h5> © 2025 Kay & Sèvis & Acha .  Global Plus Ht . MFU</h5></footer>  
 </main>  
 <!-- Firebase v12.7 CDN -->  
-<!-- Firebase v12.7 CDN -->  
-<script type="module" src="https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js"></script>  
-<script type="module" src="https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js"></script>  
-<!-- App JS -->  
-<script type="module" src="konkou.js"></script>  
+<script type="module" src="index.js"></script>
+<script type="module" src="konkou.js"></script>
 <script src="data.js"></script>  
 <script src="app.js"></script>  </body>  
-</html>
+    </html>
