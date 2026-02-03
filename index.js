@@ -102,7 +102,7 @@ function renderProducts() {
       const id = p.key;
 
       const card = document.createElement("div");
-      card.className = "property-info";
+      card.className = "property-card";
       card.innerHTML = `
         <img src="${d.img}" class="property-img">
         <h3>${d.name}</h3>
