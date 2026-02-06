@@ -83,6 +83,11 @@
     placeholder="Rechèch pwodui..."
     class="search-bar"
   >
+<!-- Loader produits -->
+<div id="productsLoader" class="loader-box">
+  <div class="spinner"></div>
+  <p>⏳ Ap chaje pwodui yo...</p>
+</div>
 
 <div id="products" class="box"></div>
 
@@ -96,15 +101,15 @@
 
 <div class="box">
   <h2> Login vandè ...</h2>
-  <input id="code" placeholder="Kòd itilizatè a">
-  <button onclick="login()" class="buttons" >Konekte la </button>
+  <input id="code" placeholder="Kòd itilizatè a" class="search-bar">
+  <button onclick="login()" class="buttons"  >Konekte la </button>
 </div>
 
 <div id="addBox" class="box hidden">
   <h3>Ajouter un produit</h3>
-  <input id="pname" placeholder="Nom produit">
-  <input id="pprice" placeholder="Prix">
-   <input id="description" placeholder="deskripsyon pwodui a">
+  <input id="pname" placeholder="Nom produit" class="search-bar">
+  <input id="pprice" placeholder="Prix" class="search-bar">
+   <input id="description" placeholder="deskripsyon pwodui a" class="search-bar">
 <input class="img" type="file" id="pfile" accept="image/*">
   <button onclick="addProduct()" class="buttons">Mete pwodui w la </button>
   <div id="adminBox" class="hidden">
@@ -127,4 +132,4 @@
 <script type="module" src="konkou.js"></script>
 <script src="data.js"></script>  
 <script src="app.js"></script>  </body>  
-    </html>
+  </html>
