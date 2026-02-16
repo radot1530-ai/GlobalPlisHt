@@ -1,28 +1,21 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="ht">
-<head>  
-  <meta charset="UTF-8">  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-  <title>Global Plis Ayiti - Sèvis</title>  
-  <link rel="stylesheet" href="style.css">  
-  <!-- Favicon pou onglet -->
-<link rel="icon" href="https://globalplisht.onrender.com/image/FotoWGP512x512.png" type="image/png">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Plis Ayiti - Sèvis</title>
+  <link rel="stylesheet" href="style.css">
 
-<!-- Open Graph (Facebook, WhatsApp) -->
-<meta property="og:title" content="Global Plis Ayiti">
-<meta property="og:description" content="Yon platfòm, plizyè solisyon: Konkou, Biznis, Imobilye, Teknoloji, Sèvis.">
-<meta property="og:image" content="https://globalplisht.onrender.com/image/FotoWGP.png">
-<meta property="og:url" content="https://globalplisht.onrender.com/">
-<meta property="og:type" content="website">
+  <link rel="icon" href="https://globalplisht.onrender.com/image/file_000000006a34722f97672f964277cbb0.png" type="image/png">
 
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Global Plis Ayiti">
-<meta name="twitter:description" content="Yon platfòm, plizyè solisyon: Konkou, Biznis, Imobilye, Teknoloji, Sèvis.">
-<meta name="twitter:image" content="https://globalplisht.onrender.com/image/FotoWGP.png">
-</head>  
+  <meta property="og:title" content="Global Plis Ayiti">
+  <meta property="og:description" content="Yon platfòm, plizyè solisyon: Konkou, Biznis, Imobilye, Teknoloji, Sèvis.">
+  <meta property="og:image" content="https://globalplisht.onrender.com/image/image/file_000000006a34722f97672f964277cbb0.png">
+  <meta property="og:url" content="https://globalplisht.onrender.com/">
+  <meta property="og:type" content="website">
+</head>
 
-  <body>
+<body>
 
 <header class="navbar">
 
@@ -164,16 +157,14 @@
     <input type="text" id="code" placeholder="Antre kòd ou..." class="popup-inputs">
     
     <button onclick="login()" class="buttons">Antre</button>
-  </div>
-</div>
-
-  <!-- Admin / User Add Product -->
-  <div id="addBox" class="hidden">
+    
+      <!-- Admin / User Add Product -->
+  <div id="addBox" class="box hidden">
     <h3>Ajoute Pwodui</h3>
-    <input type="text" id="pname" placeholder="Non pwodui">
-    <input type="text" id="pprice" placeholder="Pri pwodui">
-    <input type="text" id="description" placeholder="Deskripsyon">
-    <select id="pcategory">
+    <input type="text" id="pname" placeholder="Non pwodui" class="popup-inputs">
+    <input type="text" id="pprice" placeholder="Pri pwodui" class="popup-inputs">
+    <input type="text" id="description" placeholder="Deskripsyon" class="popup-inputs">
+    <select id="pcategory" class="popup-inputs">
       <option value="Sponsorisé">Sponsorisé</option>
       <option value="Mache">Mache</option>
       <option value="Immobilier">Immobilier</option>
@@ -181,15 +172,19 @@
       <option value="Zouti">Zouti</option>
     </select>
     <input type="file" id="pfile">
-    <button onclick="addProduct()">Ajoute Pwodui</button>
-  </div>
+    <button onclick="addProduct()" class="buttons">Ajoute Pwodui</button>
+</div>
 
-  <!-- Admin Users -->
-  <div id="adminBox" class="hidden">
-    <h3>Jere Itilizatè</h3>
-    <button onclick="addUser()">Ajoute User</button>
-    <div id="usersBox"></div>
+<!-- Admin Users -->  
+<div id="adminBox" class="hidden">  
+    <h3>Jere Itilizatè</h3>  
+    <button onclick="addUser()" class"buttons" >Ajoute User</button>  
+    <div id="usersBox"></div>  
+  </div>  
   </div>
+</div>
+
+
 
   <!-- Search -->
   <input type="text" id="searchService" placeholder="Rechèch pwodui..." class="search-bar">
@@ -257,4 +252,4 @@
 
 
 </body>
-  </html>
+    </html>
