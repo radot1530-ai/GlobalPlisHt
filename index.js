@@ -65,6 +65,7 @@ function startSponsorRotation() {
       if (currentUser?.role === "admin") {
         const del = document.createElement("button");
         del.textContent = "❌";
+        del.classList.add("buttons");
         del.onclick = () => deleteProduct(p.id);
         card.appendChild(del);
       }
@@ -182,6 +183,7 @@ function renderCategory(rowId, category, list = allProducts) {
     if (currentUser?.role === "admin") {
       const del = document.createElement("button");
       del.textContent = "❌";
+      del.classList.add("buttons");
       del.onclick = () => deleteProduct(p.id);
       card.appendChild(del);
     }
@@ -270,7 +272,7 @@ whatsappBtn.onclick = () => {
   });
   
   msg += "Total: " + total;
-  window.open("https://wa.me/?text=" + encodeURIComponent(msg));
+  window.open("https://wa.me/50940488401?text=" + encodeURIComponent(msg));
 };
 
 /* ================= RENDER PRODUCTS ================= */
@@ -358,4 +360,46 @@ function downloadPage() {
   a.click();
 
   URL.revokeObjectURL(url);
-  }
+}
+
+
+/* ================= ADMIN USERS ================= */
+async function renderUsers() {
+  if (currentUser?.role !== "admin") return;
+
+  const box = document.getElementById("usersBox");
+  if (!box) return;
+
+  box.innerHTML = "";
+
+  const snap = await get(ref(db, "users"));
+  if (!snap.exists()) return;
+
+  snap.forEach(u => {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      ${u.key} (${u.val().role})
+      <button class="buttons">❌</button>
+    `;
+
+    div.querySelector("button").onclick = () => {
+      if (confirm("Supprimer user?")) {
+        remove(ref(db, "users/" + u.key)).then(() => renderUsers());
+      }
+    };
+
+    box.appendChild(div);
+  });
+}
+
+window.addUser = async () => {
+  if (currentUser?.role !== "admin") return alert("Ou pa admin");
+
+  const code = prompt("Code user");
+  if (!code) return;
+
+  const role = prompt("Role: user/premium", "user");
+
+  await set(ref(db, "users/" + code), { role });
+  renderUsers();
+};
