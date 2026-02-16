@@ -214,132 +214,61 @@ window.deleteProduct = id => {
 
 /* ================= CART ================= */
 function addToCart(p) {
-  cart.push(p);
-  renderCart();
-}
+function startSponsorRotation() {
+  const row = document.getElementById("sponsoriseRow");
+  if (!row) return;
 
-function renderCart() {
-  cartItems.innerHTML = "";
-  let total = 0;
-  
-  cart.forEach((p, i) => {
-    total += Number(p.price);
-    
-    const div = document.createElement("div");
-    div.innerHTML = `${p.name} (${p.price}) <button>X</button>`;
-    
-    div.querySelector("button").onclick = () => {
-      cart.splice(i, 1);
-      renderCart();
-    };
-    
-    cartItems.appendChild(div);
+  if (sponsorTimer) clearInterval(sponsorTimer);
+
+  let sponsors = allProducts
+    .filter(p => p.category === "Sponsorisé")
+    .sort((a, b) => b.premium - a.premium || b.time - a.time);
+
+  if (sponsors.length === 0) {
+    row.innerHTML = "";
+    return;
+  }
+
+  // ✅ preload sèlman 4 premye (pa tout lis la)
+  sponsors.slice(0, 4).forEach(p => {
+    const img = new Image();
+    img.src = p.img;
   });
-  
-  totalPrice.innerText = "Total: " + total + " HTG";
-  cartCount.innerText = cart.length;
-}
 
-cartBtn.onclick = () => cartPopup.classList.toggle("show");
+  function render(list) {
+    row.innerHTML = "";
 
-whatsappBtn.onclick = () => {
-  if (cart.length === 0) return alert("Panier vid");
-  
-  let msg = "Bonjou, mwen vle kòmande:\n";
-  let total = 0;
-  
-  cart.forEach(p => {
-    msg += `${p.name} - ${p.price}\n`;
-    total += Number(p.price);
-  });
-  
-  msg += "Total: " + total;
-  window.open("https://wa.me/?text=" + encodeURIComponent(msg));
-};
+    list.slice(0, 4).forEach(p => {
+      const card = document.createElement("div");
+      card.className = "product-card";
 
-/* ================= RENDER PRODUCTS ================= */
-function renderProducts() {
-  showSpinner(true);
-  
-  onValue(ref(db, "products"), snap => {
-    allProducts = [];
-    
-    if (snap.exists()) {
-      snap.forEach(s => {
-        allProducts.push({ id: s.key, ...s.val() });
-      });
-    }
-    
-    // 🔥 RANN LÒT KATEGORI SELMAN
-    renderCategory("macheRow", "Mache");
-    renderCategory("immobilierRow", "Immobilier");
-    renderCategory("abimanRow", "Abiman & Tekstil");
-    renderCategory("zoutiRow", "Zouti");
-    
-    // 🔥 SLIDER
-    startSponsorRotation();
-    
-    showSpinner(false);
-  });
-}
+      // ❌ retire lazy loading pou slider
+      card.innerHTML = `
+        <img src="${p.img}">
+        <div>${p.name}</div>
+        <div>${p.price} HTG</div>
+        <button class="big-btn">Ajoute</button>
+      `;
 
-/* ================= INIT ================= */
-window.addEventListener("DOMContentLoaded", () => {
-  renderProducts();
-  initSearch();
-});
+      card.querySelector("button").onclick = () => addToCart(p);
 
+      // ADMIN DELETE (kenbe lojik Code 2)
+      if (currentUser?.role === "admin") {
+        const del = document.createElement("button");
+        del.textContent = "❌";
+        del.onclick = () => deleteProduct(p.id);
+        card.appendChild(del);
+      }
 
-/* ================= LOGIN POPUP ================= */
-window.openLogin = () => {
-  document.getElementById("loginPopup").style.display = "flex";
-};
+      row.appendChild(card);
+    });
+  }
 
-window.closeLogin = () => {
-  document.getElementById("loginPopup").style.display = "none";
-};
+  render(sponsors);
 
-// Fèmen si klike deyò
-window.addEventListener("click", e => {
-  const popup = document.getElementById("loginPopup");
-  if (e.target === popup) popup.style.display = "none";
-});
-
-
-// MENU SYSTEM
-const menuBtn = document.getElementById("menuBtn");
-const sideMenu = document.getElementById("sideMenu");
-const closeMenu = document.getElementById("closeMenu");
-const overlay = document.getElementById("menuOverlay");
-
-// Open menu
-menuBtn.onclick = () => {
-  sideMenu.classList.add("show");
-  overlay.classList.add("show");
-};
-
-// Close menu bouton
-closeMenu.onclick = closeMenuFunc;
-
-// Close menu klik deyò
-overlay.onclick = closeMenuFunc;
-
-function closeMenuFunc() {
-  sideMenu.classList.remove("show");
-  overlay.classList.remove("show");
-}
-
-// TELECHAJE PAJ LA OTOMATIKMAN
-function downloadPage() {
-  const html = document.documentElement.outerHTML;
-
-  const blob = new Blob([html], { type: "text/html" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "globalplus_offline.html";
-  a.click();
-
-  URL.revokeObjectURL(url);
+  sponsorTimer = setInterval(() => {
+    const first = sponsors.shift();
+    sponsors.push(first);
+    render(sponsors);
+  }, 5000);
 }
