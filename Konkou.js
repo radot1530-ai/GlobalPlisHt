@@ -1,6 +1,6 @@
 // 🔹 IMPORT FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+import { push, set, getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
 // 🔹 CONFIG FIREBASE
 const firebaseConfig = {
