@@ -1,6 +1,8 @@
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
   import {
+  update,
+  push,
   getDatabase,
   ref,
   set,
@@ -9,7 +11,7 @@
   runTransaction
 } from
   "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
-
+  
   // TODO: Add SDKs for Firebase products that you want to use
   // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -37,6 +39,7 @@ const ville = document.getElementById("ville");
 const texte = document.getElementById("texte");
 const add = document.getElementById("add");
 const liste = document.getElementById("liste");
+
 // ➕ AJOUT
 add.onclick = () => {
   if(!code.value || !nom.value) {
@@ -76,4 +79,5 @@ window.supprimer = code => {
   if(confirm("Supprimer ce participant ?")){
     remove(ref(db, "participants/" + code));
   }
-de
+};
+
