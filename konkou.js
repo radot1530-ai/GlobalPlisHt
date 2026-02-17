@@ -109,3 +109,5 @@ window.vote = code => {
       alert("❌ Erreur, réessayez");
     });
 };
+
+               
