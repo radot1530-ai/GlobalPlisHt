@@ -1,7 +1,8 @@
+// 🔹 IMPORT FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { push, set, getDatabase, ref, onValue, remove, get } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+import { push, set, getDatabase, ref, onValue, runTransaction, remove, get } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
-/* ================= FIREBASE ================= */
+// 🔹 CONFIG FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyAgvH0CpF6tGISpfLw3JWJCT2beBG28wAM",
   authDomain: "kaylakay-cdf64.firebaseapp.com",
@@ -9,9 +10,11 @@ const firebaseConfig = {
   projectId: "kaylakay-cdf64",
   storageBucket: "kaylakay-cdf64.appspot.com",
   messagingSenderId: "663099511740",
-  appId: "1:663099511740:web:aeb6bddccee9666ff791b9"
+  appId: "1:663099511740:web:aeb6bddccee9666ff791b9",
+  measurementId: "G-JF9PNTTTG4"
 };
 
+// 🔹 INITIALISATION
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
