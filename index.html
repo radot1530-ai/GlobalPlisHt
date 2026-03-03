@@ -1,38 +1,38 @@
-<section id="KONKOU">
-    <h2>Participants Ranking</h2>
-    <div class="ranking">
-        <div class="card">1. Alice</div>
-        <div class="card">2. Bob</div>
-        <div class="card">3. Carol</div>
-        <div class="card">4. David</div>
-        <div class="card">5. Eve</div>
-        <div class="card">6. Frank</div>
-        <div class="card">7. Grace</div>
-        <div class="card">8. Heidi</div>
-        <div class="card">9. Ivan</div>
-        <div class="card">10. Judy</div>
-        <div class="card">11. Ken</div>
-        <div class="card">12. Leo</div>
-        <div class="card">13. Mallory</div>
-        <div class="card">14. Nathan</div>
-        <div class="card">15. Olivia</div>
-    </div>
-</section>
-<style>
-    .ranking {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-    }
-    .card {
-        background-color: #f8f8f8;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 1rem;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        flex: 1 1 calc(20% - 1rem);
-    }
-</style>
-<footer>
-    <p>Rankings are updated weekly.</p>
-</footer>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KONKOU - Global PlisHt</title>
+</head>
+<body>
+    <header>
+        <h1>Welcome to KONKOU</h1>
+    </header>
+    <section id="enrollment">
+        <h2>Enrollment</h2>
+        <form action="/submit-enrollment" method="post">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <br>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <br>
+            <input type="submit" value="Enroll">
+        </form>
+    </section>
+    <section id="voting">
+        <h2>Voting Section</h2>
+        <form action="/submit-vote" method="post">
+            <label for="vote">Vote:</label>
+            <select id="vote" name="vote">
+                <option value="option1">Option 1</option>
+                <option value="option2">Option 2</option>
+                <option value="option3">Option 3</option>
+            </select>
+            <br>
+            <input type="submit" value="Submit Vote">
+        </form>
+    </section>
+</body>
+</html>
