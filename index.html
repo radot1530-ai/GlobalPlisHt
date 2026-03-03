@@ -1,38 +1,403 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ht">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KONKOU - Global PlisHt</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Plis Ayiti - Sèvis</title>
+  <link rel="stylesheet" href="style.css">
+
+  <link rel="icon" href="https://globalplisht.onrender.com/image/Fotoglobalweb.png" type="image/png">
+
+  <meta property="og:title" content="Global Plis Ayiti">
+  <meta property="og:description" content="Yon platfòm, plizyè solisyon: Konkou, Biznis, Imobilye, Teknoloji, Sèvis.">
+  <meta property="og:image" content="https://globalplisht.onrender.com/image/FotoWGP512x512.png">
+  <meta property="og:url" content="https://globalplisht.onrender.com/">
+  <meta property="og:type" content="website">
 </head>
+
 <body>
-    <header>
-        <h1>Welcome to KONKOU</h1>
-    </header>
-    <section id="enrollment">
-        <h2>Enrollment</h2>
-        <form action="/submit-enrollment" method="post">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-            <br>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            <br>
-            <input type="submit" value="Enroll">
-        </form>
-    </section>
-    <section id="voting">
-        <h2>Voting Section</h2>
-        <form action="/submit-vote" method="post">
-            <label for="vote">Vote:</label>
-            <select id="vote" name="vote">
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
-            </select>
-            <br>
-            <input type="submit" value="Submit Vote">
-        </form>
-    </section>
+
+<header class="navbar">
+
+  <!-- HEADER FIXE -->
+  <div class="header">
+    <button id="menuBtn">☰</button>
+    <button id="loginBtn" onclick="openLogin()"><h5 class="tabo">🔐login</h5></button>
+  </div>
+
+
+<!-- SIDE MENU -->
+<div id="sideMenu" class="side-menu">
+  <div class="menu-header">
+    <span>☰ Menu</span>
+    <button id="closeMenu">✕</button>
+  </div>
+
+  <div class="menu-content">
+
+    <div class="menu-section">
+      <h3>ℹ️ Apropos</h3>
+      <p>
+        Global Plus se yon platfòm polivalan ki bay sèvis   vann, achte, lwe kay,
+        epi mete sèvis yo sou entènèt fasilman. Objektif nou se
+        konekte tout moun ak opòtinite rapid.
+      </p>
+    </div>
+
+    <div class="menu-section">
+      <h3>🚀 Global Plis enfini</h3>
+      <p>
+        Nou bay sèvis:
+        <br>• Òganizasyon Konkou 
+        <br>• Marketplace (achte & vann)
+        <br>• Immobilier (lwe / vann kay)
+        <br>• Pwomosyon pwodwi sponsorisé
+        <br>• Panier ak commande WhatsApp
+<!-- Bouton telechaje APK -->
+<a href="image/globalplis.apk" download class="buttons" style="display:inline-block; margin:20px; padding:12px 20px; background: darkorange; color:white; border-radius:8px; text-decoration:none; font-weight:bold; cursor:pointer;">
+  ⬇️ Telechaje APK
+</a>
+      </p>
+    </div>
+
+    <div class="menu-section">
+      <h3>📖 Kijan pou itilize sit la</h3>
+      <p>
+        1️⃣ Kreye kont oswa konekte<br>
+        2️⃣ Ajoute pwodui ou oswa chèche sa ou bezwen<br>
+        3️⃣ Ajoute nan panier<br>
+        4️⃣ Voye commande pa WhatsApp
+      </p>
+           <a href="https://wa.me/+50940488401"  target="blank" class="whatsapp-btn">💬 Ale sou WhatsApp(plis en fòmasyon)</a>
+    </div>
+
+    <div class="menu-section">
+      <h3>💡Pwosede yo </h3>
+      <p>
+        ✔ Pwodui sponsorisé parèt an premye<br>
+        ✔ Mete bon imaj pou vann pi vit<br>
+        ✔ Sèvi ak deskripsyon klè
+      </p>
+    </div>
+
+    <div class="menu-section">
+      <h3>📞 Kontak</h3>
+      <p>
+        WhatsApp: +509 40 48 84 01<br>
+        Email: storetechnologie9@email.com
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<!-- OVERLAY -->
+<div id="menuOverlay" class="menu-overlay"></div>
+  </nav>
+
+  <div class="logo-container">
+    <img src="/image/1768017763381.png" alt="KayLakay Logo" class="logo-img">
+  </div>
+
+  <nav class="tabs">
+    <button class="tab" data-tab="konkou">Konkou</button>
+    <button class="tab" data-tab="accueil">Imobilye</button>
+    <button class="tab active" data-tab="productCategories">Store</button>
+  </nav>
+
+</header>
+
+<main>
+
+<!-- ================= KONKOU ================= -->
+<section id="konkou" class="tab-content">
+  <style>
+
+
+.container{
+  max-width:900px;
+  margin:auto;
+}
+header{
+  text-align:center;
+  margin-bottom:25px;
+}
+h1{
+  margin:0;
+  color: darkgoldenrod;
+}
+.card{
+  background:white;
+  border-radius:12px;
+  padding:15px 18px;
+  margin-bottom:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+.rank{
+  font-size:22px;
+  font-weight:bold;
+}
+.name{
+  flex:1;
+  margin-left:15px;
+}
+.score{
+  font-weight:bold;
+  color: darkgreen;
+}
+.gold{border-left:6px solid gold;}
+.silver{border-left:6px solid silver;}
+.bronze{border-left:6px solid #cd7f32;}
+footer{
+  text-align:center;
+  margin-top:30px;
+  font-size:13px;
+  color:#555;
+}
+</style>
+  
+    <h1>🏆 Klasman Ofisyèl GP+ Konkou</h1>
+    <p>Global Plis — Rezilta Final</p>
+   <!-- 1er -->  <section class="card gold">
+    <div class="rank">🏆 1er</div>
+    <div class="name">
+      <strong>71/80 tèks, 16/20 vòt</strong>
+      Kòd: GPK-038
+    </div>
+    <div class="score"><br>87/100</div>
+  </section>  <!-- 2e -->  <section class="card silver">
+    <div class="rank">🏆2e</div>
+    <div class="name">
+      <strong>Tèks : 74/80, vòt : 11/20</strong><br>
+      Kòd: AYT-051
+    </div>
+    <div class="score">85/100</div>
+  </section>  <!-- 3e -->  <section class="card bronze">
+    <div class="rank"> 🏆 3e</div>
+    <div class="name">
+      <strong>Tèks : 73/80, vòt :11/20</strong><br>
+      Kòd: AYT-053
+    </div>
+    <div class="score">84/100</div>
+  </section>  <!-- 4e -->  <section class="card">
+    <div class="rank"> 🏅 4e</div>
+    <div class="name">
+      <strong>Tèks : 63/80, vòt : 20/20</strong><br>
+      Kòd: GPK-013
+    </div>
+    <div class="score">83/100</div>
+  </section>  <!-- Ajoute lòt yo anba menm modèl la --> 
+  <!-- 4e -->  <section class="card">
+    <div class="rank"> 🏅5e</div>
+    <div class="name">
+      <strong>Tèks : 60/80, vòt : 20/20</strong><br>
+      Kòd: GPK-003
+    </div>
+    <div class="score">80/100</div>
+  </section> 
+  <section class="card">
+    <div class="rank"> 🎖️6e</div>
+    <div class="name">
+      <strong>Tèks : 64/80, vòt : 10/20</strong><br>
+      Kòd: GPK-030
+    </div>
+    <div class="score">74/100</div>
+  </section>
+  <section class="card">
+  <div class="rank"> 🎖️7e</div>
+  <div class="name">
+    <strong>Tèks : 59/80, vòt : 14/20</strong><br>
+    Kòd: GPK-002
+  </div>
+  <div class="score">73/100</div>
+</section>
+<section class="card">
+  <div class="rank"> 🏅8e</div>
+  <div class="name">
+    <strong>Tèks : 67/80, vòt : 03/20</strong><br>
+    Kòd: AYT-061
+  </div>  <div class="score">70/100</div>
+</section>
+  <section class="card">
+  <div class="rank"> 🏅9e</div>
+  <div class="name">
+    <strong>Tèks : 59/80, vòt : 10/20</strong><br>
+    Kòd: AYT-056
+  </div>
+  <div class="score">69/100</div>
+</section>
+  <section class="card">
+  <div class="rank"> 🎖️10e</div>
+  <div class="name">
+    <strong>Tèks : 64/80, vòt : 03/20</strong><br>
+    Kòd: GPK-024
+  </div>
+  <div class="score">67/100</div>
+</section>
+  <section class="card">
+  <div class="rank"> 11e</div>
+  <div class="name">
+    <strong>Tèks : 62/80, vòt : 05/20</strong><br>
+    Kòd: AYT-060
+  </div>
+  <div class="score">67/100</div>
+</section>
+  <section class="card">
+  <div class="rank"> 12e</div>
+  <div class="name">
+    <strong>Tèks : 60/80, vòt : 03/20</strong><br>
+    Kòd: GPK-012
+  </div>
+  <div class="score">63/100</div>
+</section>
+  <section class="card">
+    <div class="rank"> 13e</div>
+    <div class="name">
+      <strong>Tèks : 60/80, vòt : 03/20</strong><br>
+      Kòd: GPK-007
+    </div>
+    <div class="score">62/100</div>
+  </section>
+  
+    <section class="card">
+    <div class="rank"> 14e</div>
+    <div class="name">
+      <strong>Tèks : 57/80, vòt : 05/20</strong><br>
+      Kòd: GPK-020
+    </div>
+    <div class="score">62/100</div>
+  </section>
+  
+    <section class="card">
+    <div class="rank"> 15e</div>
+    <div class="name">
+      <strong>Tèks : 56/80, vòt : 05/20</strong><br>
+      Kòd: GPK-009
+    </div>
+    <div class="score">61/100</div>
+  </section>
+
+  
+  <footer>
+    © 2026 Global Plus Konkou — Tout dwa rezève
+  </footer>
+                            </div>
+</section>
+
+
+<!-- ================= IMOBILYE ================= -->
+<section id="accueil" class="tab-content">
+</section>
+
+<!-- ================= STORE ================= -->  
+<section id="productCategories" class="tab-content store-section active">
+
+<!-- LOGIN POPUP -->
+<div id="loginPopup" class="popups">
+  <div class="popup-boxs">
+    <span class="closes" onclick="closeLogin()">✖</span>
+    
+    <h3>Konekte</h3>
+    
+    <input type="text" id="code" placeholder="Antre kòd ou..." class="popup-inputs">
+    
+    <button onclick="login()" class="buttons">Antre</button>
+    
+      <!-- Admin / User Add Product -->
+  <div id="addBox" class="box hidden">
+    <h3>Ajoute Pwodui</h3>
+    <input type="text" id="pname" placeholder="Non pwodui" class="popup-inputs">
+    <input type="text" id="pprice" placeholder="Pri pwodui" class="popup-inputs">
+    <input type="text" id="description" placeholder="Deskripsyon" class="popup-inputs">
+    <select id="pcategory" class="popup-inputs">
+      <option value="Sponsorisé">Sponsorisé</option>
+      <option value="Mache">Mache</option>
+      <option value="Immobilier">Immobilier</option>
+      <option value="Abiman & Tekstil">Abiman & Tekstil</option>
+      <option value="Zouti">Zouti</option>
+    </select>
+    <input type="file" id="pfile">
+    <button onclick="addProduct()" class="buttons">Ajoute Pwodui</button>
+</div>
+
+<!-- Admin Users -->  
+<div id="adminBox" class="hidden">  
+    <h3>Jere Itilizatè</h3>  
+    <button onclick="addUser()">Ajoute User</button>  
+    <div id="usersBox"></div>  
+  </div>  
+  </div>
+</div>
+
+
+
+  <!-- Search -->
+  <input type="text" id="searchService" placeholder="Rechèch pwodui..." class="search-bar">
+
+  <!-- Categories -->
+  <div class="category">
+    <h2 class="tabo">Sponsorisé</h2>
+    <div class="product-row" id="sponsoriseRow"></div>
+    <div id="spinner" class="spinner"></div>
+</div>
+  </div>
+
+  <div class="category">
+    <h2 class="tabo">Mache</h2>
+    <div class="product-row" id="macheRow"></div>
+    <div id="spinner" class="spinner"></div>
+</div>
+  </div>
+
+  <div class="category">
+    <h2 class="tabo">Immobilier</h2>
+    <div class="product-row" id="immobilierRow"></div>
+    <div id="spinner" class="spinner"></div>
+</div>
+  </div>
+
+  <div class="category">
+    <h2 class="tabo">Abiman & Tekstil</h2>
+    <div class="product-row" id="abimanRow"></div>
+    <div id="spinner" class="spinner"></div>
+</div>
+  </div>
+
+  <div class="category">
+    <h2 class="tabo">Zouti</h2>
+    <div class="product-row" id="zoutiRow"></div>
+        <div id="spinner" class="spinner"></div>
+  </div>
+
+  <!-- Floating Cart -->
+  <button id="cartBtn">🛒 <span id="cartCount">0</span></button>
+
+  <!-- Cart Popup -->
+  <div id="cartPopup">
+    <h3>Panier</h3>
+    <div id="cartItems"></div>
+    <div id="totalPrice">Total: 0 HTG</div>
+    <button id="whatsappBtn">Voye pa WhatsApp</button>
+  </div>
+  
+
+</section>
+<!--- PATI GENERAL ---->
+<footer class="footer">
+  <h5>© 2025 Kay & Sèvis & Acha . Global Plis enfini Ht . MFU</h5>
+</footer>
+
+</main>
+
+<script type="module" src="index.js"></script>
+<script type="module" src="konkou.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+
+
+
 </body>
 </html>
