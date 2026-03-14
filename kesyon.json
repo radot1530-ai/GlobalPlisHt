@@ -1,37 +1,37 @@
 {
   "1": [
-    { "q": "Ki derive de f(x)=x²?", "a": ["2x", "x", "x²", "2"], "correct": 0 },
-    { "q": "Ki entègral de ∫2x dx?", "a": ["x² + C", "2x + C", "x + C", "x²/2 + C"], "correct": 0 },
-    { "q": "Ki valè f'(x) si f(x)=3x³?", "a": ["9x²", "3x²", "x³", "6x²"], "correct": 0 }
+    { "q": "Ki pati nan selil ki kontwole tout aktivite li?", "a": ["Noyau", "Mitokondri", "Membran", "Ribozòm"], "correct": 0 },
+    { "q": "Ki molekil ki pote enfòmasyon jenetik?", "a": ["ADN", "ARN", "Pwoteyin", "Lipids"], "correct": 0 },
+    { "q": "Ki fonksyon mitokondri nan selil?", "a": ["Pwodiksyon enèji", "Sere ADN", "Kontwole repons selilè", "Synthesize pwoteyin"], "correct": 0 }
   ],
   "2": [
-    { "q": "Ki derivée de sin(x)?", "a": ["cos(x)", "sin(x)", "-sin(x)", "-cos(x)"], "correct": 0 },
-    { "q": "Ki derivée de cos(x)?", "a": ["-sin(x)", "cos(x)", "sin(x)", "-cos(x)"], "correct": 0 },
-    { "q": "Ki entègral de ∫cos(x) dx?", "a": ["sin(x) + C", "-cos(x) + C", "-sin(x) + C", "cos(x) + C"], "correct": 0 }
+    { "q": "Ki nivo òganizasyon ki pi piti nan òganis vivan?", "a": ["Selil", "Tisi", "Ògan", "Sistèm"], "correct": 0 },
+    { "q": "Ki tisi ki pèmèt mouvman nan zo?", "a": ["Tisi miskilè", "Tisi nève", "Tisi epitelial", "Tisi konektif"], "correct": 0 },
+    { "q": "Ki ògàn nan sistèm respiratwa ki fè echanj gaz?", "a": ["Poumon", "Kè", "Fwa", "Ren"], "correct": 0 }
   ],
   "3": [
-    { "q": "Ki fòmil pou are yon sèk?", "a": ["πr²", "2πr", "πd", "r²/2"], "correct": 0 },
-    { "q": "Ki fòmil pou perimèt yon sèk?", "a": ["2πr", "πr²", "πd²", "d²/2"], "correct": 0 },
-    { "q": "Ki valè π apeprè?", "a": ["3.14", "2.71", "1.62", "3.41"], "correct": 0 }
+    { "q": "Ki kalite selil ki fè fotosentèz?", "a": ["Plant selil", "Bakteri", "Zo selil", "Fonj selil"], "correct": 0 },
+    { "q": "Ki pigman ki responsab pou koulè vèt nan fèy?", "a": ["Chlorofil", "Melanin", "Kloròfil B", "Karotèn"], "correct": 0 },
+    { "q": "Ki faktè ki afekte fotosentèz?", "a": ["Limyè, dlo, CO2", "O2 sèlman", "Tè sèlman", "Sèlman tanperati"], "correct": 0 }
   ],
   "4": [
-    { "q": "Ki kapital Ayiti?", "a": ["Pòtoprens", "Kap Ayisyen", "Les Cayes", "Jakmèl"], "correct": 0 },
-    { "q": "Ki lang ofisyèl Ayiti?", "a": ["Kreyòl, Franse", "Anglè", "Panyòl", "Pòtigè"], "correct": 0 },
-    { "q": "Ki dat endepandans Ayiti?", "a": ["1 Janvye 1804", "18 Novanm 1803", "12 Desanm 1804", "1 Janvye 1803"], "correct": 0 }
+    { "q": "Ki kalite jen ki pase soti nan paran bay pitit?", "a": ["Jen ereditè", "Jen anviwònman", "Jen aksidantèl", "Jen sentetik"], "correct": 0 },
+    { "q": "Ki fòmil ADN?", "a": ["Double helix", "Single strand", "Triple helix", "Loop"], "correct": 0 },
+    { "q": "Ki ògàn ki ede nan dijesyon manje?", "a": ["Estomak", "Kè", "Poumon", "Ren"], "correct": 0 }
   ],
   "5": [
-    { "q": "Ki planèt ki pi pre solèy la?", "a": ["Mèki", "Venis", "Latè", "Mas"], "correct": 0 },
-    { "q": "Ki planèt ki gen gwo bag li?", "a": ["Satèn", "Jipitè", "Mars", "Neptin"], "correct": 0 },
-    { "q": "Ki planèt ki rele planèt wouj?", "a": ["Mas", "Venis", "Mèki", "Jipitè"], "correct": 0 }
+    { "q": "Ki sistèm ki pote san nan tout kò a?", "a": ["Sèvo kadyovaskilè", "Sistèm respiratwa", "Sistèm dijestif", "Sistèm ekskretè"], "correct": 0 },
+    { "q": "Ki san ki pote oksijèn?", "a": ["San oksijene", "San dezoksijene", "San limfatik", "San ble"], "correct": 0 },
+    { "q": "Ki kalite veso san ki pote san soti nan kè?", "a": ["Atè", "Vèn", "Kapilè", "Tib"], "correct": 0 }
   ],
   "6": [
-    { "q": "Ki siy matematik pou fòs?", "a": ["F", "m", "a", "E"], "correct": 0 },
-    { "q": "Ki inite fòs nan SI?", "a": ["Newton", "Kilogram", "Joul", "Watt"], "correct": 0 },
-    { "q": "Ki fòmil Newton pou fòs?", "a": ["F=ma", "E=mc²", "P=mv", "V=IR"], "correct": 0 }
+    { "q": "Ki fòm seleksyon natirèl ki chwazi moun ki pi adapte?", "a": ["Seleksyon direksyonèl", "Seleksyon stabilizan", "Seleksyon divèsifye", "Seleksyon o aza"], "correct": 0 },
+    { "q": "Ki moun ki te dekouvri mikwòb?", "a": ["Anton van Leeuwenhoek", "Charles Darwin", "Louis Pasteur", "Gregor Mendel"], "correct": 0 },
+    { "q": "Ki kalite adaptasyon nan plant pou reziste sechrès?", "a": ["Adaptasyon morfolojik", "Adaptasyon konpòtman", "Adaptasyon fonksyonèl", "Adaptasyon jenetik"], "correct": 0 }
   ],
   "7": [
-    { "q": "Ki premye lèt nan alfabè?", "a": ["A", "B", "C", "D"], "correct": 0 },
-    { "q": "Ki dezyèm lèt nan alfabè?", "a": ["B", "A", "C", "D"], "correct": 0 },
-    { "q": "Ki twa premye lèt nan alfabè?", "a": ["A, B, C", "B, C, D", "C, D, E", "D, E, F"], "correct": 0 }
+    { "q": "Ki faktè ki fè popilasyon diminye?", "a": ["Predatè, maladi, mank manje", "Sèlman maladi", "Sèlman predatè", "Sèlman eleman abiotik"], "correct": 0 },
+    { "q": "Ki ekosistèm ki gen dlo sèl?", "a": ["Oseyan", "Lac", "Rivyè", "Forè"], "correct": 0 },
+    { "q": "Ki relasyon ant espès nan kad ekosistèm?", "a": ["Predasyon, konpetisyon, mutualism", "Sèlman konpetisyon", "Sèlman predasyon", "Sèlman mutualism"], "correct": 0 }
   ]
 }
