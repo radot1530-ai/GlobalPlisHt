@@ -1,37 +1,66 @@
 {
-  "1": [
-    { "q": "Ki pati nan selil ki kontwole tout aktivite li?", "a": ["Noyau", "Mitokondri", "Membran", "Ribozòm"], "correct": 0 },
-    { "q": "Ki molekil ki pote enfòmasyon jenetik?", "a": ["ADN", "ARN", "Pwoteyin", "Lipids"], "correct": 0 },
-    { "q": "Ki fonksyon mitokondri nan selil?", "a": ["Pwodiksyon enèji", "Sere ADN", "Kontwole repons selilè", "Synthesize pwoteyin"], "correct": 0 }
+  "jou_1": [
+    { "q": "Nan analiz matematik, ki sa limit (sin x / x) bay lè x ap pwoche 0?", "a": ["0", "1", "Enfini", "Pa egziste"], "correct": 1 },
+    { "q": "Ki sa 'Sistèm Limbik' la kontwole nan kò moun?", "a": ["Dijesyon", "Emosyon ak memwa", "Mouvman misk yo", "Respirasyon"], "correct": 1 },
+    { "q": "Ki lanne yo te dekouvri Amerik la (premye dekouvèt Ewopeyen)?", "a": ["1804", "1492", "1502", "1697"], "correct": 1 },
+    { "q": "Nan fizik, ki inite yo itilize pou mezire fòs?", "a": ["Joul", "Watt", "Newton", "Pascal"], "correct": 2 },
+    { "q": "Ki otè ki ekri lodyans 'Ti Sentaniz' la?", "a": ["Franketienne", "Justin Lhérisson", "Maurice Sixto", "Jean-Claude Martineau"], "correct": 2 },
+    { "q": "Ki sa yon vèb tranzitif mande?", "a": ["Yon sijè sèlman", "Yon konpleman objè", "Yon advèb", "Yon pwen de lèt"], "correct": 1 },
+    { "q": "Ki fòmil chimik gaz kabonik?", "a": ["O2", "CO2", "H2O", "CH4"], "correct": 1 }
   ],
-  "2": [
-    { "q": "Ki nivo òganizasyon ki pi piti nan òganis vivan?", "a": ["Selil", "Tisi", "Ògan", "Sistèm"], "correct": 0 },
-    { "q": "Ki tisi ki pèmèt mouvman nan zo?", "a": ["Tisi miskilè", "Tisi nève", "Tisi epitelial", "Tisi konektif"], "correct": 0 },
-    { "q": "Ki ògàn nan sistèm respiratwa ki fè echanj gaz?", "a": ["Poumon", "Kè", "Fwa", "Ren"], "correct": 0 }
+  "jou_2": [
+    { "q": "Ki valè derive fonksyon f(x) = x^2 ?", "a": ["x", "2x", "x^2", "2"], "correct": 1 },
+    { "q": "Ki kote ADN nan ye nan yon selil ekaryòt?", "a": ["Nan sitoplas la", "Nan nwayo a", "Nan manbran an", "Nan ribozòm lan"], "correct": 1 },
+    { "q": "Ki sa 'Espiralis' la ye nan literati ayisyen?", "a": ["Yon jan mizik", "Yon mouvman literè", "Yon kalite powèm", "Yon figi estil"], "correct": 1 },
+    { "q": "Nan filozofi, ki sa 'EPISTEMOLOJI' etidye?", "a": ["Bondye", "Konesans syantifik", "Bote", "Moral"], "correct": 1 },
+    { "q": "Ki valè akselerasyon gravite (g) sou latè (apeprè)?", "a": ["5 m/s²", "15 m/s²", "9.8 m/s²", "0 m/s²"], "correct": 2 },
+    { "q": "Ki mòn ki pi wo an Ayiti?", "a": ["Mòn Boutilyen", "Pik Lasèl", "Mòn Kabrit", "Pik Makaya"], "correct": 1 },
+    { "q": "Ki sa 'polisemi' vle di?", "a": ["Yon mo ak yon sèl sans", "Yon mo ak plizyè sans", "De mo ki sonnen menm jan", "Yon mo ki pa gen sans"], "correct": 1 }
   ],
-  "3": [
-    { "q": "Ki kalite selil ki fè fotosentèz?", "a": ["Plant selil", "Bakteri", "Zo selil", "Fonj selil"], "correct": 0 },
-    { "q": "Ki pigman ki responsab pou koulè vèt nan fèy?", "a": ["Chlorofil", "Melanin", "Kloròfil B", "Karotèn"], "correct": 0 },
-    { "q": "Ki faktè ki afekte fotosentèz?", "a": ["Limyè, dlo, CO2", "O2 sèlman", "Tè sèlman", "Sèlman tanperati"], "correct": 0 }
+  "jou_3": [
+    { "q": "Ki pati nan selil la ki responsab pou respirasyon selilè (enèji)?", "a": ["Mitokondri", "Vakyòl", "Nwayo", "Lizozòm"], "correct": 0 },
+    { "q": "Konbyen kote yon triyang ekilateral genyen ki egal?", "a": ["2", "0", "3", "4"], "correct": 2 },
+    { "q": "Ki sa 'Sosyoloji' etidye?", "a": ["Zetwal", "Sosyete ak relasyon imen", "Bèt sovaj", "Wòch"], "correct": 1 },
+    { "q": "Ki fòmil pou kalkile vitès yon kò?", "a": ["V = d * t", "V = d / t", "V = m * g", "V = t / d"], "correct": 1 },
+    { "q": "Nan literati, ki sa yon 'metafò' ye?", "a": ["Yon konparezon ak 'kou'", "Yon konparezon san mo konparezon an", "Yon egzajerasyon", "Yon iwoni"], "correct": 1 },
+    { "q": "Ki lanne premye konstitisyon Ayiti a te fèt?", "a": ["1804", "1805", "1806", "1844"], "correct": 1 },
+    { "q": "Ki eleman chimik ki gen senbòl 'Fe'?", "a": ["Fliyò", "Fè", "Fosfò", "Lò"], "correct": 1 }
   ],
-  "4": [
-    { "q": "Ki kalite jen ki pase soti nan paran bay pitit?", "a": ["Jen ereditè", "Jen anviwònman", "Jen aksidantèl", "Jen sentetik"], "correct": 0 },
-    { "q": "Ki fòmil ADN?", "a": ["Double helix", "Single strand", "Triple helix", "Loop"], "correct": 0 },
-    { "q": "Ki ògàn ki ede nan dijesyon manje?", "a": ["Estomak", "Kè", "Poumon", "Ren"], "correct": 0 }
+  "jou_4": [
+    { "q": "Nan chimi, ki pH yon solisyon ki net genyen?", "a": ["0", "14", "7", "5"], "correct": 2 },
+    { "q": "Ki branch matematik ki etidye ang ak triyang?", "a": ["Aljèb", "Trigonomètri", "Jeometri", "Estatistik"], "correct": 1 },
+    { "q": "Ki sa 'Sikoanaliz' la eksplore nan sikoloji?", "a": ["Konsyan an sèlman", "Enkonsyan an", "Zo nan kò a", "Mete dlo nan je"], "correct": 1 },
+    { "q": "Ki jan yo rele yon liy nan yon powèm?", "a": ["Vè", "Estwòf", "Paragraf", "Fraz"], "correct": 0 },
+    { "q": "Ki moun ki te dekouvri vaksen kont rabi (rabies)?", "a": ["Einstein", "Louis Pasteur", "Newton", "Darwin"], "correct": 1 },
+    { "q": "Ki fòs ki kenbe nou atache sou tè a?", "a": ["Fòs mayetik", "Fòs gravitasyonèl", "Fòs elektrik", "Fòs van"], "correct": 1 },
+    { "q": "Ki sa 'Dezafi' reprezante nan literati?", "a": ["Yon powèm", "Premye woman kreyòl la", "Yon istwa kout", "Yon lodyans"], "correct": 1 }
   ],
-  "5": [
-    { "q": "Ki sistèm ki pote san nan tout kò a?", "a": ["Sèvo kadyovaskilè", "Sistèm respiratwa", "Sistèm dijestif", "Sistèm ekskretè"], "correct": 0 },
-    { "q": "Ki san ki pote oksijèn?", "a": ["San oksijene", "San dezoksijene", "San limfatik", "San ble"], "correct": 0 },
-    { "q": "Ki kalite veso san ki pote san soti nan kè?", "a": ["Atè", "Vèn", "Kapilè", "Tib"], "correct": 0 }
+  "jou_5": [
+    { "q": "Ki sa yon solisyon 'asid' bay lè w mezire pH li?", "a": ["Pi gwo pase 7", "Egal ak 7", "Pi piti pase 7", "14"], "correct": 2 },
+    { "q": "Ki pati nan san an ki pote oksijèn?", "a": ["Globil blan", "Globil wouj", "Plasma", "Plakèt"], "correct": 1 },
+    { "q": "Nan filozofi, ki sa 'Estetik' etidye?", "a": ["Moral la", "Lanmò", "Bote ak la", "Lojik"], "correct": 2 },
+    { "q": "Ki fòmil yon liy dwat nan matematik (fòm jeneral)?", "a": ["y = ax^2 + b", "y = ax + b", "y = a/x", "y = sin x"], "correct": 1 },
+    { "q": "Ki gwo lennmi sistèm iminitè a nan maladi SIDA?", "a": ["Globil wouj", "Lenfosit T4", "Bakteri", "Po moun"], "correct": 1 },
+    { "q": "Ki sa figi estil 'iperbòl' la fè?", "a": ["Li pase moun nan betiz", "Li egzajere yon lide", "Li konpare de bagay", "Li di kontrè a"], "correct": 1 },
+    { "q": "Ki peyi ki te okipe Ayiti soti 1915 rive 1934?", "a": ["Frans", "Espay", "Etazini", "Angletè"], "correct": 2 }
   ],
-  "6": [
-    { "q": "Ki fòm seleksyon natirèl ki chwazi moun ki pi adapte?", "a": ["Seleksyon direksyonèl", "Seleksyon stabilizan", "Seleksyon divèsifye", "Seleksyon o aza"], "correct": 0 },
-    { "q": "Ki moun ki te dekouvri mikwòb?", "a": ["Anton van Leeuwenhoek", "Charles Darwin", "Louis Pasteur", "Gregor Mendel"], "correct": 0 },
-    { "q": "Ki kalite adaptasyon nan plant pou reziste sechrès?", "a": ["Adaptasyon morfolojik", "Adaptasyon konpòtman", "Adaptasyon fonksyonèl", "Adaptasyon jenetik"], "correct": 0 }
+  "jou_6": [
+    { "q": "Ki sa 'Fotosentèz' la pwodui kòm gaz?", "a": ["CO2", "Azòt", "Oksijèn", "Idwojèn"], "correct": 2 },
+    { "q": "Nan lojik, ki sa yon 'Silojis' ye?", "a": ["Yon kalite pwezi", "Yon rezònman ak de premis ak yon konklizyon", "Yon manti", "Yon figi estil"], "correct": 1 },
+    { "q": "Ki sa 'mòfofonoloji' etidye?", "a": ["Sans mo yo", "Relasyon ant son ak fòm mo yo", "Istwa lang lan", "Kijan pou w pale nan radyo"], "correct": 1 },
+    { "q": "Ki fòmil enèji sinetik?", "a": ["Ec = m * g * h", "Ec = 1/2 * m * v^2", "Ec = F * d", "Ec = P / t"], "correct": 1 },
+    { "q": "Ki non yon veso san ki mennen san tounen nan kè?", "a": ["Atè", "Kapilè", "Vèn", "Aòt"], "correct": 2 },
+    { "q": "Ki fòmil dlo (chimik)?", "a": ["H2O", "CO2", "NaCl", "O2"], "correct": 0 },
+    { "q": "Ki pi gwo oseyan sou latè?", "a": ["Oseyan Atlantik", "Oseyan Pasifik", "Oseyan Endyen", "Oseyan Antatik"], "correct": 1 }
   ],
-  "7": [
-    { "q": "Ki faktè ki fè popilasyon diminye?", "a": ["Predatè, maladi, mank manje", "Sèlman maladi", "Sèlman predatè", "Sèlman eleman abiotik"], "correct": 0 },
-    { "q": "Ki ekosistèm ki gen dlo sèl?", "a": ["Oseyan", "Lac", "Rivyè", "Forè"], "correct": 0 },
-    { "q": "Ki relasyon ant espès nan kad ekosistèm?", "a": ["Predasyon, konpetisyon, mutualism", "Sèlman konpetisyon", "Sèlman predasyon", "Sèlman mutualism"], "correct": 0 }
+  "jou_7": [
+    { "q": "Nan estatistik, ki sa 'mòd' yon seri done ye?", "a": ["Mwayèn nan", "Done ki parèt plis fwa a", "Done ki nan mitan an", "Diferans ant pi gwo ak pi piti"], "correct": 1 },
+    { "q": "Ki sa 'personifikasyon' fè?", "a": ["Li touye moun", "Li bay bagay karakteristik moun", "Li konpare de moun", "Li dekri yon kote"], "correct": 1 },
+    { "q": "Ki sistèm nan kò a ki responsab pou voye mesaj vit nan sèvo a?", "a": ["Sistèm dijestif", "Sistèm nève", "Sistèm zo", "Sistèm respiratwa"], "correct": 1 },
+    { "q": "Ki lanne Ayiti te pran endepandans li?", "a": ["1791", "1803", "1804", "1844"], "correct": 2 },
+    { "q": "Ki sa 'pwen de lèt' (:) sèvi fè?", "a": ["Poze keksyon", "Anonse yon lis oswa esplikasyon", "Esklamasyon", "Fini yon fraz"], "correct": 1 },
+    { "q": "Nan fizik, ki sa 'pouvwa' (Power) mezire?", "a": ["Travay ki fèt pa inite de tan", "Fòs ki rale yon kò", "Vitès limyè", "Chalè"], "correct": 0 },
+    { "q": "Ki otè ki ekri 'Gouverneurs de la Rosée'?", "a": ["Franketienne", "Jacques Roumain", "Jacques Stephen Alexis", "Dany Laferrière"], "correct": 1 },
+    { "q": "Ki sa pH 14 reprezante?", "a": ["Yon asid fò", "Net", "Yon baz fò", "Dlo pi"], "correct": 2 }
   ]
 }
