@@ -806,3 +806,140 @@ body {
 .menu-overlay.show {
   display: block;
 }
+
+
+
+/* Konfigirasyon jeneral pou kat aplikasyon an */
+.app-store-card {
+  max-width: 450px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  margin: 20px auto;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  border: 1px solid #eaeaea;
+  transition: transform 0.3s ease;
+}
+
+.app-store-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Seksyon anwo (Logo ak Tit) */
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.app-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: #f0f0f0; /* Koulè si imaj la poko chaje */
+}
+
+.app-info {
+  flex: 1;
+}
+
+.app-title {
+  margin: 0 0 4px 0;
+  font-size: 22px;
+  color: #1f2937;
+  font-weight: bold;
+}
+
+.app-developer {
+  color: #059669; /* Yon bèl vèt pou non devlopè a */
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.app-stats {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+}
+
+.app-rating {
+  color: #fbbf24; /* Koulè jòn pou zetwal yo */
+}
+
+.app-rating b {
+  color: #4b5563; /* Nimewo a pi fonse */
+  margin-right: 4px;
+}
+
+/* Seksyon deskripsyon */
+.app-description {
+  color: #4b5563;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  background-color: #f9fafb;
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 4px solid #059669;
+}
+
+/* Seksyon anba (Bouton ak lyen) */
+.app-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-download {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background-color: #059669; /* Koulè vèt prensipal la */
+  color: white;
+  padding: 14px 24px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-download:hover {
+  background-color: #047857; /* Vin yon ti jan pi fonse sou hover */
+}
+
+.btn-download:active {
+  transform: scale(0.98); /* Efè klike a */
+}
+
+.download-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.secure-text {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* Responsive pou ekran piti */
+@media (max-width: 480px) {
+  .app-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .app-stats {
+    justify-content: center;
+  }
+}
