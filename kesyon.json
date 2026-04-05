@@ -1,5 +1,5 @@
 {
-  "jou_1": [
+  "1": [
     { "q": "Nan analiz matematik, ki sa limit (sin x / x) bay lè x ap pwoche 0?", "a": ["0", "1", "Enfini", "Pa egziste"], "correct": 1 },
     { "q": "Ki sa 'Sistèm Limbik' la kontwole nan kò moun?", "a": ["Dijesyon", "Emosyon ak memwa", "Mouvman misk yo", "Respirasyon"], "correct": 1 },
     { "q": "Ki lanne yo te dekouvri Amerik la (premye dekouvèt Ewopeyen)?", "a": ["1804", "1492", "1502", "1697"], "correct": 1 },
@@ -8,7 +8,7 @@
     { "q": "Ki sa yon vèb tranzitif mande?", "a": ["Yon sijè sèlman", "Yon konpleman objè", "Yon advèb", "Yon pwen de lèt"], "correct": 1 },
     { "q": "Ki fòmil chimik gaz kabonik?", "a": ["O2", "CO2", "H2O", "CH4"], "correct": 1 }
   ],
-  "jou_2": [
+  "2": [
     { "q": "Ki valè derive fonksyon f(x) = x^2 ?", "a": ["x", "2x", "x^2", "2"], "correct": 1 },
     { "q": "Ki kote ADN nan ye nan yon selil ekaryòt?", "a": ["Nan sitoplas la", "Nan nwayo a", "Nan manbran an", "Nan ribozòm lan"], "correct": 1 },
     { "q": "Ki sa 'Espiralis' la ye nan literati ayisyen?", "a": ["Yon jan mizik", "Yon mouvman literè", "Yon kalite powèm", "Yon figi estil"], "correct": 1 },
@@ -17,7 +17,7 @@
     { "q": "Ki mòn ki pi wo an Ayiti?", "a": ["Mòn Boutilyen", "Pik Lasèl", "Mòn Kabrit", "Pik Makaya"], "correct": 1 },
     { "q": "Ki sa 'polisemi' vle di?", "a": ["Yon mo ak yon sèl sans", "Yon mo ak plizyè sans", "De mo ki sonnen menm jan", "Yon mo ki pa gen sans"], "correct": 1 }
   ],
-  "jou_3": [
+  "3": [
     { "q": "Ki pati nan selil la ki responsab pou respirasyon selilè (enèji)?", "a": ["Mitokondri", "Vakyòl", "Nwayo", "Lizozòm"], "correct": 0 },
     { "q": "Konbyen kote yon triyang ekilateral genyen ki egal?", "a": ["2", "0", "3", "4"], "correct": 2 },
     { "q": "Ki sa 'Sosyoloji' etidye?", "a": ["Zetwal", "Sosyete ak relasyon imen", "Bèt sovaj", "Wòch"], "correct": 1 },
@@ -26,7 +26,7 @@
     { "q": "Ki lanne premye konstitisyon Ayiti a te fèt?", "a": ["1804", "1805", "1806", "1844"], "correct": 1 },
     { "q": "Ki eleman chimik ki gen senbòl 'Fe'?", "a": ["Fliyò", "Fè", "Fosfò", "Lò"], "correct": 1 }
   ],
-  "jou_4": [
+  "4": [
     { "q": "Nan chimi, ki pH yon solisyon ki net genyen?", "a": ["0", "14", "7", "5"], "correct": 2 },
     { "q": "Ki branch matematik ki etidye ang ak triyang?", "a": ["Aljèb", "Trigonomètri", "Jeometri", "Estatistik"], "correct": 1 },
     { "q": "Ki sa 'Sikoanaliz' la eksplore nan sikoloji?", "a": ["Konsyan an sèlman", "Enkonsyan an", "Zo nan kò a", "Mete dlo nan je"], "correct": 1 },
@@ -35,7 +35,7 @@
     { "q": "Ki fòs ki kenbe nou atache sou tè a?", "a": ["Fòs mayetik", "Fòs gravitasyonèl", "Fòs elektrik", "Fòs van"], "correct": 1 },
     { "q": "Ki sa 'Dezafi' reprezante nan literati?", "a": ["Yon powèm", "Premye woman kreyòl la", "Yon istwa kout", "Yon lodyans"], "correct": 1 }
   ],
-  "jou_5": [
+  "5": [
     { "q": "Ki sa yon solisyon 'asid' bay lè w mezire pH li?", "a": ["Pi gwo pase 7", "Egal ak 7", "Pi piti pase 7", "14"], "correct": 2 },
     { "q": "Ki pati nan san an ki pote oksijèn?", "a": ["Globil blan", "Globil wouj", "Plasma", "Plakèt"], "correct": 1 },
     { "q": "Nan filozofi, ki sa 'Estetik' etidye?", "a": ["Moral la", "Lanmò", "Bote ak la", "Lojik"], "correct": 2 },
@@ -44,7 +44,7 @@
     { "q": "Ki sa figi estil 'iperbòl' la fè?", "a": ["Li pase moun nan betiz", "Li egzajere yon lide", "Li konpare de bagay", "Li di kontrè a"], "correct": 1 },
     { "q": "Ki peyi ki te okipe Ayiti soti 1915 rive 1934?", "a": ["Frans", "Espay", "Etazini", "Angletè"], "correct": 2 }
   ],
-  "jou_6": [
+  "6": [
     { "q": "Ki sa 'Fotosentèz' la pwodui kòm gaz?", "a": ["CO2", "Azòt", "Oksijèn", "Idwojèn"], "correct": 2 },
     { "q": "Nan lojik, ki sa yon 'Silojis' ye?", "a": ["Yon kalite pwezi", "Yon rezònman ak de premis ak yon konklizyon", "Yon manti", "Yon figi estil"], "correct": 1 },
     { "q": "Ki sa 'mòfofonoloji' etidye?", "a": ["Sans mo yo", "Relasyon ant son ak fòm mo yo", "Istwa lang lan", "Kijan pou w pale nan radyo"], "correct": 1 },
@@ -53,7 +53,7 @@
     { "q": "Ki fòmil dlo (chimik)?", "a": ["H2O", "CO2", "NaCl", "O2"], "correct": 0 },
     { "q": "Ki pi gwo oseyan sou latè?", "a": ["Oseyan Atlantik", "Oseyan Pasifik", "Oseyan Endyen", "Oseyan Antatik"], "correct": 1 }
   ],
-  "jou_7": [
+  "7": [
     { "q": "Nan estatistik, ki sa 'mòd' yon seri done ye?", "a": ["Mwayèn nan", "Done ki parèt plis fwa a", "Done ki nan mitan an", "Diferans ant pi gwo ak pi piti"], "correct": 1 },
     { "q": "Ki sa 'personifikasyon' fè?", "a": ["Li touye moun", "Li bay bagay karakteristik moun", "Li konpare de moun", "Li dekri yon kote"], "correct": 1 },
     { "q": "Ki sistèm nan kò a ki responsab pou voye mesaj vit nan sèvo a?", "a": ["Sistèm dijestif", "Sistèm nève", "Sistèm zo", "Sistèm respiratwa"], "correct": 1 },
