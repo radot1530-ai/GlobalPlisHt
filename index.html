@@ -337,43 +337,259 @@ footer{
   <!-- Search -->
   <input type="text" id="searchService" placeholder="Rechèch pwodui..." class="search-bar">
 
-<div class="app-store-card">
-  <div class="app-header">
-    <img src="image/ic_launcher_round.png" alt="Logo App" class="app-icon">
-    
-    <div class="app-info">
-      <h2 class="app-title">NS4 Support Plus</h2>
-      <span class="app-developer">NS4 Support Plus</span><br>
+
+  <style>
+  /* Kòd CSS pou style kat yo */
+
+  .pricing-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .app-store-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    padding: 25px;
+    flex: 1;
+    min-width: 300px;
+    max-width: 400px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+
+  .app-store-card:hover {
+    transform: translateY(-5px);
+  }
+
+  /* Style espesyal pou vèsyon Pro a */
+  .pro-card {
+    border: 2px solid #10b981;
+    background-color: #fafffc;
+  }
+
+  .pro-badge {
+    position: absolute;
+    top: 15px;
+    right: -35px;
+    background-color: #10b981;
+    color: white;
+    padding: 5px 40px;
+    transform: rotate(45deg);
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+
+  .app-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .app-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 14px;
+    object-fit: cover;
+    margin-right: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .app-info {
+    flex: 1;
+  }
+
+  .app-title {
+    margin: 0 0 5px 0;
+    font-size: 20px;
+    color: #1f2937;
+  }
+
+  .app-developer {
+    color: #6b7280;
+    font-size: 14px;
+  }
+
+  .app-stats {
+    font-size: 13px;
+    color: #4b5563;
+    margin-top: 5px;
+  }
+
+  .app-rating b { color: #f59e0b; }
+
+  .app-description {
+    font-size: 14px;
+    color: #4b5563;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+
+  .features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+    font-size: 14px;
+  }
+
+  .features-list li {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .price-tag {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+    color: #1f2937;
+  }
+
+  .price-tag.pro {
+    color: #10b981;
+  }
+
+  .app-actions {
+    text-align: center;
+  }
+
+  .btn-download {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    color: white;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-free {
+    background-color: #3b82f6;
+  }
+
+  .btn-free:hover { background-color: #2563eb; }
+
+  .btn-pro {
+    background-color: #10b981;
+  }
+
+  .btn-pro:hover { background-color: #059669; }
+
+  .download-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .secure-text {
+    display: block;
+    font-size: 12px;
+    color: #9ca3af;
+    margin-top: 10px;
+  }
+</style>
+<div class="pricing-container">
+
+  <div class="app-store-card">
+    <div class="app-header">
+      <img src="/image/IMG-20260329-WA0000_copy_192x192_1.jpg" alt="Logo App" class="app-icon" onerror="this.src='https://via.placeholder.com/70'">
       
-      <div class="app-stats">
-        <span class="app-rating">
-          <b>4.8</b> ★★★★☆
-        </span>
-        <span class="app-size"> • 15 MB</span>
-        <span class="app-version"> • v1.0.0</span>
+      <div class="app-info">
+        <h2 class="app-title">NS4 Support Plus</h2>
+        <span class="app-developer">Vèsyon Debaz</span><br>
+        <div class="app-stats">
+          <span class="app-rating"><b>4.6</b> ★★★★☆</span>
+          <span class="app-size"> • 10 MB</span>
+        </div>
       </div>
+    </div>
+
+    <div class="app-description">
+      Prepare egzamen ofisyèl ou avèk zouti debaz yo. Bon pou kòmanse revize chak jou.
+    </div>
+
+    <ul class="features-list">
+      <li>✅ Anviwon 700 kesyon baz</li>
+      <li>✅ Aksè ak koreksyon modèl egzamen : Matematik, Fizik, Anglè, Istwa, Art</li>
+      <li>✅ Aksè a defi kotidye </li>
+      <li>❌ Gen piblisite (Ads)</li>
+      <li>❌ Pa gen tout modèl egzamen ki disponib sou app la </li>
+      <li>❌ Pa gen leson, nòt fòmil enpòtan, fasil pou memorize</li>
+    </ul>
+
+    <div class="price-tag">Gratis</div>
+
+    <div class="app-actions">
+      <a href="NS4 Support Plus_Gratuit.apk" download class="btn-download btn-free">
+        <svg class="download-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        Telechaje Vèsyon Gratis (🤖)
+      </a>
+      <span class="secure-text">🔒 Telechajman Sekirize</span>
     </div>
   </div>
 
-  <div class="app-description">
-    <b>Deskripsyon :</b><br>
-    Aplikasyon sa a fèt pou ede elèv NS4 yo prepare egzamen ofisyèl yo avèk plis pase 2,000 kesyon. Li gen ladan l tout matyè yo, koreksyon ansyen egzamen leta yo, Nòt ak fòmil fasil pou memorize.
+  <div class="app-store-card pro-card">
+    <div class="pro-badge">PRO</div>
+    
+    <div class="app-header">
+      <img src="/image/IMG-20260329-WA0000_copy_192x192_1.jpg" alt="Logo App" class="app-icon" onerror="this.src='https://via.placeholder.com/70'">
+      
+      <div class="app-info">
+        <h2 class="app-title">NS4 Support Premium</h2>
+        <span class="app-developer">Vèsyon Konplè</span><br>
+        <div class="app-stats">
+          <span class="app-rating"><b>4.9</b> ★★★★★</span>
+          <span class="app-size"> • 15 MB</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-description">
+      Tout sa w bezwen pou w reyisi. Plis pase 4,000 kesyon ak ansyen egzamen leta yo rezoud!
+    </div>
+
+    <ul class="features-list">
+      <li>🌟 Tout 4,000+ kesyon yo</li>
+      <li>🌟 Koreksyon ansyen egzamen leta</li>
+      <li>🌟 San okenn piblisite</li>
+      <li>🌟 Nòt espesyal ak fòmil konplè</li>
+    </ul>
+
+    <div class="price-tag pro">50 HTG</div>
+
+    <div class="app-actions">
+      <a href="image/app-debug(1)_sign.apk" download class="btn-download btn-pro">
+        <svg class="download-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        Telechaje Vèsyon Pro (🤖)
+      </a>
+      <span class="secure-text">🔒 Peman an Sekirite | Telechajman Imedyat</span>
+    </div>
   </div>
 
-  <div class="app-actions">
-    <a href="image/NS4 Support Plus.apk" download class="btn-download">
-      <svg class="download-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-        <polyline points="7 10 12 15 17 10"></polyline>
-        <line x1="12" y1="15" x2="12" y2="3"></line>
-      </svg>
-      Telechaje APK ( Android 🤖 )
-    </a>
-    <span class="secure-text">🔒 Telechajman Sekirize</span>
-  </div>
 </div>
 
-  <!-- Categories -->
+ 
+
+ <!-- Categories -->
   <div class="category">
     <h2 class="tabo">Sponsorisé</h2>
     <div class="product-row" id="sponsoriseRow"></div>
