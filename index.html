@@ -17,283 +17,152 @@
 
 <body>
 
-<header class="navbar">
 
-  <!-- HEADER FIXE -->
-  <div class="header">
-    <button id="menuBtn">☰</button>
-    <button id="loginBtn" onclick="openLogin()"><h5 class="tabo">🔐login</h5></button>
+
+
+<!-------------DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD------>
+<header class="main-header">
+  <div class="header-top-bar">
+    <button id="menuBtn" class="nav-toggle" aria-label="Ouvri Menu">☰</button>
+    <div class="brand-container">
+      <img src="/image/1768017763381.png" alt="Global Plis Logo" class="main-logo" onerror="this.src='https://via.placeholder.com/150x40?text=Global+Plis'">
+    </div>
+<button id="loginBtn" class="login-pill" onclick="document.getElementById('authModal').style.display='flex'"><span>🔐</span> Enskri</button>
+
+
   </div>
 
-
-<!-- SIDE MENU -->
-<div id="sideMenu" class="side-menu">
-  <div class="menu-header">
-    <span>☰ Menu</span>
-    <button id="closeMenu">✕</button>
-  </div>
-
-  <div class="menu-content">
-
-    <div class="menu-section">
-      <h3>ℹ️ Apropos</h3>
-      <p>
-        Global Plus se yon platfòm polivalan ki bay sèvis   vann, achte, lwe kay,
-        epi mete sèvis yo sou entènèt fasilman. Objektif nou se
-        konekte tout moun ak opòtinite rapid.
-      </p>
+  <nav class="tabs-container">
+    <div class="tabs">
+      <button class="tab" data-tab="konkou">Konkou</button>
+      <button class="tab" data-tab="accueil">Imobilye</button>
+      <button class="tab" data-tab="productCategories">Store</button>
+      <button class="tab active" data-tab="sèv">Sèvis +</button>
     </div>
-
-    <div class="menu-section">
-      <h3>🚀 Global Plis enfini</h3>
-      <p>
-        Nou bay sèvis:
-        <br>• Òganizasyon Konkou 
-        <br>• Marketplace (achte & vann)
-        <br>• Immobilier (lwe / vann kay)
-        <br>• Pwomosyon pwodwi sponsorisé
-        <br>• Panier ak commande WhatsApp
-<!-- Bouton telechaje APK -->
-<a href="image/globalplis.apk" download class="buttons" style="display:inline-block; margin:20px; padding:12px 20px; background: darkorange; color:white; border-radius:8px; text-decoration:none; font-weight:bold; cursor:pointer;">
-  ⬇️ Telechaje APK
-</a>
-      </p>
-    </div>
-
-    <div class="menu-section">
-      <h3>📖 Kijan pou itilize sit la</h3>
-      <p>
-        1️⃣ Kreye kont oswa konekte<br>
-        2️⃣ Ajoute pwodui ou oswa chèche sa ou bezwen<br>
-        3️⃣ Ajoute nan panier<br>
-        4️⃣ Voye commande pa WhatsApp
-      </p>
-           <a href="https://wa.me/+50940488401"  target="blank" class="whatsapp-btn">💬 Ale sou WhatsApp(plis en fòmasyon)</a>
-    </div>
-
-    <div class="menu-section">
-      <h3>💡Pwosede yo </h3>
-      <p>
-        ✔ Pwodui sponsorisé parèt an premye<br>
-        ✔ Mete bon imaj pou vann pi vit<br>
-        ✔ Sèvi ak deskripsyon klè
-      </p>
-    </div>
-
-    <div class="menu-section">
-      <h3>📞 Kontak</h3>
-      <p>
-        WhatsApp: +509 40 48 84 01<br>
-        Email: storetechnologie9@email.com
-      </p>
-    </div>
-
-  </div>
-</div>
-
-<!-- OVERLAY -->
-<div id="menuOverlay" class="menu-overlay"></div>
   </nav>
 
-  <div class="logo-container">
-    <img src="/image/1768017763381.png" alt="KayLakay Logo" class="logo-img">
+  <div id="sideMenu" class="side-menu">
+    <div class="menu-header">
+      <span>☰ Menu Global Plis</span>
+      <button id="closeMenu" aria-label="Fèmen Menu">✕</button>
+    </div>
+
+    <div class="menu-content">
+      <!-- Seksyon Apropos -->
+      <div class="menu-section">
+        <h3>ℹ️ Apropos</h3>
+        <p>
+          Global Plus se yon platfòm polivalan ki bay sèvis vann, achte, lwe kay, 
+          epi mete sèvis yo sou entènèt fasilman. Objektif nou se konekte tout moun ak opòtinite rapid.
+        </p>
+      </div>
+
+      <!-- Seksyon Sèvis -->
+      <div class="menu-section">
+        <h3>🚀 Global Plis enfini</h3>
+        <p>
+          Nou bay sèvis:<br>
+          • Òganizasyon Konkou<br>
+          • Marketplace (achte & vann)<br>
+          • Immobilier (lwe / vann kay)<br>
+          • Pwomosyon pwodwi sponsorisé<br>
+          • Panier ak commande WhatsApp
+        </p>
+        <a href="image/globalplis.apk" download class="big-btn" style="text-decoration: none;">⬇️ Telechaje APK</a>
+      </div>
+
+      <!-- Seksyon Gid -->
+      <div class="menu-section">
+        <h3>📖 Kijan pou itilize sit la</h3>
+        <ol>
+          <li>Kreye kont oswa konekte</li>
+          <li>Ajoute pwodui ou oswa chèche sa ou bezwen</li>
+          <li>Ajoute nan panier</li>
+          <li>Voye commande pa WhatsApp</li>
+        </ol>
+        <a href="https://wa.me/+50940488401" target="_blank" class="big-btn" style="text-decoration: none;">💬 Ale sou WhatsApp (Plis enfòmasyon)</a>
+      </div>
+
+      <!-- Seksyon Pwosede -->
+      <div class="menu-section">
+        <h3>💡 Pwosede yo</h3>
+        <p>
+          ✔ Pwodui sponsorisé parèt an premye<br>
+          ✔ Mete bon imaj pou vann pi vit<br>
+          ✔ Sèvi ak deskripsyon klè
+        </p>
+      </div>
+
+      <!-- Seksyon Kontak -->
+      <div class="menu-section footer-contact">
+        <h3>📞 Kontak</h3>
+        <p>
+          WhatsApp: +509 40 48 84 01<br>
+          Email: storetechnologie9@email.com
+        </p>
+      </div>
+    </div>
   </div>
-
-  <nav class="tabs">
-    <button class="tab" data-tab="konkou">Konkou</button>
-    <button class="tab" data-tab="accueil">Imobilye</button>
-    <button class="tab active" data-tab="productCategories">Store</button>
-  </nav>
-
+  
+  <div id="menuOverlay" class="menu-overlay"></div>
 </header>
 
 <main>
-
-<!-- ================= KONKOU ================= -->
+  
+  
+  
+  
+  
+  <!-------------DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD------>
 <section id="konkou" class="tab-content">
-  <style>
+<section class="contest-section">
+  <div class="maintenance-card">
+    <div class="card-icon">⏳</div>
+    <h2>Pa gen konkou pou kounye a</h2>
+    <p>Pou moman sa a, pa gen okenn konkou aktif sou platfòm lan. Men, pa enkyete w, nou ap prepare bèl sipriz pou ou trè byento!</p>
+    
+    <div class="divider"></div>
+    
+    <p class="cta-text">Pandan w ap tann, pwofite dekouvri lòt ribrik nou yo:</p>
+    
+    <div class="card-actions">
+      <button class="btn-secondary" onclick="chanjeOnglet('accueil')">🏠 Ale nan Imobilye</button>
+      <button class="btn-secondary" onclick="chanjeOnglet('productCategories')">🛒 Vizite Store la</button>
+            <button class="btn-secondary" onclick="chanjeOnglet('sèv')">💻Swiv fòmasyon</button>
+    </div>
+  </div>
+</section>
 
 
-.container{
-  max-width:900px;
-  margin:auto;
-}
-header{
-  text-align:center;
-  margin-bottom:25px;
-}
-h1{
-  margin:0;
-  color: darkgoldenrod;
-}
-.card{
-  background:white;
-  border-radius:12px;
-  padding:15px 18px;
-  margin-bottom:12px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  box-shadow:0 4px 10px rgba(0,0,0,0.08);
-}
-.rank{
-  font-size:22px;
-  font-weight:bold;
-}
-.name{
-  flex:1;
-  margin-left:15px;
-}
-.score{
-  font-weight:bold;
-  color: darkgreen;
-}
-.gold{border-left:6px solid gold;}
-.silver{border-left:6px solid silver;}
-.bronze{border-left:6px solid #cd7f32;}
-footer{
-  text-align:center;
-  margin-top:30px;
-  font-size:13px;
-  color:#555;
-}
-</style>
-  
-    <h1>🏆 Klasman Ofisyèl GP+ Konkou</h1>
-    <p>Global Plis — Rezilta Final</p>
-   <!-- 1er -->  <section class="card gold">
-    <div class="rank">🏆 1er</div>
-    <div class="name">
-      <strong>71/80 tèks, 16/20 vòt</strong>
-      Kòd: GPK-038
-    </div>
-    <div class="score"><br>87/100</div>
-  </section>  <!-- 2e -->  <section class="card silver">
-    <div class="rank">🏆2e</div>
-    <div class="name">
-      <strong>Tèks : 74/80, vòt : 11/20</strong><br>
-      Kòd: AYT-051
-    </div>
-    <div class="score">85/100</div>
-  </section>  <!-- 3e -->  <section class="card bronze">
-    <div class="rank"> 🏆 3e</div>
-    <div class="name">
-      <strong>Tèks : 73/80, vòt :11/20</strong><br>
-      Kòd: AYT-053
-    </div>
-    <div class="score">84/100</div>
-  </section>  <!-- 4e -->  <section class="card">
-    <div class="rank"> 🏅 4e</div>
-    <div class="name">
-      <strong>Tèks : 63/80, vòt : 20/20</strong><br>
-      Kòd: GPK-013
-    </div>
-    <div class="score">83/100</div>
-  </section>  <!-- Ajoute lòt yo anba menm modèl la --> 
-  <!-- 4e -->  <section class="card">
-    <div class="rank"> 🏅5e</div>
-    <div class="name">
-      <strong>Tèks : 60/80, vòt : 20/20</strong><br>
-      Kòd: GPK-003
-    </div>
-    <div class="score">80/100</div>
-  </section> 
-  <section class="card">
-    <div class="rank"> 🎖️6e</div>
-    <div class="name">
-      <strong>Tèks : 64/80, vòt : 10/20</strong><br>
-      Kòd: GPK-030
-    </div>
-    <div class="score">74/100</div>
-  </section>
-  <section class="card">
-  <div class="rank"> 🎖️7e</div>
-  <div class="name">
-    <strong>Tèks : 59/80, vòt : 14/20</strong><br>
-    Kòd: GPK-002
-  </div>
-  <div class="score">73/100</div>
 </section>
-<section class="card">
-  <div class="rank"> 🏅8e</div>
-  <div class="name">
-    <strong>Tèks : 67/80, vòt : 03/20</strong><br>
-    Kòd: AYT-061
-  </div>  <div class="score">70/100</div>
-</section>
-  <section class="card">
-  <div class="rank"> 🏅9e</div>
-  <div class="name">
-    <strong>Tèks : 59/80, vòt : 10/20</strong><br>
-    Kòd: AYT-056
-  </div>
-  <div class="score">69/100</div>
-</section>
-  <section class="card">
-  <div class="rank"> 🎖️10e</div>
-  <div class="name">
-    <strong>Tèks : 64/80, vòt : 03/20</strong><br>
-    Kòd: GPK-024
-  </div>
-  <div class="score">67/100</div>
-</section>
-  <section class="card">
-  <div class="rank"> 11e</div>
-  <div class="name">
-    <strong>Tèks : 62/80, vòt : 05/20</strong><br>
-    Kòd: AYT-060
-  </div>
-  <div class="score">67/100</div>
-</section>
-  <section class="card">
-  <div class="rank"> 12e</div>
-  <div class="name">
-    <strong>Tèks : 60/80, vòt : 03/20</strong><br>
-    Kòd: GPK-012
-  </div>
-  <div class="score">63/100</div>
-</section>
-  <section class="card">
-    <div class="rank"> 13e</div>
-    <div class="name">
-      <strong>Tèks : 60/80, vòt : 03/20</strong><br>
-      Kòd: GPK-007
+
+
+
+
+<!-------------DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD------>
+  <section id="accueil" class="tab-content">
+    <div class="immo-header">
+      <h2>🏠 Jwenn Espas Rèv Ou</h2>
+      <p>Kay ak Teren nan pi bon pri sou mache a</p>
+      <div class="search-filter-box">
+        <input type="text" id="immoSearch" placeholder="Chèche yon zòn (egz: Taba)...">
+        <select id="typeFilter">
+          <option value="tout">Tout Kategori</option>
+          <option value="kay">Kay</option>
+          <option value="teren">Teren</option>
+        </select>
+      </div>
     </div>
-    <div class="score">62/100</div>
-  </section>
-  
-    <section class="card">
-    <div class="rank"> 14e</div>
-    <div class="name">
-      <strong>Tèks : 57/80, vòt : 05/20</strong><br>
-      Kòd: GPK-020
-    </div>
-    <div class="score">62/100</div>
-  </section>
-  
-    <section class="card">
-    <div class="rank"> 15e</div>
-    <div class="name">
-      <strong>Tèks : 56/80, vòt : 05/20</strong><br>
-      Kòd: GPK-009
-    </div>
-    <div class="score">61/100</div>
+    <div id="immo-list" class="immo-grid"></div>
   </section>
 
-  
-  <footer>
-    © 2026 Global Plus Konkou — Tout dwa rezève
-  </footer>
-                            </div>
-</section>
 
 
-<!-- ================= IMOBILYE ================= -->
-<section id="accueil" class="tab-content">
-</section>
 
-<!-- ================= STORE ================= -->  
-<section id="productCategories" class="tab-content store-section active">
+
+<!-------------DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD------>
+  <section id="productCategories" class="tab-content">
+
 
 <!-- LOGIN POPUP -->
 <div id="loginPopup" class="popups">
@@ -335,261 +204,10 @@ footer{
 
 
   <!-- Search -->
+
   <input type="text" id="searchService" placeholder="Rechèch pwodui..." class="search-bar">
 
-
-  <style>
-  /* Kòd CSS pou style kat yo */
-
-  .pricing-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 25px;
-    justify-content: center;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
-  .app-store-card {
-    background-color: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    padding: 25px;
-    flex: 1;
-    min-width: 300px;
-    max-width: 400px;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s ease;
-  }
-
-  .app-store-card:hover {
-    transform: translateY(-5px);
-  }
-
-  /* Style espesyal pou vèsyon Pro a */
-  .pro-card {
-    border: 2px solid #10b981;
-    background-color: #fafffc;
-  }
-
-  .pro-badge {
-    position: absolute;
-    top: 15px;
-    right: -35px;
-    background-color: #10b981;
-    color: white;
-    padding: 5px 40px;
-    transform: rotate(45deg);
-    font-size: 12px;
-    font-weight: bold;
-    text-transform: uppercase;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  }
-
-  .app-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-
-  .app-icon {
-    width: 70px;
-    height: 70px;
-    border-radius: 14px;
-    object-fit: cover;
-    margin-right: 15px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
-
-  .app-info {
-    flex: 1;
-  }
-
-  .app-title {
-    margin: 0 0 5px 0;
-    font-size: 20px;
-    color: #1f2937;
-  }
-
-  .app-developer {
-    color: #6b7280;
-    font-size: 14px;
-  }
-
-  .app-stats {
-    font-size: 13px;
-    color: #4b5563;
-    margin-top: 5px;
-  }
-
-  .app-rating b { color: #f59e0b; }
-
-  .app-description {
-    font-size: 14px;
-    color: #4b5563;
-    line-height: 1.5;
-    margin-bottom: 20px;
-  }
-
-  .features-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 20px 0;
-    font-size: 14px;
-  }
-
-  .features-list li {
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .price-tag {
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 15px;
-    color: #1f2937;
-  }
-
-  .price-tag.pro {
-    color: #10b981;
-  }
-
-  .app-actions {
-    text-align: center;
-  }
-
-  .btn-download {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px 20px;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: bold;
-    color: white;
-    transition: background-color 0.3s ease;
-  }
-
-  .btn-free {
-    background-color: #3b82f6;
-  }
-
-  .btn-free:hover { background-color: #2563eb; }
-
-  .btn-pro {
-    background-color: #10b981;
-  }
-
-  .btn-pro:hover { background-color: #059669; }
-
-  .download-icon {
-    width: 20px;
-    height: 20px;
-  }
-
-  .secure-text {
-    display: block;
-    font-size: 12px;
-    color: #9ca3af;
-    margin-top: 10px;
-  }
-</style>
-<div class="pricing-container">
-
-  <div class="app-store-card">
-    <div class="app-header">
-      <img src="/image/ic_launcher_round.png" alt="Logo App" class="app-icon" onerror="this.src='https://via.placeholder.com/70'">
-      
-      <div class="app-info">
-        <h2 class="app-title">NS4 Support Plus</h2>
-        <span class="app-developer">Vèsyon Debaz</span><br>
-        <div class="app-stats">
-          <span class="app-rating"><b>4.6</b> ★★★★☆</span>
-          <span class="app-size"> • 10 MB</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="app-description">
-      Prepare egzamen ofisyèl ou avèk zouti debaz yo. Bon pou kòmanse revize chak jou.
-    </div>
-
-    <ul class="features-list">
-      <li>✅ Anviwon 700 kesyon baz</li>
-      <li>✅ Aksè ak koreksyon modèl egzamen : Matematik, Fizik, Anglè, Istwa, Art</li>
-      <li>✅ Aksè a defi kotidye </li>
-      <li>❌ Gen piblisite (Ads)</li>
-      <li>❌ Pa gen tout modèl egzamen ki disponib sou app la </li>
-      <li>❌ Pa gen leson, nòt fòmil enpòtan, fasil pou memorize</li>
-    </ul>
-
-    <div class="price-tag">Gratis</div>
-
-    <div class="app-actions">
-      <a href="image/NS4 Support Plus_Gratuit.apk" download class="btn-download btn-free">
-        <svg class="download-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-          <polyline points="7 10 12 15 17 10"></polyline>
-          <line x1="12" y1="15" x2="12" y2="3"></line>
-        </svg>
-        Telechaje Vèsyon Gratis (🤖)
-      </a>
-      <span class="secure-text">🔒 Telechajman Sekirize</span>
-    </div>
-  </div>
-
-  <div class="app-store-card pro-card">
-    <div class="pro-badge">PRO</div>
-    
-    <div class="app-header">
-      <img src="/image/ic_launcher_round.png" alt="Logo App" class="app-icon" onerror="this.src='https://via.placeholder.com/70'">
-      
-      <div class="app-info">
-        <h2 class="app-title">NS4 Support Premium</h2>
-        <span class="app-developer">Vèsyon Konplè</span><br>
-        <div class="app-stats">
-          <span class="app-rating"><b>4.9</b> ★★★★★</span>
-          <span class="app-size"> • 15 MB</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="app-description">
-      Tout sa w bezwen pou w reyisi. Plis pase 4,000 kesyon ak ansyen egzamen leta yo rezoud!
-    </div>
-
-    <ul class="features-list">
-      <li>🌟 Tout 4,000+ kesyon yo</li>
-      <li>🌟 Koreksyon ansyen egzamen leta</li>
-      <li>🌟 San okenn piblisite</li>
-      <li>🌟 Nòt espesyal ak fòmil konplè</li>
-    </ul>
-
-    <div class="price-tag pro">50 HTG</div>
-
-    <div class="app-actions">
-      <a href="image/NS4 Support Plus.apk" download class="btn-download btn-pro">
-        <svg class="download-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-          <polyline points="7 10 12 15 17 10"></polyline>
-          <line x1="12" y1="15" x2="12" y2="3"></line>
-        </svg>
-        Telechaje Vèsyon Pro (🤖)
-      </a>
-      <span class="secure-text">🔒 Peman an Sekirite | Telechajman Imedyat</span>
-    </div>
-  </div>
-
-</div>
-
- 
-
- <!-- Categories -->
+  <!-- Categories -->
   <div class="category">
     <h2 class="tabo">Sponsorisé</h2>
     <div class="product-row" id="sponsoriseRow"></div>
@@ -603,6 +221,10 @@ footer{
     <div id="spinner" class="spinner"></div>
 </div>
   </div>
+
+
+
+
 
   <div class="category">
     <h2 class="tabo">Immobilier</h2>
@@ -634,21 +256,118 @@ footer{
     <div id="totalPrice">Total: 0 HTG</div>
     <button id="whatsappBtn">Voye pa WhatsApp</button>
   </div>
-  
+  </section>
 
+
+
+
+<!-------------DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD------>
+<section id="sèv" class="tab-content active">
+
+    <div class="slider-container">
+        <div class="slider">
+            <div class="slides" id="slides">
+                </div>
+
+            <button class="slider-btn" id="prev" aria-label="Imaj anvan">&#10094;</button>
+            <button class="slider-btn" id="next" aria-label="Imaj swivan">&#10095;</button>
+
+            <div id="dots" class="dots-container"></div>
+        </div>
+    </div>
+
+
+  <section class="course-section" style="padding: 20px;">
+    <div class="course-grid" id="courseWrapper" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;"></div>
+  </section>
 </section>
-<!--- PATI GENERAL ---->
-<footer class="footer">
-  <h5>© 2025 Kay & Sèvis & Acha . Global Plis enfini Ht . MFU</h5>
-</footer>
+
 
 </main>
 
+
+
+
+
+<!-------------DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD------>
+<footer class="footer-container">
+  <div class="footer-content">
+    <div class="footer-section">
+      <h3>Global Plis +∞</h3>
+      <p style="font-style: italic; color: #fff;">"Nou kwè teknoloji se youn nan fason ki ka fè Ayiti amelyore, lè nou bay jèn yo zouti pou yo avanse."</p>
+    </div>
+    <div class="footer-section">
+      <h3>Sa Nou Ofri</h3>
+      <ul>
+        <li><span>🎓</span> <a href="#">NS4 Support Plus</a></li>
+        <li><span>🏗️</span> <a href="#">Immobilier</a></li>
+        <li><span>🛒</span> <a href="#">E-commerce</a></li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h3>Konekte Ak Nou</h3>
+      <div class="social-icons-wrapper">
+        <a href="https://wa.me/+50940488401" target="_blank"><img src="/image/Screenshot_20260612-165809.png" alt="WA" onerror="this.src='https://via.placeholder.com/30'"></a>
+        <a href="https://www.instagram.com/globalplis?igsh=YjQzaXM3MnkzdTlx"><img src="/image/Screenshot_20260612-165727.png" alt="IG" onerror="this.src='https://via.placeholder.com/30'"></a>
+                <a href="https://www.facebook.com/globalplisht?mibextid=ZbWKwL"><img src="/image/Screenshot_20260612-164509.png" alt="Facebook" onerror="this.src='https://via.placeholder.com/30'"></a>
+                
+                <a href="tiktok.com/@globalplisht000"><img src="/image/Screenshot_20260612-171753.png" alt="Tiktok" onerror="this.src='https://via.placeholder.com/30'"></a>
+                
+                <a href="/NS4supportplus/telechaje/NS4 Support Plus.html"><img src="/image/IMG-20260329-WA0000_copy_192x192_1.jpg" alt="Ns4 Support Plus" onerror="this.src='https://via.placeholder.com/30'"></a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 Global Plis +∞. Fòme yon lòt jenerasyon pou Ayiti. Tout dwa rezève.</p>
+  </div>
+</footer>
+
+
+
+
+
+<!-------------DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD------>
+
 <script type="module" src="index.js"></script>
+<script type="module" src="essaie.js"></script>
 <script type="module" src="konkou.js"></script>
 <script src="data.js"></script>
 <script src="app.js"></script>
+<script>(function(s){s.dataset.zone='11236917',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 
+
+<div id="authModal" class="popups" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
+  <div style="background:#fff; padding:30px; border-radius:12px; width:90%; max-width:400px; text-align:center; position:relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+    <span onclick="document.getElementById('authModal').style.display='none'" style="position:absolute; right:15px; top:10px; cursor:pointer; font-size:24px; font-weight:bold; color:#666;">&times;</span>
+    
+    <h3 id="authTitle" style="color:#1e3f8a; margin-top:0;">Konekte</h3>
+    
+    <button id="googleAuthBtn" class="btn btn-google" style="width:100%; margin-bottom:20px; font-size:15px;">
+      <i class="fab fa-google"></i> Kontinye ak Google
+    </button>
+    
+    <div style="display:flex; align-items:center; margin-bottom:20px;">
+      <div style="flex:1; height:1px; background:#ccc;"></div>
+      <span style="padding:0 10px; color:#888; font-size:12px;">OSWA</span>
+      <div style="flex:1; height:1px; background:#ccc;"></div>
+    </div>
+    
+    <input type="text" id="authName" placeholder="Non konplè w" style="display:none; width:100%; padding:12px; margin-bottom:12px; border:1px solid #cbd5e1; border-radius:8px; box-sizing:border-box;">
+    
+    <input type="email" id="authEmail" placeholder="Imel ou" style="width:100%; padding:12px; margin-bottom:12px; border:1px solid #cbd5e1; border-radius:8px; box-sizing:border-box;">
+    
+    <input type="password" id="authPassword" placeholder="Modpas (6 karaktè min.)" style="width:100%; padding:12px; margin-bottom:20px; border:1px solid #cbd5e1; border-radius:8px; box-sizing:border-box;">
+    
+    <button id="manualAuthBtn" class="btn" style="background:#1e3f8a; color:white; width:100%; border:none;">Konekte</button>
+    
+    <p style="margin-top:20px; font-size:14px; color:#555;">
+      <span id="authToggleText">Ou poko gen kont?</span> 
+      <a href="#" id="toggleAuthMode" style="color:#ff7a3d; font-weight:bold; text-decoration:none;">Kreye youn kounye a</a>
+    </p>
+
+  </div>
+</div>
+<div id="toast" style="position:fixed; bottom:20px; right:20px; background:#333; color:#fff; padding:15px 25px; border-radius:5px; display:none; z-index:9999; text-align: center;"></div>
 
 
 </body>
