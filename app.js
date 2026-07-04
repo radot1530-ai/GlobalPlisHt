@@ -130,4 +130,19 @@ Lè enskripsyon fin valide n'ap voye kòd patisipan w lan  ba ou.
   const url = `https://wa.me/${40488401}?text=${encodeURIComponent(message)}`;
 
   window.open(url, "_blank");}
+
+
+function chanjeOnglet(tabDataValue) {
+    // 1. Jwenn bouton nan meni an ki gen menm data-tab ak sa nou vle a
+    const boutonMeni = document.querySelector(`.tab[data-tab="${tabDataValue}"]`);
+    
+    if (boutonMeni) {
+        // 2. Fè kòd la simulation yon klik sou bouton sa a otomatikman
+        boutonMeni.click();
+        
+        // 3. Monte paj la anlè nèt dousman pou moun lan ka wè onglè a louvri
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
   
