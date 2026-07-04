@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detay Kou a | Global Plis +∞</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* --- DESIGN GLOBAL PLIS +∞ --- */
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
+    .container { max-width: 800px; margin: 40px auto; padding: 20px; }
+    
+    /* Loading Spinner */
+    #loadingSpinner { text-align: center; padding: 60px 20px; color: #1e3f8a; background: #fff; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    
+    /* Kat Detay Kou a */
+    .course-detail-card { background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.06); border: 1px solid #f0f0f0; display: none; }
+    .course-detail-card img.banner { width: 100%; height: 350px; object-fit: cover; display: block; }
+    
+    .course-content { padding: 30px; }
+    .course-badge { display: inline-block; background-color: #e0f2fe; color: #0369a1; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; }
+    .course-title { font-size: 28px; color: #111; margin: 0 0 15px; font-weight: bold; line-height: 1.3; }
+    
+    .course-meta { display: flex; gap: 20px; font-size: 15px; color: #666; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid #eee; flex-wrap: wrap; }
+    .course-meta span i { color: #ff9800; margin-right: 6px; }
+    
+    .course-description-box { background: #f8fafc; padding: 20px; border-radius: 12px; margin-bottom: 25px; border-left: 4px solid #1e3f8a; }
+    .course-description-box h3 { margin-top: 0; color: #1e3f8a; font-size: 18px; }
+    .course-description-box p { color: #444; line-height: 1.6; margin-bottom: 0; font-size: 15px; }
+
+    /* Aksyon ak Pèman */
+    #actionSection { background: #fff; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 20px; text-align: center; }
+    
+    .btn { padding: 14px 24px; border-radius: 8px; font-size: 16px; font-weight: bold; text-align: center; cursor: pointer; border: none; transition: all 0.3s ease; display: inline-block; width: 100%; box-sizing: border-box; }
+    .btn-google { background-color: #db4437; color: white; box-shadow: 0 4px 12px rgba(219, 68, 55, 0.3); }
+    .btn-google:hover { transform: translateY(-3px); background-color: #c53929; }
+    .btn-pay { background-color: #ff7a3d; color: white; box-shadow: 0 4px 12px rgba(255, 122, 61, 0.3); }
+    .btn-pay:hover { transform: translateY(-3px); background-color: #e8682e; }
+    .btn-free { background-color: #10b981; color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+    .btn-free:hover { transform: translateY(-3px); background-color: #059669; }
+
+    /* Fòm Pèman ki jere pa JS */
+    .payment-input-group { margin: 15px 0; text-align: left; }
+    .payment-input-group label { display: block; font-weight: bold; margin-bottom: 8px; color: #333; }
+    .payment-input-group input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; box-sizing: border-box; }
+    
+    .payment-logos { display: flex; justify-content: center; gap: 15px; margin-top: 20px; align-items: center; }
+    .payment-logos img { height: 40px; border-radius: 8px; border: 1px solid #eee; padding: 2px; background: #fff; }
+
+    @media (max-width: 600px) {
+      .course-detail-card img.banner { height: 200px; }
+      .course-title { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div id="loadingSpinner">
+    <i class="fas fa-circle-notch fa-spin" style="font-size: 40px; margin-bottom: 15px;"></i>
+    <p style="font-size: 18px; font-weight: bold;">Ap chaje enfòmasyon kou a...</p>
+  </div>
+
+  <div class="course-detail-card" id="courseDetailCard">
+    <img id="kouImaj" class="banner" src="" alt="Imaj Kou a">
+    
+    <div class="course-content">
+      <span class="course-badge" id="kouBadge"></span>
+      <h1 class="course-title" id="kouTit"></h1>
+      
+      <div class="course-meta">
+        <span><i class="fas fa-clock"></i> <strong id="kouDire"></strong></span>
+        <span><i class="fas fa-chart-line"></i> <strong id="kouNivo"></strong></span>
+        <span><i class="fas fa-tag"></i> <strong id="kouPri" style="color: #1e3f8a; font-size: 16px;"></strong></span>
+      </div>
+
+      <div class="course-description-box">
+        <h3>🎯 Objektif Kou a</h3>
+        <p id="kouObjektif"></p>
+      </div>
+
+      <div class="course-description-box" style="border-left-color: #ff7a3d;">
+        <h3>📖 Deskripsyon ak Eksplikasyon</h3>
+        <p id="kouDeskripsyon"></p>
+      </div>
+
+      <div id="actionSection"></div>
+      
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+  // KONFIGIRASYON FIREBASE
+    const firebaseConfig = {
+  apiKey: "AIzaSyAgvH0CpF6tGISpfLw3JWJCT2beBG28wAM",
+  authDomain: "kaylakay-cdf64.firebaseapp.com",
+  databaseURL: "https://kaylakay-cdf64-default-rtdb.firebaseio.com/",
+  projectId: "kaylakay-cdf64",
+  storageBucket: "kaylakay-cdf64.appspot.com",
+  messagingSenderId: "663099511740",
+  appId: "1:663099511740:web:aeb6bddccee9666ff791b9",
+  measurementId: "G-JF9PNTTTG4"
+    // Mete done pa w yo la
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getDatabase(app);
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const courseId = urlParams.get('id');
+
+  const loadingSpinner = document.getElementById('loadingSpinner');
+  const courseDetailCard = document.getElementById('courseDetailCard');
+  const actionSection = document.getElementById('actionSection');
+
+  if (!courseId) {
+    window.location.href = "index.html"; // Voye l tounen si pa gen ID
+  }
+
+  // 1. Chaje Enfòmasyon Kou a nan Navigatè a
+  onValue(ref(db, `kou/${courseId}`), (snapshot) => {
+    if (!snapshot.exists()) {
+      loadingSpinner.innerHTML = "<p style='color:red;'>Kou sa pa disponib ankò.</p>";
+      return;
+    }
+
+    const kou = snapshot.val();
+    
+    // Mete done yo nan HTML la
+    document.getElementById('kouImaj').src = kou.imajUrl;
+    document.getElementById('kouBadge').innerText = kou.badge || "FÒMASYON";
+    document.getElementById('kouTit').innerText = kou.non;
+    document.getElementById('kouDire').innerText = kou.dire;
+    document.getElementById('kouNivo').innerText = kou.nivo;
+    document.getElementById('kouObjektif').innerText = kou.objektif;
+    document.getElementById('kouDeskripsyon').innerText = kou.deskripsyon || "Deskripsyon konplè kou sa ap ede w metrize domèn nan pafètman.";
+    
+    // Jere afichaj pri a
+    const isFree = (kou.pri == 0 || String(kou.pri).toLowerCase() === "gratis");
+    document.getElementById('kouPri').innerText = isFree ? "GRATIS" : `${kou.pri} HTG`;
+
+    // Retire Loading, Montre Kat la
+    loadingSpinner.style.display = "none";
+    courseDetailCard.style.display = "block";
+
+    // 2. Jere Aksyon Itilizatè a (Koneksyon / Pèman)
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        // ITILIZATÈ PA KONEKTE: Pa montre okenn done pèman nan navigatè a
+        actionSection.innerHTML = `
+          <h3 style="color: #333; margin-top: 0;">Ou dwe enskri pou swiv kou sa</h3>
+          <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Kreye yon kont Global Plis +∞ pou w ka jwenn aksè ak fòmasyon an oswa fè pèman an.</p>
+          <button id="loginBtn" class="btn btn-google"><i class="fab fa-google"></i> Konekte ak Google pou Enskri</button>
+        `;
+        document.getElementById('loginBtn').addEventListener('click', () => {
+          signInWithPopup(auth, new GoogleAuthProvider());
+        });
+      } else {
+        // ITILIZATÈ KONEKTE: Tcheke si l gen dwa sou kou a
+        verifyEnrollment(user.uid, kou, isFree);
+      }
+    });
+  });
+
+  function verifyEnrollment(userId, kou, isFree) {
+    onValue(ref(db, `enskripsyon/${userId}/${courseId}`), (snapshot) => {
+      const status = snapshot.exists() ? snapshot.val().estati : "poko";
+
+      if (status === "valide") {
+        actionSection.innerHTML = `
+          <div style="background: #ecfdf5; padding: 20px; border-radius: 8px; border: 1px solid #a7f3d0;">
+            <h3 style="color: #059669; margin: 0 0 10px 0;"><i class="fas fa-check-circle"></i> Enskripsyon w Valide!</h3>
+            <p style="margin-bottom: 15px;">Ou gentan gen aksè ak tout modil kou sa a.</p>
+            <a href="sal-de-klas.html?id=${courseId}" class="btn" style="background: #1e3f8a; color: white; text-decoration: none;">Antre nan Sal de Klas la</a>
+          </div>
+        `;
+      } else if (status === "ann_atant") {
+        actionSection.innerHTML = `
+          <div style="background: #fffbeb; padding: 20px; border-radius: 8px; border: 1px solid #fde68a;">
+            <h3 style="color: #d97706; margin: 0 0 10px 0;"><i class="fas fa-hourglass-half"></i> Pèman an anba verifikasyon</h3>
+            <p style="margin: 0;">Administratè yo ap verifye kòd tranzaksyon w lan. Aksè w la ap debloke trè byento.</p>
+          </div>
+        `;
+      } else {
+        // POKO ENSKRI
+        if (isFree) {
+          // KOU GRATIS: Sote pèman, anrejistre dirèk
+          actionSection.innerHTML = `
+            <h3 style="color: #1e3f8a;">Kou sa se kado!</h3>
+            <p>Klike anba a pou w ajoute kou sa nan kont ou imedyatman san w pa peye anyen.</p>
+            <button id="enrollFreeBtn" class="btn btn-free"><i class="fas fa-unlock"></i> Kòmanse Kou a Gratis</button>
+          `;
+          document.getElementById('enrollFreeBtn').addEventListener('click', () => {
+            set(ref(db, `enskripsyon/${userId}/${courseId}`), {
+              estati: "valide",
+              dat: new Date().toISOString(),
+              tip: "gratis"
+            });
+          });
+        } else {
+          // KOU PEYE: Montre fòm pèman ak Logo MonCash/NatCash
+        // Pati sa a ranplase seksyon KOU PEYE nan kou.html la
+actionSection.innerHTML = `
+  <div style="text-align: left;">
+    <h3 style="color: #1e3f8a; text-align: center; margin-top: 0;">Pèman Fòmasyon an</h3>
+    <p style="font-size: 14px; color: #555; text-align: center;">Fè yon transfè <strong>${kou.pri} HTG</strong> sou youn nan nimewo sa yo:</p>
+    
+    <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: center;">
+      <p style="margin: 5px 0;"><strong>MonCash:</strong> +509 3XXX-XXXX (Non W)</p>
+      <p style="margin: 5px 0;"><strong>NatCash:</strong> +509 4XXX-XXXX (Non W)</p>
+    </div>
+    
+    <div class="payment-input-group">
+      <label for="whatsappNum"><i class="fab fa-whatsapp" style="color:#25D366;"></i> Nimewo WhatsApp ou:</label>
+      <input type="text" id="whatsappNum" placeholder="+509 XXXX XXXX" required>
+    </div>
+
+    <div class="payment-input-group">
+      <label for="transCode">Kòd Tranzaksyon an (Trans. ID):</label>
+      <input type="text" id="transCode" placeholder="Egzanp: 1234567890" required>
+    </div>
+    
+    <button id="submitPaymentBtn" class="btn btn-pay"><i class="fas fa-paper-plane"></i> Soumèt Pèman an</button>
+  </div>
+`;
+
+document.getElementById('submitPaymentBtn').addEventListener('click', () => {
+  const code = document.getElementById('transCode').value.trim();
+  const whatsapp = document.getElementById('whatsappNum').value.trim();
+
+  if(code.length > 4 && whatsapp.length > 7) {
+    set(ref(db, `enskripsyon/${userId}/${courseId}`), {
+      estati: "ann_atant",
+      kod_tranzaksyon: code,
+      whatsapp: whatsapp, // Nou anrejistre nimewo a
+      montan: kou.pri,
+      dat: new Date().toISOString()
+    }).then(() => {
+      alert("Mèsi! Nou resevwa pèman w lan. Administratè a ap valide l byento.");
+      window.location.reload(); // Rechaje paj la pou l wè estati ann atant lan
+    });
+  } else {
+    alert("Tanpri mete yon kòd tranzaksyon ak yon nimewo WhatsApp ki valab.");
+  }
+});
+
+        }
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
