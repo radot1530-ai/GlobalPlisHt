@@ -1,6 +1,8 @@
-// 🔹 IMPORT FIREBASE
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { push, set, getDatabase, ref, onValue, runTransaction, remove, get } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+// 🔹 IMPORT FIREBASE (VÈSYON 10.7.1 POU PA GEN KONFLI AK KOU.HTML)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, push, set, onValue, remove, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import {getAuth, signInWithPopup, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail,GoogleAuthProvider
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 // 🔹 CONFIG FIREBASE
 const firebaseConfig = {
@@ -14,152 +16,187 @@ const firebaseConfig = {
   measurementId: "G-JF9PNTTTG4"
 };
 
-// 🔹 INITIALISATION
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
 /* ================= GLOBAL ================= */
 let currentUser = null;
 let allProducts = [];
 let cart = [];
+let isSignUpMode = false; // Pou konnen si se enskri y ap enskri oswa konekte
 
-/* ================= SPONSOR TRUE ROTATION ================= */
-let sponsorTimer = null;
+const loginBtn = document.getElementById("loginBtn");
+const adminPanel = document.getElementById("adminPanel");
+const authModal = document.getElementById("authModal");
 
-function startSponsorRotation() {
-  const row = document.getElementById("sponsoriseRow");
-  if (!row) return;
-  
-  if (sponsorTimer) clearInterval(sponsorTimer);
-  
-  let sponsors = allProducts
-    .filter(p => p.category === "Sponsorisé")
-    .sort((a, b) => b.premium - a.premium || b.time - a.time);
-  
-  if (sponsors.length === 0) {
-    row.innerHTML = "";
-    return;
-  }
-  
-  // ✅ preload sèlman 4 premye (pa tout lis la)
-  sponsors.slice(0, 2).forEach(p => {
-    const img = new Image();
-    img.src = p.img;
-  });
-  
-  function render(list) {
-    row.innerHTML = "";
-    
-    list.slice(0, 4).forEach(p => {
-      const card = document.createElement("div");
-      card.className = "product-card";
-      
-      // ❌ retire lazy loading pou slider
-      card.innerHTML = `
-        <img src="${p.img}">
-        <div>${p.name}</div>
-        <div>${p.price} HTG</div>
-        <button class="big-btn">Ajoute</button>
-      `;
-      
-      card.querySelector("button").onclick = () => addToCart(p);
-      
-      // ADMIN DELETE (kenbe lojik Code 2)
-      if (currentUser?.role === "admin") {
-        const del = document.createElement("button");
-        del.textContent = "❌";
-        del.classList.add("buttons");
-        del.onclick = () => deleteProduct(p.id);
-        card.appendChild(del);
-      }
-      
-      row.appendChild(card);
-    });
-  }
-  
-  render(sponsors);
-  
-  sponsorTimer = setInterval(() => {
-    const first = sponsors.shift();
-    sponsors.push(first);
-    render(sponsors);
-  }, 5000);
-}
-/* ================= SPINNER ================= */
-function showSpinner(show = true) {
-  document.querySelectorAll(".spinner").forEach(sp => {
-    sp.style.display = show ? "block" : "none";
-  });
-}
+/* ================= JERE SISTÈM KONEKSYON AN ================= */
 
-/* ================= LOGIN ================= */
-window.login = async () => {
-  const code = document.getElementById("code").value.trim();
-  if (!code) return alert("Antre kòd");
-  
-  if (code === "admin125") {
-    currentUser = { code, role: "admin" };
-    addBox.classList.remove("hidden");
-    adminBox.classList.remove("hidden");
-    alert("Admin konekte ✔️");
-  } else {
-    const snap = await get(ref(db, "users/" + code));
-    if (!snap.exists()) return alert("Code invalide");
-    
-    const role = snap.val().role || "user";
-    currentUser = { code, role };
-    
-    if (role === "user" || role === "premium") {
-      addBox.classList.remove("hidden");
+// Lè itilizatè a chanje ant "Konekte" ak "Kreye Kont" nan fòm nan
+document.getElementById("toggleAuthMode")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  isSignUpMode = !isSignUpMode;
+  document.getElementById("authTitle").innerText = isSignUpMode ? "Kreye yon Kont" : "Konekte";
+  document.getElementById("authName").style.display = isSignUpMode ? "block" : "none";
+  document.getElementById("manualAuthBtn").innerText = isSignUpMode ? "Enskri kounye a" : "Konekte";
+  document.getElementById("authToggleText").innerText = isSignUpMode ? "Ou gentan gen yon kont?" : "Ou poko gen kont?";
+  e.target.innerText = isSignUpMode ? "Konekte" : "Kreye youn kounye a";
+});
+
+// Konekte ak Google
+document.getElementById("googleAuthBtn")?.addEventListener("click", () => {
+  signInWithPopup(auth, provider).then(() => {
+    authModal.style.display = "none";
+  }).catch((error) => showToast("Erè Google: " + error.message));
+});
+
+// Konekte / Enskri ak Imel
+// Konekte / Enskri ak Imel
+document.getElementById("manualAuthBtn")?.addEventListener("click", () => {
+  const email = document.getElementById("authEmail").value.trim();
+  const pass = document.getElementById("authPassword").value.trim();
+  const name = document.getElementById("authName").value.trim();
+
+  if (!email || !pass) return showToast("Tanpri mete imel ak modpas ou.");
+  if (pass.length < 6) return showToast("Modpas la dwe gen omwen 6 karaktè.");
+
+  const btn = document.getElementById("manualAuthBtn");
+  btn.innerText = "Ap chaje...";
+  btn.disabled = true;
+
+  if (isSignUpMode) {
+    if (!name) { 
+      btn.innerText = "Enskri kounye a"; 
+      btn.disabled = false; 
+      return showToast("Tanpri mete non w."); 
     }
     
-    alert(`Login ✔️ (${role})`);
+    createUserWithEmailAndPassword(auth, email, pass)
+      .then(async (userCred) => {
+        // Voye imel verifikasyon an
+        await sendEmailVerification(userCred.user);
+        
+        // Sove non an nan Database la
+        await set(ref(db, `users/${userCred.user.uid}`), { non: name, email: email, role: "user", kreyeNan: Date.now() });
+        
+        // Fòse itilizatè a dekonekte pou l ka al verifye imel li anvan
+        await signOut(auth);
+        
+        authModal.style.display = "none";
+        showToast("Kont ou kreye! Tanpri tcheke bwat lèt ou (spam tou) pou verifye imel la.", 6000);
+        
+        // Retounen fòm nan sou mòd "Konekte" pou pwochen fwa a
+        document.getElementById("toggleAuthMode").click();
+      })
+      .catch(err => {
+        if (err.code === 'auth/email-already-in-use') {
+          showToast("Imel sa a gen yon kont deja.");
+        } else {
+          showToast("Erè: " + err.message);
+        }
+      })
+      .finally(() => { btn.innerText = "Enskri kounye a"; btn.disabled = false; });
+  } else {
+    signInWithEmailAndPassword(auth, email, pass)
+      .then(async (userCred) => {
+        // Tcheke si imel la verifye
+        if (!userCred.user.emailVerified) {
+          await signOut(auth);
+          showToast("Ou poko verifye imel ou. Tanpri tcheke mesaj nou te voye ba ou a.", 5000);
+          btn.innerText = "Konekte"; 
+          btn.disabled = false;
+          return;
+        }
+        authModal.style.display = "none"; 
+        showToast("Ou konekte ak siksè!");
+      })
+      .catch(err => {
+        showToast("Imel oswa modpas la pa bon.");
+      })
+      .finally(() => { 
+        if(btn.innerText === "Ap chaje...") {
+          btn.innerText = "Konekte"; 
+          btn.disabled = false; 
+        }
+      });
   }
-  
-  renderProducts();
-  renderUsers(); // ✅ Rele global
-};
+});
+
+// Dekonekte
+if (loginBtn) {
+  loginBtn.addEventListener("click", () => {
+    if (currentUser) {
+      if (confirm("Ou vle dekonekte?")) signOut(auth);
+    } else {
+      authModal.style.display = "flex";
+    }
+  });
+}
+
+// Tcheke tout tan si moun nan konekte (Sa aplike pou Google AK fòm manyèl la)
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    // Chèche non moun nan
+    let displayName = user.displayName || "Itilizatè";
+    const userRef = ref(db, `users/${user.uid}`);
+    const snap = await get(userRef);
+    
+    if (!snap.exists()) {
+      await set(userRef, { non: displayName, email: user.email, role: "user", kreyeNan: Date.now() });
+      currentUser = { uid: user.uid, role: "user", email: user.email };
+    } else {
+      const data = snap.val();
+      displayName = data.non || displayName; // Pran non manyèl la si l te kreye ak imel
+      currentUser = { uid: user.uid, role: data.role, email: user.email };
+    }
+
+    loginBtn.innerHTML = `<span>👤</span> Sòti (${displayName.split(" ")[0]})`;
+    if(adminPanel) adminPanel.style.display = (currentUser.role === "admin") ? "block" : "none";
+    
+    renderProducts();
+  } else {
+    currentUser = null;
+    loginBtn.innerHTML = `<span>🔐</span> Konekte`;
+    if(adminPanel) adminPanel.style.display = "none";
+    renderProducts();
+  }
+});
 
 
-/* ================= ADD PRODUCT ================= */
+/* ================= REST KÒD POU STORE LA (MENM JAN AN) ================= */
 window.addProduct = () => {
-  if (!currentUser) return alert("Ou pa konekte");
+  if (!currentUser || currentUser.role !== "admin") return showToast("Sèlman administratè a ki ka ajoute pwodui.");
+  const name = document.getElementById('pname').value.trim();
+  const price = document.getElementById('pprice').value.trim();
+  const desc = document.getElementById('description').value.trim();
+  const file = document.getElementById('pfile').files[0];
+  let category = document.getElementById('pcategory').value;
+  if (!name || !price || !desc || !file) return showToast("Tout chan yo oblije ranpli");
   
-  const name = pname.value.trim();
-  const price = pprice.value.trim();
-  const desc = description.value.trim();
-  const file = pfile.files[0];
-  let category = pcategory.value;
-  
-  if (!name || !price || !desc || !file) return alert("Champs vid");
-  
-  if (currentUser.role === "user" && category === "Sponsorisé") {
-    alert("Ou pa gen dwa Sponsorisé");
-    category = "Mache";
-  }
+  const btnSubmit = document.querySelector("#adminPanel button");
+  btnSubmit.innerText = "Ap chaje..."; btnSubmit.disabled = true;
   
   const reader = new FileReader();
   reader.onload = () => {
     push(ref(db, "products"), {
-      name,
-      price,
-      description: desc,
-      category,
-      img: reader.result,
-      user: currentUser.code,
-      premium: currentUser.role === "premium" || category === "Sponsorisé",
-      time: Date.now()
+      name, price, description: desc, category, img: reader.result, premium: category === "Sponsorisé", time: Date.now()
+    }).then(() => {
+      showToast("✅ Pwodui ajoute ak siksè!");
+      document.getElementById('pname').value = ""; document.getElementById('pprice').value = "";
+      document.getElementById('description').value = ""; document.getElementById('pfile').value = "";
     });
-    
-    pname.value = "";
-    pprice.value = "";
-    description.value = "";
-    pfile.value = "";
+    btnSubmit.innerText = "Ajoute Pwodui"; btnSubmit.disabled = false;
   };
   reader.readAsDataURL(file);
 };
 
-/* ================= CATEGORY RENDER ================= */
+window.deleteProduct = id => {
+  if (!currentUser || currentUser.role !== "admin") return;
+  if (confirm("Èske w sèten ou vle efase pwodui sa nèt?")) remove(ref(db, "products/" + id));
+};
+
+// 🔹 NAN JAVASCRIPT PRENSIPAL OU A
 function renderCategory(rowId, category, list = allProducts) {
   if (category === "Sponsorisé") return; // 🔥 PA RANN SPONSOR ISIT
   
@@ -174,15 +211,22 @@ function renderCategory(rowId, category, list = allProducts) {
     const card = document.createElement("div");
     card.className = "product-card";
     
+    // Nou kenbe menm HTML ou an, nou jis mete yon klas "click-to-view" ak cursor:pointer
     card.innerHTML = `
-      <img src="${p.img}" loading="lazy">
-      <div>${p.name}</div>
+      <img src="${p.img}" loading="lazy" class="click-to-view" style="cursor:pointer;" title="Klike pou wè detay">
+      <div class="click-to-view" style="cursor:pointer;">${p.name}</div>
       <div>${p.price} HTG</div>
       <button class="big-btn">Ajoute</button>
     `;
     
-    card.querySelector("button").onclick = () => addToCart(p);
+    // 🔹 Lojik pou klike sou imaj la oswa tit la
+    const goToProduct = () => window.location.href = `produit.html?id=${p.id}`;
+    card.querySelectorAll(".click-to-view").forEach(el => el.onclick = goToProduct);
     
+    // Bouton ajoute a rete menm jan an
+    card.querySelector("button.big-btn").onclick = () => addToCart(p);
+    
+    // Nou remete lojik ADMIN ou a ki te la anvan an
     if (currentUser?.role === "admin") {
       const del = document.createElement("button");
       del.textContent = "❌";
@@ -195,214 +239,121 @@ function renderCategory(rowId, category, list = allProducts) {
   });
 }
 
-/* ================= SEARCH ================= */
-function initSearch() {
-  const input = document.getElementById("searchService");
-  if (!input) return;
+// 🔹 POU SPONSOR A TOU
+let sponsorTimer = null;
+function startSponsorRotation() {
+  const row = document.getElementById("sponsoriseRow");
+  if (!row) return;
+  if (sponsorTimer) clearInterval(sponsorTimer);
   
-  input.addEventListener("input", e => {
-    const term = e.target.value.toLowerCase().trim();
-    
-    if (!term) return renderProducts();
-    
-    showSpinner(true);
-    
-    const filtered = allProducts.filter(p =>
-      p.name.toLowerCase().includes(term)
-    );
-    
-    ["macheRow", "immobilierRow", "abimanRow", "zoutiRow"]
-    .forEach(id => document.getElementById(id).innerHTML = "");
-    
-    const map = {
-      "Mache": "macheRow",
-      "Immobilier": "immobilierRow",
-      "Abiman & Tekstil": "abimanRow",
-      "Zouti": "zoutiRow"
-    };
-    
-    filtered.forEach(p => renderCategory(map[p.category], p.category, filtered));
-    
-    showSpinner(false);
-  });
+  let sponsors = allProducts.filter(p => p.category === "Sponsorisé").sort((a, b) => b.time - a.time);
+  if (sponsors.length === 0) { row.innerHTML = ""; return; }
+  
+  function render(list) {
+    row.innerHTML = "";
+    list.slice(0, 4).forEach(p => {
+      const card = document.createElement("div"); 
+      card.className = "product-card";
+      
+      card.innerHTML = `
+        <img src="${p.img}" class="click-to-view" style="cursor:pointer;" title="Klike pou wè detay">
+        <div class="click-to-view" style="cursor:pointer;">${p.name}</div>
+        <div>${p.price} HTG</div>
+        <button class="big-btn">Ajoute</button>
+      `;
+      
+      // 🔹 Lojik pou klike sou imaj la oswa tit la
+      const goToProduct = () => window.location.href = `produit.html?id=${p.id}`;
+      card.querySelectorAll(".click-to-view").forEach(el => el.onclick = goToProduct);
+
+      card.querySelector("button.big-btn").onclick = () => addToCart(p);
+      
+      // Lojik Admin pou sponsor a tou
+      if (currentUser?.role === "admin") {
+        const del = document.createElement("button"); 
+        del.textContent = "❌"; 
+        del.classList.add("buttons");
+        del.onclick = () => deleteProduct(p.id); 
+        card.appendChild(del);
+      }
+      
+      row.appendChild(card);
+    });
+  }
+  
+  render(sponsors);
+  sponsorTimer = setInterval(() => { const first = sponsors.shift(); sponsors.push(first); render(sponsors); }, 5000);
 }
 
-/* ================= DELETE ================= */
-window.deleteProduct = id => {
-  if (currentUser?.role !== "admin") return alert("Ou pa admin");
-  if (confirm("Supprimer ?")) remove(ref(db, "products/" + id));
-};
-
-/* ================= CART ================= */
-function addToCart(p) {
-  cart.push(p);
-  renderCart();
-}
-
-function renderCart() {
-  cartItems.innerHTML = "";
-  let total = 0;
-  
-  cart.forEach((p, i) => {
-    total += Number(p.price);
-    
-    const div = document.createElement("div");
-    div.innerHTML = `${p.name} (${p.price}) <button>X</button>`;
-    
-    div.querySelector("button").onclick = () => {
-      cart.splice(i, 1);
-      renderCart();
-    };
-    
-    cartItems.appendChild(div);
-  });
-  
-  totalPrice.innerText = "Total: " + total + " HTG";
-  cartCount.innerText = cart.length;
-}
-
-cartBtn.onclick = () => cartPopup.classList.toggle("show");
-
-whatsappBtn.onclick = () => {
-  if (cart.length === 0) return alert("Panier vid");
-  
-  let msg = "Bonjou, mwen vle kòmande:\n";
-  let total = 0;
-  
-  cart.forEach(p => {
-    msg += `${p.name} - ${p.price}\n`;
-    total += Number(p.price);
-  });
-  
-  msg += "Total: " + total;
-  window.open("https://wa.me/50940488401?text=" + encodeURIComponent(msg));
-};
-
-/* ================= RENDER PRODUCTS ================= */
 function renderProducts() {
-  showSpinner(true);
-  
+  document.querySelectorAll(".spinner").forEach(sp => sp.style.display = "block");
   onValue(ref(db, "products"), snap => {
     allProducts = [];
-    
-    if (snap.exists()) {
-      snap.forEach(s => {
-        allProducts.push({ id: s.key, ...s.val() });
-      });
-    }
-    
-    // 🔥 RANN LÒT KATEGORI SELMAN
-    renderCategory("macheRow", "Mache");
-    renderCategory("immobilierRow", "Immobilier");
-    renderCategory("abimanRow", "Abiman & Tekstil");
-    renderCategory("zoutiRow", "Zouti");
-    
-    // 🔥 SLIDER
+    if (snap.exists()) { snap.forEach(s => { allProducts.push({ id: s.key, ...s.val() }); }); }
+    renderCategory("macheRow", "Mache"); renderCategory("immobilierRow", "Immobilier");
+    renderCategory("abimanRow", "Abiman & Tekstil"); renderCategory("zoutiRow", "Zouti");
     startSponsorRotation();
-    
-    showSpinner(false);
+    document.querySelectorAll(".spinner").forEach(sp => sp.style.display = "none");
   });
 }
 
-/* ================= INIT ================= */
-window.addEventListener("DOMContentLoaded", () => {
-  renderProducts();
-  initSearch();
-});
+function addToCart(p) { cart.push(p); renderCart(); showToast(`${p.name} ajoute nan panyen w lan!`); }
 
-
-/* ================= LOGIN POPUP ================= */
-window.openLogin = () => {
-  document.getElementById("loginPopup").style.display = "flex";
-};
-
-window.closeLogin = () => {
-  document.getElementById("loginPopup").style.display = "none";
-};
-
-// Fèmen si klike deyò
-window.addEventListener("click", e => {
-  const popup = document.getElementById("loginPopup");
-  if (e.target === popup) popup.style.display = "none";
-});
-
-
-// MENU SYSTEM
-const menuBtn = document.getElementById("menuBtn");
-const sideMenu = document.getElementById("sideMenu");
-const closeMenu = document.getElementById("closeMenu");
-const overlay = document.getElementById("menuOverlay");
-
-// Open menu
-menuBtn.onclick = () => {
-  sideMenu.classList.add("show");
-  overlay.classList.add("show");
-};
-
-// Close menu bouton
-closeMenu.onclick = closeMenuFunc;
-
-// Close menu klik deyò
-overlay.onclick = closeMenuFunc;
-
-function closeMenuFunc() {
-  sideMenu.classList.remove("show");
-  overlay.classList.remove("show");
-}
-
-// TELECHAJE PAJ LA OTOMATIKMAN
-function downloadPage() {
-  const html = document.documentElement.outerHTML;
-
-  const blob = new Blob([html], { type: "text/html" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "globalplus_offline.html";
-  a.click();
-
-  URL.revokeObjectURL(url);
-}
-
-
-/* ================= ADMIN USERS ================= */
-async function renderUsers() {
-  if (currentUser?.role !== "admin") return;
-
-  const box = document.getElementById("usersBox");
-  if (!box) return;
-
-  box.innerHTML = "";
-
-  const snap = await get(ref(db, "users"));
-  if (!snap.exists()) return;
-
-  snap.forEach(u => {
+function renderCart() {
+  const cartItems = document.getElementById('cartItems'); const totalPrice = document.getElementById('totalPrice'); const cartCount = document.getElementById('cartCount');
+  cartItems.innerHTML = ""; let total = 0;
+  cart.forEach((p, i) => {
+    total += Number(p.price);
     const div = document.createElement("div");
-    div.innerHTML = `
-      ${u.key} (${u.val().role})
-      <button class="buttons">❌</button>
-    `;
+    div.innerHTML = `${p.name} (${p.price} HTG) <button style="color:red; cursor:pointer; border:none; background:none;">✖</button>`;
+    div.querySelector("button").onclick = () => { cart.splice(i, 1); renderCart(); };
+    cartItems.appendChild(div);
+  });
+  totalPrice.innerText = "Total: " + total + " HTG"; cartCount.innerText = cart.length;
+}
 
-    div.querySelector("button").onclick = () => {
-      if (confirm("Supprimer user?")) {
-        remove(ref(db, "users/" + u.key)).then(() => renderUsers());
-      }
-    };
+document.getElementById('cartBtn').onclick = () => document.getElementById('cartPopup').classList.toggle("show");
+document.getElementById('whatsappBtn').onclick = () => {
+  if (cart.length === 0) return showToast("Panyen an vid!");
+  let msg = "Bonjou, mwen vle kòmande sou Global Plis:\n\n"; let total = 0;
+  cart.forEach(p => { msg += `▪️ ${p.name} - ${p.price} HTG\n`; total += Number(p.price); });
+  msg += `\nTotal: ${total} HTG`; window.open("https://wa.me/50940488401?text=" + encodeURIComponent(msg));
+};
 
-    box.appendChild(div);
+const searchInput = document.getElementById("searchService");
+if (searchInput) {
+  searchInput.addEventListener("input", e => {
+    const term = e.target.value.toLowerCase().trim();
+    if (!term) return renderProducts();
+    const filtered = allProducts.filter(p => p.name.toLowerCase().includes(term));
+    ["macheRow", "immobilierRow", "abimanRow", "zoutiRow"].forEach(id => document.getElementById(id).innerHTML = "");
+    const map = { "Mache": "macheRow", "Immobilier": "immobilierRow", "Abiman & Tekstil": "abimanRow", "Zouti": "zoutiRow" };
+    filtered.forEach(p => renderCategory(map[p.category], p.category, filtered));
   });
 }
 
-window.addUser = async () => {
-  if (currentUser?.role !== "admin") return alert("Ou pa admin");
+window.addEventListener("DOMContentLoaded", renderProducts);
 
-  const code = prompt("Code user");
-  if (!code) return;
 
-  const role = prompt("Role: user/premium", "user");
+function showToast(message, duration = 3000) {
+    const toast = document.getElementById("toast");
+    toast.innerText = message;
+    toast.style.display = "block";
+    setTimeout(() => { toast.style.display = "none"; }, duration);
+}
 
-  await set(ref(db, "users/" + code), { role });
-  renderUsers();
+
+const menuBtn = document.getElementById('menuBtn');
+const closeMenu = document.getElementById('closeMenu');
+const sideMenu = document.getElementById('sideMenu');
+const menuOverlay = document.getElementById('menuOverlay');
+
+menuBtn.onclick = () => {
+  sideMenu.classList.add('active');
+  menuOverlay.classList.add('active');
+};
+
+closeMenu.onclick = () => {
+  sideMenu.classList.remove('active');
+  menuOverlay.classList.remove('active');
 };
