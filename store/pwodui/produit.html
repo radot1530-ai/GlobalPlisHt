@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css"> 
+  <title>Detay Pwodui - Global Plis</title>
+  <style>
+    /* Ti style siplemantè pou paj detay la */
+    .product-detail-container {
+      display: flex; flex-wrap: wrap; gap: 30px; max-width: 1000px; margin: 40px auto; padding: 20px;
+    }
+    .product-image-box { flex: 1; min-width: 300px; }
+    .product-image-box img { width: 100%; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .product-info-box { flex: 1; min-width: 300px; }
+    .product-title { font-size: 28px; font-weight: bold; margin-bottom: 10px; }
+    .product-price { font-size: 24px; color: #ff7a3d; margin-bottom: 20px; font-weight: bold; }
+    .product-desc { font-size: 16px; color: #555; line-height: 1.6; margin-bottom: 30px; }
+    .back-btn { display: inline-block; margin: 20px; text-decoration: none; color: #1e3f8a; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <a href="index.html" class="back-btn">⬅ Tounen nan Prensipal la</a>
+
+  <div id="loadingMessage" style="text-align:center; font-size:20px; margin-top:50px;">Ap chaje pwodui a...</div>
+  
+  <div class="product-detail-container" id="productDetail" style="display:none;">
+    <div class="product-image-box">
+      <img id="detailImg" src="" alt="Imaj pwodui">
+    </div>
+    <div class="product-info-box">
+      <h1 class="product-title" id="detailName">...</h1>
+      <div class="product-price" id="detailPrice">... HTG</div>
+      <p class="product-desc" id="detailDesc">...</p>
+      
+      <button id="buyNowBtn" class="btn" style="background:#1e3f8a; color:white; width:100%; padding:15px; font-size:18px;">
+        Kòmande sou WhatsApp kounye a
+      </button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    // 🔹 METE CONFIG FIREBASE OU A LA A 🔹
+    const firebaseConfig = {
+    apiKey: "AIzaSyB1f26ZYfvHkFWf9x1Zm6bJlrUwbXWWBfk",
+    authDomain: "globalplis-9f740.firebaseapp.com",
+    databaseURL: "https://globalplis-9f740-default-rtdb.firebaseio.com",
+    projectId: "globalplis-9f740",
+    storageBucket: "globalplis-9f740.firebasestorage.app",
+    messagingSenderId: "907235331553",
+    appId: "1:907235331553:web:5b13a1497f857a0fec16a0",
+    measurementId: "G-R91CLS4MY8"
+  };
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Chèche ID pwodui a nan URL la (Egzanp: ?id=12345)
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+
+    if (!productId) {
+      document.getElementById('loadingMessage').innerText = "Erè: Nou pa jwenn pwodui sa a.";
+    } else {
+      // Rale pwodui a nan Firebase
+      const productRef = ref(db, 'products/' + productId);
+      get(productRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const product = snapshot.val();
+          
+          // Mete ajou paj la
+          document.title = product.name + " - Global Plis"; // Pou SEO
+          document.getElementById('detailImg').src = product.img;
+          document.getElementById('detailName').innerText = product.name;
+          document.getElementById('detailPrice').innerText = product.price + " HTG";
+          document.getElementById('detailDesc').innerText = product.description;
+          
+          document.getElementById('loadingMessage').style.display = 'none';
+          document.getElementById('productDetail').style.display = 'flex';
+
+          // Fonksyon kòmande dirèk
+          document.getElementById('buyNowBtn').onclick = () => {
+            let msg = `Bonjou, mwen enterese nan pwodui sa a sou sit la:\n\n▪️ ${product.name}\n▪️ Pri: ${product.price} HTG\n\nLyen: ${window.location.href}`;
+            window.open("https://wa.me/50940488401?text=" + encodeURIComponent(msg));
+          };
+        } else {
+          document.getElementById('loadingMessage').innerText = "Pwodui sa a pa egziste ankò.";
+        }
+      }).catch(error => {
+        document.getElementById('loadingMessage').innerText = "Erè koneksyon: " + error.message;
+      });
+    }
+  </script>
+</body>
+</html>
