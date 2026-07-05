@@ -220,7 +220,7 @@ function renderCategory(rowId, category, list = allProducts) {
     `;
     
     // 🔹 Lojik pou klike sou imaj la oswa tit la
-    const goToProduct = () => window.location.href = `produit.html?id=${p.id}`;
+    const goToProduct = () => window.location.href = `store/pwodui/produit.html?id=${p.id}`;
     card.querySelectorAll(".click-to-view").forEach(el => el.onclick = goToProduct);
     
     // Bouton ajoute a rete menm jan an
