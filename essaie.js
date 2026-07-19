@@ -3,7 +3,7 @@
 // ==========================
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
 // Enpòte 'app' ki sot nan lòt fichye w la (asire w chemen an bon)
-import { app } from "firebase-j.js"; 
+import { app } from "./firebase-j.js"; 
 
 // Initialize Database ak 'app' ou fèk enpòte a
 const db = getDatabase(app);
