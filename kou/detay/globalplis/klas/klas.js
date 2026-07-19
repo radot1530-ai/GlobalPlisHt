@@ -11,40 +11,105 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-const auth = getAuth(app); // INisyalize Auth la
+const auth = getAuth(app); 
 
 let userId = localStorage.getItem("gp_user");
 let sessionId = localStorage.getItem("gp_session") || "session_" + Math.random().toString(36).substring(2, 10);
 localStorage.setItem("gp_session", sessionId);
 
-const loading = (show) => document.getElementById("loadingOverlay").classList.toggle("hidden", !show);
+const loading = (show) => {
+    const overlay = document.getElementById("loadingOverlay");
+    if(overlay) overlay.classList.toggle("hidden", !show);
+};
 const authOverlay = document.getElementById("authOverlay");
+
+// KREYE MODIL YO OTOMATIKMAN NAN DASHBOARD LA DEPANNAN SOU PAJ LA
+const container = document.getElementById("modulesContainer");
+if(container && container.children.length === 0) {
+    for(let i=2; i<=15; i++) {
+        container.innerHTML += `
+            <div id="module${i}" class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 locked transition-all">
+                <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-2">
+                    <h2 class="font-bold text-lg text-slate-700">Modil ${i}</h2>
+                    <div class="flex gap-2">
+                         <button onclick="toggleFullScreen('vid${i}')" class="bg-slate-800 text-white p-1.5 rounded text-[10px] font-bold">🔳 Full</button>
+                         <button onclick="rotateVideo('vid${i}')" class="bg-slate-100 border border-slate-200 text-slate-700 p-1.5 rounded text-[10px] font-bold">🔄 Vire</button>
+                         <button onclick="unlockMod(${i})" id="lockBtn${i}" class="bg-yellow-500 hover:bg-yellow-400 text-slate-900 px-4 py-1.5 rounded-md text-xs font-black pointer-events-auto shadow-sm transition-colors">🔑 DEBLOKE</button>
+                    </div>
+                </div>
+                <div class="aspect-video bg-slate-900 rounded-lg mb-2 flex items-center justify-center overflow-hidden shadow-inner relative group">
+                    <video id="vid${i}" controls controlsList="nodownload" oncontextmenu="return false;" class="w-full h-full relative z-10 transition-all opacity-0"></video>
+                </div>
+                <div id="playlist${i}" class="flex flex-wrap gap-2 mb-4 empty:hidden"></div>
+                
+                <div class="flex gap-3">
+                    <button onclick="openQuiz(${i})" class="bg-slate-200 text-slate-500 px-4 py-3 rounded-lg font-bold text-sm w-full cursor-not-allowed transition-colors" id="qBtn${i}" disabled>Egzamen pa disponib</button>
+                    <a id="pdf${i}" href="#" target="_blank" class="hidden bg-red-50 text-red-600 font-bold border border-red-200 px-5 py-3 rounded-lg text-sm flex items-center gap-2 transition-colors hover:bg-red-100"><span class="text-lg">📄</span> PDF</a>
+                </div>
+            </div>`;
+    }
+}
 
 // === SEKIRITE 1: TCHEKE FIREBASE AUTH ===
 onAuthStateChanged(auth, (user) => {
     if (!user) {
-        // Moun nan pa konekte ditou sou kont Global Plis la
         alert("🔒 Ou dwe konekte ak kont prensipal ou pou w gen aksè ak paj sal klas la.");
-        window.location.href = "/index.html"; // Voye l tounen sou paj akèy la
+        window.location.href = "/index.html"; 
     } else {
-        // Moun nan verifye nan Auth. Nou ka retire ekran nwa ki bloke a
+        // Moun nan konekte, nou retire ekran nwa a imedyatman pou l wè dashboard la
         if (authOverlay) authOverlay.style.display = "none";
         
         // === SEKIRITE 2: TCHEKE ID INIK (KÒD ELÈV) ===
         if (userId) {
             activateStudentAccess();
+        } else {
+            // Moun nan sou Dashboard la, men li poko antre ID li.
+            // Nou asire bouton "Antre ID w" la parèt byen klè pou li ka klike sou li.
+            const loginBtn = document.getElementById("loginBtn");
+            const logoutBtn = document.getElementById("logoutBtn");
+            const userStatus = document.getElementById("userStatus");
+            const displayId = document.getElementById("displayId");
+            const statusIndicator = document.getElementById("statusIndicator");
+            
+            if(loginBtn) {
+                loginBtn.innerText = "🔑 Antre ID w";
+                loginBtn.classList.remove("hidden");
+            }
+            if(logoutBtn) logoutBtn.classList.add("hidden");
+            if(displayId) displayId.classList.add("hidden");
+            
+            if(userStatus) {
+                userStatus.innerText = "Poko gen ID elèv - Modil yo bloke";
+                userStatus.className = "text-yellow-600 font-bold";
+            }
+            if(statusIndicator) {
+                statusIndicator.className = "w-3 h-3 rounded-full bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.6)]";
+            }
         }
     }
 });
 
 function activateStudentAccess() {
-    document.getElementById("userStatus").innerText = "Elèv Enskri - Aksè Pèmèt";
-    document.getElementById("userStatus").className = "text-green-600";
-    document.getElementById("statusIndicator").className = "w-3 h-3 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]";
-    document.getElementById("displayId").innerText = "ID: " + userId;
-    document.getElementById("displayId").classList.remove("hidden");
-    document.getElementById("loginBtn").classList.add("hidden");
-    document.getElementById("logoutBtn").classList.remove("hidden");
+    const userStatus = document.getElementById("userStatus");
+    const statusIndicator = document.getElementById("statusIndicator");
+    const displayId = document.getElementById("displayId");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    if(userStatus) {
+        userStatus.innerText = "Elèv Enskri - Aksè Pèmèt";
+        userStatus.className = "text-green-600 font-bold";
+    }
+    if(statusIndicator) {
+        statusIndicator.className = "w-3 h-3 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]";
+    }
+    if(displayId) {
+        displayId.innerText = "ID: " + userId;
+        displayId.classList.remove("hidden");
+    }
+    if(loginBtn) loginBtn.classList.add("hidden");
+    if(logoutBtn) logoutBtn.classList.remove("hidden");
+    
     startSessionSecurity();
     loadProgress();
 }
@@ -54,7 +119,7 @@ function startSessionSecurity() {
     onValue(ref(db, "users/" + userId + "/activeSession"), (snap) => {
         if(snap.exists() && snap.val() !== sessionId && !alertShown) {
             alertShown = true;
-            alert("⚠️ ALÈT SEKIRITE: ID sa a fèk konekte sou yon lòt aparèy. Pou pwoteje kont ou, n ap dekonekte w isit la.");
+            alert("⚠️ ALÈT SEKIRITE: ID sa a fèk konekte sou yon lòt aparèy. Pou pwoteje kont ou, n ap dekonekte w isit line.");
             localStorage.removeItem("gp_user");
             location.reload();
         }
@@ -70,18 +135,20 @@ window.login = async () => {
     try {
         const userSnap = await get(ref(db, "users/" + cleanInput));
         const codeSnap = await get(ref(db, "codes/" + cleanInput));
+        
         if(userSnap.exists() || codeSnap.exists()) {
             localStorage.setItem("gp_user", cleanInput);
             if(!userSnap.exists()) {
                 await update(ref(db, "users/" + cleanInput), { module1: true, created: Date.now() });
             }
+            alert("✅ Byenvini nan sal klas la! Aksè ou aktive.");
             location.reload();
         } else {
-            alert("❌ ID pa anrejistre.");
+            alert("❌ ID sa pa anrejistre nan baz done a.");
             loading(false);
         }
     } catch (error) {
-        alert("Erè rezo.");
+        alert("Erè rezo. Tanpri eseye ankò.");
         loading(false);
     }
 };
@@ -99,33 +166,11 @@ window.logout = () => {
 
 window.changeVideo = (vidId, src) => {
     const v = document.getElementById(vidId);
-    v.src = src;
-    v.play();
+    if(v) {
+        v.src = src;
+        v.play();
+    }
 };
-
-const container = document.getElementById("modulesContainer");
-for(let i=2; i<=15; i++) {
-    container.innerHTML += `
-        <div id="module${i}" class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 locked transition-all">
-            <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-2">
-                <h2 class="font-bold text-lg text-slate-700">Modil ${i}</h2>
-                <div class="flex gap-2">
-                     <button onclick="toggleFullScreen('vid${i}')" class="bg-slate-800 text-white p-1.5 rounded text-[10px] font-bold">🔳 Full</button>
-                     <button onclick="rotateVideo('vid${i}')" class="bg-slate-100 border border-slate-200 text-slate-700 p-1.5 rounded text-[10px] font-bold">🔄 Vire</button>
-                     <button onclick="unlockMod(${i})" id="lockBtn${i}" class="bg-yellow-500 hover:bg-yellow-400 text-slate-900 px-4 py-1.5 rounded-md text-xs font-black pointer-events-auto shadow-sm transition-colors">🔑 DEBLOKE</button>
-                </div>
-            </div>
-            <div class="aspect-video bg-slate-900 rounded-lg mb-2 flex items-center justify-center overflow-hidden shadow-inner relative group">
-                <video id="vid${i}" controls controlsList="nodownload" oncontextmenu="return false;" class="w-full h-full relative z-10 transition-all opacity-0"></video>
-            </div>
-            <div id="playlist${i}" class="flex flex-wrap gap-2 mb-4 empty:hidden"></div>
-            
-            <div class="flex gap-3">
-                <button onclick="openQuiz(${i})" class="bg-slate-200 text-slate-500 px-4 py-3 rounded-lg font-bold text-sm w-full cursor-not-allowed transition-colors" id="qBtn${i}" disabled>Egzamen pa disponib</button>
-                <a id="pdf${i}" href="#" target="_blank" class="hidden bg-red-50 text-red-600 font-bold border border-red-200 px-5 py-3 rounded-lg text-sm flex items-center gap-2 transition-colors hover:bg-red-100"><span class="text-lg">📄</span> PDF</a>
-            </div>
-        </div>`;
-}
 
 let userProgress = {};
 async function loadProgress() {
@@ -141,11 +186,11 @@ async function loadProgress() {
 }
 
 window.unlockMod = async (num) => {
-    if(!userId) return alert("Ou dwe antre ID ou anvan.");
+    if(!userId) return alert("Ou dwe antre ID ou anlè a anvan pou w ka debloke yon modil.");
     const prevModStatus = (num === 2) ? userProgress.module1 : userProgress["module" + (num - 1)];
-    if(!prevModStatus) return alert("Pase egzamen modil anvan an anvan ou debloke sa a.");
+    if(!prevModStatus) return alert(`Pase egzamen Modil ${num - 1} an anvan ou debloke sa a.`);
     
-    const codeInput = prompt(`Kòd pou Modil ${num} :`);
+    const codeInput = prompt(`Antre kòd peman pou Modil ${num} :`);
     if(!codeInput) return;
     loading(true);
     try {
@@ -159,7 +204,7 @@ window.unlockMod = async (num) => {
                 alert("✅ Modil debloke ak siksè!");
                 location.reload();
             } else { 
-                alert("❌ Kòd enkòrèk."); 
+                alert("❌ Kòd la pa bon."); 
                 loading(false); 
             }
         } else {
@@ -211,8 +256,10 @@ async function updateUI() {
             } catch(e) { console.error("Erè kontni:", e); }
 
             const lockBtn = document.getElementById("lockBtn"+i);
-            lockBtn.innerText = "✔ AKSÈ PÈMÈT";
-            lockBtn.className = "bg-green-100 text-green-700 border border-green-300 px-3 py-1 rounded text-xs font-bold pointer-events-none";
+            if(lockBtn) {
+                lockBtn.innerText = "✔ AKSÈ PÈMÈT";
+                lockBtn.className = "bg-green-100 text-green-700 border border-green-300 px-3 py-1 rounded text-xs font-bold pointer-events-none";
+            }
             
             const qBtn = document.getElementById("qBtn"+i);
             if(qBtn) {
@@ -236,7 +283,7 @@ window.toggleFullScreen = (id) => {
 
 window.rotateVideo = (id) => document.getElementById(id).classList.toggle("rotate-90");
 
-// KENBE QUIZ BANK OU AN ANTYE LA...
+// BANK EGZAMEN AN
 const quizBank = {
 "1": [
     { q: "Si nou konpare yon sit entènèt ak yon kò moun, ki wòl HTML jwe?", a: "Li se po ak rad (Design)", b: "Li se skelèt la (Structure)", r: "b" },
@@ -320,9 +367,14 @@ const quizBank = {
 window.openQuiz = (m) => {
     const questions = quizBank[m];
     if(!questions) return alert("Egzamen sa poko disponib.");
-    document.getElementById("qModNum").innerText = m;
+    
+    const modNumElem = document.getElementById("qModNum");
+    if(modNumElem) modNumElem.innerText = m;
+    
     const t = document.getElementById("quizContent");
+    if(!t) return;
     t.innerHTML = "";
+    
     questions.forEach((item, k) => {
         t.innerHTML += `
             <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-sm mb-3">
@@ -339,37 +391,12 @@ window.openQuiz = (m) => {
                 </div>
             </div>`;
     });
-    document.getElementById("quizBox").classList.remove("hidden");
-};
-
-window.closeQuiz = () => document.getElementById("quizBox").classList.add("hidden");
-
-window.submitQuiz = async () => {
-    const m = document.getElementById("qModNum").innerText;
-    const questions = quizBank[m];
-    let score = 0;
-    let answered = 0;
     
-    for(let k=1; k<=questions.length; k++) {
-        const checked = document.querySelector(`input[name="q${k}"]:checked`);
-        if(checked) {
-            answered++;
-            if(checked.value === questions[k-1].r) score++;
-        }
-    }
-
-    if(answered < questions.length) return alert("Reponn tout kesyon yo!");
-
-    if(score >= 4) {
-        alert(`🎉 Konpliman! Ou fè ${score}/${questions.length}.`);
-        if(userId) {
-            loading(true);
-            await update(ref(db, "users/" + userId), { ["module" + m]: true });
-            location.reload();
-        } else { window.closeQuiz(); }
-    } else {
-        alert(`Ou fè ${score}/${questions.length}. Ou bezwen 4 pou pase.`);
-    }
+    const quizBox = document.getElementById("quizBox");
+    if(quizBox) quizBox.classList.remove("hidden");
 };
 
-document.addEventListener("contextmenu", e => e.preventDefault());
+window.closeQuiz = () => {
+    const quizBox = document.getElementById("quizBox");
+    if(quizBox) quizBox.classList.add("hidden");
+};
