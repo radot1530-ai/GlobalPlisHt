@@ -1,17 +1,11 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+// 🔹 IMPORT SOTI NAN FIREBASE-J.JS AK SDK YO (v12.15.0)
+import { db, auth } from "/firebase-j.js";
+import { ref, get, update, onValue } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
-const firebaseConfig = {
-    apiKey: "AIzaSyAgvH0CpF6tGISpfLw3JWJCT2beBG28wAM",
-    authDomain: "kaylakay-cdf64.firebaseapp.com",
-    databaseURL: "https://kaylakay-cdf64-default-rtdb.firebaseio.com/",
-    projectId: "kaylakay-cdf64",
-    storageBucket: "kaylakay-cdf64.appspot.com",
-};
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const auth = getAuth(app); 
+// Nou pran ID kou a nan URL la pou nou konnen ki kontni pou n chaje
+const urlParams = new URLSearchParams(window.location.search);
+const courseId = urlParams.get('id') || "default_course"; 
 
 let userId = localStorage.getItem("gp_user");
 let sessionId = localStorage.getItem("gp_session") || "session_" + Math.random().toString(36).substring(2, 10);
@@ -23,7 +17,7 @@ const loading = (show) => {
 };
 const authOverlay = document.getElementById("authOverlay");
 
-// KREYE MODIL YO OTOMATIKMAN NAN DASHBOARD LA DEPANNAN SOU PAJ LA
+// KREYE MODIL YO OTOMATIKMAN NAN DASHBOARD LA
 const container = document.getElementById("modulesContainer");
 if(container && container.children.length === 0) {
     for(let i=2; i<=15; i++) {
@@ -50,42 +44,21 @@ if(container && container.children.length === 0) {
     }
 }
 
-// === SEKIRITE 1: TCHEKE FIREBASE AUTH ===
+// === SEKIRITE 1: TCHEKE FIREBASE AUTH SYNC AK INDEX LA ===
 onAuthStateChanged(auth, (user) => {
     if (!user) {
-        alert("🔒 Ou dwe konekte ak kont prensipal ou pou w gen aksè ak paj sal klas la.");
+        alert("🔒 Ou dwe konekte anvan sou paj prensipal la pou w gen aksè ak sal klas la.");
         window.location.href = "/index.html"; 
     } else {
-        // Moun nan konekte, nou retire ekran nwa a imedyatman pou l wè dashboard la
         if (authOverlay) authOverlay.style.display = "none";
         
-        // === SEKIRITE 2: TCHEKE ID INIK (KÒD ELÈV) ===
-        if (userId) {
-            activateStudentAccess();
-        } else {
-            // Moun nan sou Dashboard la, men li poko antre ID li.
-            // Nou asire bouton "Antre ID w" la parèt byen klè pou li ka klike sou li.
-            const loginBtn = document.getElementById("loginBtn");
-            const logoutBtn = document.getElementById("logoutBtn");
-            const userStatus = document.getElementById("userStatus");
-            const displayId = document.getElementById("displayId");
-            const statusIndicator = document.getElementById("statusIndicator");
-            
-            if(loginBtn) {
-                loginBtn.innerText = "🔑 Antre ID w";
-                loginBtn.classList.remove("hidden");
-            }
-            if(logoutBtn) logoutBtn.classList.add("hidden");
-            if(displayId) displayId.classList.add("hidden");
-            
-            if(userStatus) {
-                userStatus.innerText = "Poko gen ID elèv - Modil yo bloke";
-                userStatus.className = "text-yellow-600 font-bold";
-            }
-            if(statusIndicator) {
-                statusIndicator.className = "w-3 h-3 rounded-full bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.6)]";
-            }
+        // Si itilizatè a pa gen yon ID elèv manyèl (gp_user), nou itilize UID Firebase li a kòm ID otomatik
+        if (!userId) {
+            userId = user.uid;
+            localStorage.setItem("gp_user", userId);
         }
+        
+        activateStudentAccess();
     }
 });
 
@@ -104,7 +77,7 @@ function activateStudentAccess() {
         statusIndicator.className = "w-3 h-3 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]";
     }
     if(displayId) {
-        displayId.innerText = "ID: " + userId;
+        displayId.innerText = "ID: " + userId.substring(0, 10) + "...";
         displayId.classList.remove("hidden");
     }
     if(loginBtn) loginBtn.classList.add("hidden");
@@ -119,47 +92,20 @@ function startSessionSecurity() {
     onValue(ref(db, "users/" + userId + "/activeSession"), (snap) => {
         if(snap.exists() && snap.val() !== sessionId && !alertShown) {
             alertShown = true;
-            alert("⚠️ ALÈT SEKIRITE: ID sa a fèk konekte sou yon lòt aparèy. Pou pwoteje kont ou, n ap dekonekte w isit line.");
+            alert("⚠️ ALÈT SEKIRITE: Kont sa a konekte sou yon lòt aparèy.");
             localStorage.removeItem("gp_user");
             location.reload();
         }
     });
 }
 
-window.login = async () => {
-    const input = prompt("Antre ID ou oswa Nimewo Telefòn ou ki anrejistre pou klas la:");
-    if(!input) return;
-    const cleanInput = input.trim();
-    if(cleanInput.length < 4) return alert("ID a twò kout.");
-    loading(true);
-    try {
-        const userSnap = await get(ref(db, "users/" + cleanInput));
-        const codeSnap = await get(ref(db, "codes/" + cleanInput));
-        
-        if(userSnap.exists() || codeSnap.exists()) {
-            localStorage.setItem("gp_user", cleanInput);
-            if(!userSnap.exists()) {
-                await update(ref(db, "users/" + cleanInput), { module1: true, created: Date.now() });
-            }
-            alert("✅ Byenvini nan sal klas la! Aksè ou aktive.");
-            location.reload();
-        } else {
-            alert("❌ ID sa pa anrejistre nan baz done a.");
-            loading(false);
-        }
-    } catch (error) {
-        alert("Erè rezo. Tanpri eseye ankò.");
-        loading(false);
-    }
-};
-
 window.logout = () => {
-    if(confirm("Èske w sèten ou vle dekonekte nèt sou aparèy sa a?")) {
+    if(confirm("Èske w sèten ou vle dekonekte?")) {
         localStorage.removeItem("gp_user");
         signOut(auth).then(() => {
             window.location.href = "/index.html";
         }).catch((error) => {
-            console.error("Erè dekoneksyon:", error);
+            console.error(error);
         });
     }
 };
@@ -179,14 +125,17 @@ async function loadProgress() {
         const snap = await get(ref(db, "users/" + userId));
         if(snap.exists()) { 
             userProgress = snap.val(); 
-            await update(ref(db, "users/" + userId), { activeSession: sessionId, lastSeen: Date.now() });
-            updateUI(); 
+        } else {
+            // Si itilizatè a fenk vini, nou ba li premye modil la pa defo
+            userProgress = { module1: true };
         }
+        await update(ref(db, "users/" + userId), { activeSession: sessionId, lastSeen: Date.now() });
+        updateUI(); 
     } catch(e) { console.error(e); }
 }
 
 window.unlockMod = async (num) => {
-    if(!userId) return alert("Ou dwe antre ID ou anlè a anvan pou w ka debloke yon modil.");
+    if(!userId) return alert("Ou dwe konekte anvan.");
     const prevModStatus = (num === 2) ? userProgress.module1 : userProgress["module" + (num - 1)];
     if(!prevModStatus) return alert(`Pase egzamen Modil ${num - 1} an anvan ou debloke sa a.`);
     
@@ -208,7 +157,7 @@ window.unlockMod = async (num) => {
                 loading(false); 
             }
         } else {
-            alert("❌ Pa gen kòd ki anrejistre pou ID sa a.");
+            alert("❌ Pa gen kòd ki anrejistre pou ID ou.");
             loading(false);
         }
     } catch(e) { 
@@ -225,7 +174,8 @@ async function updateUI() {
             if(!mDiv) continue;
             mDiv.classList.remove("locked");
             try {
-                const cSnap = await get(ref(db, "content/module"+i));
+                // Done yo chaje daprè ID kou a pou kontni an pa melanje
+                const cSnap = await get(ref(db, `content/${courseId}/module${i}`));
                 if(cSnap.exists()) {
                     const d = cSnap.val();
                     const v = document.getElementById("vid"+i);
@@ -233,23 +183,23 @@ async function updateUI() {
                     
                     if(d.videos && Array.isArray(d.videos)) {
                         if(!v.src) { 
-                            v.src = "image/" + d.videos[0]; 
+                            v.src = d.videos[0]; 
                             v.load(); 
                             v.classList.remove("opacity-0"); 
                         }
                         playlist.innerHTML = "";
                         d.videos.forEach((vidSrc, idx) => {
-                            playlist.innerHTML += `<button onclick="changeVideo('vid${i}', 'image/${vidSrc}')" class="bg-blue-50 hover:bg-blue-200 text-blue-700 px-3 py-1.5 rounded text-xs font-bold border border-blue-200 transition-colors">▶ Pati ${idx + 1}</button>`;
+                            playlist.innerHTML += `<button onclick="changeVideo('vid${i}', '${vidSrc}')" class="bg-blue-50 hover:bg-blue-200 text-blue-700 px-3 py-1.5 rounded text-xs font-bold border border-blue-200 transition-colors">▶ Pati ${idx + 1}</button>`;
                         });
                     } else if(d.video && !v.src) { 
-                        v.src = "image/" + d.video; 
+                        v.src = d.video; 
                         v.load(); 
                         v.classList.remove("opacity-0"); 
                     }
 
                     if(d.pdf) { 
                         const pdfLink = document.getElementById("pdf"+i);
-                        pdfLink.href = "image/"+d.pdf; 
+                        pdfLink.href = d.pdf; 
                         pdfLink.classList.remove("hidden"); 
                     }
                 }
@@ -300,67 +250,6 @@ const quizBank = {
     { q: "Kisa yon balise ye nan HTML?", a: "Yon kòmand nou ekri ant siy pi piti ak pi gran", b: "Yon foto nou mete sou sit la", r: "a" },
     { q: "Ki balise ki vlope tout dokiman HTML la?", a: "html", b: "head", r: "a" },
     { q: "Ki balise ki sèvi pou mete enfòmasyon sou paj la tankou charset oswa description?", a: "meta", b: "title", r: "a" }
-],
-"3": [
-    { q: "Ki balise ki sèvi pou ekri yon paragraf?", a: "p", b: "h1", r: "a" },
-    { q: "Ki balise ki sèvi pou fè tèks la vin gra?", a: "b", b: "br", r: "a" },
-    { q: "Ki balise ki sèvi pou kase liy epi desann anba?", a: "hr", b: "br", r: "b" },
-    { q: "Ki balise ki sèvi pou fè yon liy orizontal?", a: "hr", b: "em", r: "a" },
-    { q: "Ki balise ki sèvi pou fè tèks la italik?", a: "i", b: "strong", r: "a" },
-    { q: "Ki balise ki sèvi pou mete yon lyen sou yon paj entènèt?", a: "a", b: "p", r: "a" },
-    { q: "Ki balise ki reprezante pi gwo tit la nan HTML?", a: "h6", b: "h1", r: "b" },
-    { q: "Ki balise ki sèvi pou bay plis enpòtans ak yon tèks?", a: "strong", b: "br", r: "a" }
-],
-"4": [
-    { q: "Ki balise ki pèmèt nou afiche yon foto sou sit la?", a: "img", b: "video", r: "a" },
-    { q: "Nan baliz img lan, ki atribi ki endike 'Kote foto a soti'?", a: "alt", b: "src", r: "b" },
-    { q: "Ki balise nou itilize pou jwe mizik oswa odyo sou yon paj HTML?", a: "sound", b: "audio", r: "b" },
-    { q: "Pou afiche yon videyo nan paj la, ki balise nou dwe itilize?", a: "video", b: "media", r: "a" },
-    { q: "Kisa balise iframe lan fè?", a: "Li afiche yon lòt sit oswa yon videyo YouTube anndan paj ou a", b: "Li kreye yon liy vètikal nan paj la", r: "a" },
-    { q: "Ki atribi nan imaj ki ede moun ki avèg yo tande kisa k nan foto a avèk yon lektè ekran?", a: "src", b: "alt", r: "b" }
-],
-"5": [
-    { q: "Ki gwo balise ki kreye yon bwat kote kliyan yo ka ranpli enfòmasyon yo?", a: "form", b: "table", r: "a" },
-    { q: "Ki balise nou itilize pou fè yon bwat kote moun ka tape tèks oswa imel?", a: "input", b: "textarea", r: "a" },
-    { q: "Nan fòm nan, ki atribi ki deside *ki kote* done yo pral voye lè moun lan klike sou 'Voye'?", a: "action", b: "method", r: "a" },
-    { q: "Ki atribi nan input ki kache modpas la an ti pwen nwa?", a: "type=\"password\"", b: "type=\"hidden\"", r: "a" },
-    { q: "Ki atribi nan baliz lyen 'a' ki pèmèt ou ouvri yon paj lè w klike sou li?", a: "src", b: "href", r: "b" },
-    { q: "Poukisa nou itilize method=\"POST\" nan yon fòm olye method=\"GET\"?", a: "Pou done sekrè yo (tankou modpas) pa parèt anlè nan lyen an", b: "Pou sit la ka pi rapid", r: "a" }
-],
-"6": [
-    { q: "Kisa CSS vle di nan devlopman Web?", a: "Cascading Style Sheets", b: "Computer Style System", r: "a" },
-    { q: "Poukisa nou itilize CSS?", a: "Pou bati estrikti a sèlman", b: "Pou bay paj la fòm, koulè, ak bèl aparans", r: "b" },
-    { q: "Ki fason ki pi pwofesyonèl pou nou ekri kòd CSS nou yo?", a: "Nan yon fichye .css separe", b: "Dirèkteman anndan chak baliz HTML ak style=\"\"", r: "a" },
-    { q: "Si m ekri selman `h3` nan yon kòd CSS, ki moun m ap chanje koulè li?", a: "M ap chanje koulè TOUT baliz h3 ki nan paj HTML la", b: "Yon sèl baliz mwen chwazi a", r: "a" },
-    { q: "Poukisa pafwa nou mete yon pwen (.) devan yon mo nan CSS tankou `.kat-pwofil`?", a: "Pou di se yon Id li ye", b: "Pou di navigatè a se yon Klas (Class) li ye", r: "b" }
-],
-"7": [
-    { q: "Ki pwopriyete CSS ki sèvi pou chanje koulè tèks la?", a: "color", b: "background-color", r: "a" },
-    { q: "Ki pwopriyete CSS ki sèvi pou chanje koulè ki dèyè yon bwat la?", a: "color", b: "background-color", r: "b" },
-    { q: "Nan CSS, kijan nou fè yon tèks vin pi gwo oswa pi piti?", a: "Avèk pwopriyete font-size", b: "Avèk pwopriyete text-align", r: "a" },
-    { q: "Kisa valè sa a ye: `#002f6c`?", a: "Yon kòd koulè RGB", b: "Yon kòd koulè Heksadesimal", r: "b" },
-    { q: "Ki pwopriyete ki retire liy ki toujou anba yon lyen otomatikman?", a: "text-decoration: none;", b: "text-transform: uppercase;", r: "a" }
-],
-"8": [
-    { q: "Nan Box Model (Modèl Bwat) CSS la, kisa `padding` ye?", a: "Espas ki anndan bwat la pou tèks la respire", b: "Liy ki trase otou bwat la", r: "a" },
-    { q: "Nan menm Box Model la, kisa `margin` ye?", a: "Espas ki andeyò bwat la ki pouse lòt bwat yo pa kole avè l", b: "Koulè ki nan bwat la", r: "a" },
-    { q: "Ki pwopriyete CSS ki trase yon bèl liy/kad alantou bwat la?", a: "border", b: "padding", r: "a" },
-    { q: "Si ou vle awondi kat kwen yon bwat nan CSS pou l pa parèt pwent, kisa w itilize?", a: "border-radius", b: "box-shadow", r: "a" },
-    { q: "Kisa `border-radius: 50%;` fè sou yon foto ki kare?", a: "Li mete foto a nan mitan ekran an", b: "Li fè foto a tounen yon wonn pafè", r: "b" }
-],
-"9": [
-    { q: "Pou ki gwo rezon pwofesyonèl nou itilize Flexbox nan CSS?", a: "Pou mete bwat yo kòt a kòt epi jere estrikti paj la byen fasil", b: "Pou chanje koulè paj la rapid", r: "a" },
-    { q: "Lè nou itilize Flexbox, sou ki bwat nou dwe mete `display: flex;` la?", a: "Sou gwo bwat Kontenè a (Parent la)", b: "Sou chak ti bwat ki anndan l yo (Items yo)", r: "a" },
-    { q: "Avèk Flexbox, ki pwopriyete ki separe bwat yo epi mete yon bèl espas nan mitan yo?", a: "justify-content: space-between;", b: "align-items: center;", r: "a" },
-    { q: "Kisa `align-items: center;` fè nan yon fòma Flexbox?", a: "Li aliyen bwat yo dwat nan mitan vètikal ekran an", b: "Li kase liy yo", r: "a" },
-    { q: "Si gen twòp bwat sou yon sèl liy pou yon ti telefòn, ki pwopriyete ki fè yo desann anba pito?", a: "flex-wrap: wrap;", b: "justify-content: center;", r: "a" }
-],
-"10": [
-    { q: "Nan CSS, si nou mete `:hover` dèyè yon klas (Eks: `.bouton:hover`), kisa l vle di?", a: "Chanje koulè bouton an SÈLMAN lè moun lan pase sourit li sou li", b: "Kache bouton an pou pèsonn pa wè l", r: "a" },
-    { q: "Pou yon chanjman koulè sou yon bouton pa fèt bridsoukou men pou l fèt dousman, kisa n dwe itilize?", a: "transition", b: "transform", r: "a" },
-    { q: "Nan pwopriyete `transform`, kisa valè `scale(1.05)` la fè sou yon bwat?", a: "Li fè bwat la grandi epi avanse sou ou yon ti kras", b: "Li fè bwat la vire tèt anba", r: "a" },
-    { q: "Ki pwopriyete ki bay yon kat pwofil yon bèl lonbray 3D anba l?", a: "box-shadow", b: "border-radius", r: "a" },
-    { q: "Kòm astis pou mete yon bwat (ki gen lajè fiks) chita nan mitan ekran an nèt, ki valè margin nan nou itilize?", a: "margin: 0 auto;", b: "margin: center;", r: "a" }
 ]
 };
 
