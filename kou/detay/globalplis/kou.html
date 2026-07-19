@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detay Kou a | Global Plis +∞</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="/style.css">
   <style>
     /* --- DESIGN GLOBAL PLIS +∞ --- */
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
@@ -54,6 +55,17 @@
   </style>
 </head>
 <body>
+  
+  <header class="main-header">
+  <div class="header-top-bar">
+    <div class="brand-container">
+      <img src="/image/1768017763381.png" alt="Global Plis Logo" class="main-logo" onerror="this.src='https://via.placeholder.com/150x40?text=Global+Plis'">
+    </div>
+<button id="loginBtn" class="login-pill" onclick="document.getElementById('authModal').style.display='flex'"><span>🔐</span> Enskri</button>
+
+  </div>
+
+</header>
 
 <div class="container">
   <div id="loadingSpinner">
@@ -89,171 +101,41 @@
     </div>
   </div>
 </div>
+<script type="module" src="kou.js"></script>
+<script type="module" src="/indexv1.1.1.js"></script>
+<script type="module" src="/firebase-j.js"></script>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-  import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-  // KONFIGIRASYON FIREBASE
-    const firebaseConfig = {
-    apiKey: "AIzaSyB1f26ZYfvHkFWf9x1Zm6bJlrUwbXWWBfk",
-    authDomain: "globalplis-9f740.firebaseapp.com",
-    databaseURL: "https://globalplis-9f740-default-rtdb.firebaseio.com",
-    projectId: "globalplis-9f740",
-    storageBucket: "globalplis-9f740.firebasestorage.app",
-    messagingSenderId: "907235331553",
-    appId: "1:907235331553:web:5b13a1497f857a0fec16a0",
-    measurementId: "G-R91CLS4MY8"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getDatabase(app);
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const courseId = urlParams.get('id');
-
-  const loadingSpinner = document.getElementById('loadingSpinner');
-  const courseDetailCard = document.getElementById('courseDetailCard');
-  const actionSection = document.getElementById('actionSection');
-
-  if (!courseId) {
-    window.location.href = "index.html"; // Voye l tounen si pa gen ID
-  }
-
-  // 1. Chaje Enfòmasyon Kou a nan Navigatè a
-  onValue(ref(db, `kou/${courseId}`), (snapshot) => {
-    if (!snapshot.exists()) {
-      loadingSpinner.innerHTML = "<p style='color:red;'>Kou sa pa disponib ankò.</p>";
-      return;
-    }
-
-    const kou = snapshot.val();
+<div id="authModal" class="popups" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
+  <div style="background:#fff; padding:30px; border-radius:12px; width:90%; max-width:400px; text-align:center; position:relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+    <span onclick="document.getElementById('authModal').style.display='none'" style="position:absolute; right:15px; top:10px; cursor:pointer; font-size:24px; font-weight:bold; color:#666;">&times;</span>
     
-    // Mete done yo nan HTML la
-    document.getElementById('kouImaj').src = kou.imajUrl;
-    document.getElementById('kouBadge').innerText = kou.badge || "FÒMASYON";
-    document.getElementById('kouTit').innerText = kou.non;
-    document.getElementById('kouDire').innerText = kou.dire;
-    document.getElementById('kouNivo').innerText = kou.nivo;
-    document.getElementById('kouObjektif').innerText = kou.objektif;
-    document.getElementById('kouDeskripsyon').innerText = kou.deskripsyon || "Deskripsyon konplè kou sa ap ede w metrize domèn nan pafètman.";
+    <h3 id="authTitle" style="color:#1e3f8a; margin-top:0;">Konekte</h3>
     
-    // Jere afichaj pri a
-    const isFree = (kou.pri == 0 || String(kou.pri).toLowerCase() === "gratis");
-    document.getElementById('kouPri').innerText = isFree ? "GRATIS" : `${kou.pri} HTG`;
-
-    // Retire Loading, Montre Kat la
-    loadingSpinner.style.display = "none";
-    courseDetailCard.style.display = "block";
-
-    // 2. Jere Aksyon Itilizatè a (Koneksyon / Pèman)
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        // ITILIZATÈ PA KONEKTE: Pa montre okenn done pèman nan navigatè a
-        actionSection.innerHTML = `
-          <h3 style="color: #333; margin-top: 0;">Ou dwe enskri pou swiv kou sa</h3>
-          <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Kreye yon kont Global Plis +∞ pou w ka jwenn aksè ak fòmasyon an oswa fè pèman an.</p>
-          <button id="loginBtn" class="btn btn-google"><i class="fab fa-google"></i> Konekte ak Google pou Enskri</button>
-        `;
-        document.getElementById('loginBtn').addEventListener('click', () => {
-          signInWithPopup(auth, new GoogleAuthProvider());
-        });
-      } else {
-        // ITILIZATÈ KONEKTE: Tcheke si l gen dwa sou kou a
-        verifyEnrollment(user.uid, kou, isFree);
-      }
-    });
-  });
-
-  function verifyEnrollment(userId, kou, isFree) {
-    onValue(ref(db, `enskripsyon/${userId}/${courseId}`), (snapshot) => {
-      const status = snapshot.exists() ? snapshot.val().estati : "poko";
-
-      if (status === "valide") {
-        actionSection.innerHTML = `
-          <div style="background: #ecfdf5; padding: 20px; border-radius: 8px; border: 1px solid #a7f3d0;">
-            <h3 style="color: #059669; margin: 0 0 10px 0;"><i class="fas fa-check-circle"></i> Enskripsyon w Valide!</h3>
-            <p style="margin-bottom: 15px;">Ou gentan gen aksè ak tout modil kou sa a.</p>
-            <a href="sal-de-klas.html?id=${courseId}" class="btn" style="background: #1e3f8a; color: white; text-decoration: none;">Antre nan Sal de Klas la</a>
-          </div>
-        `;
-      } else if (status === "ann_atant") {
-        actionSection.innerHTML = `
-          <div style="background: #fffbeb; padding: 20px; border-radius: 8px; border: 1px solid #fde68a;">
-            <h3 style="color: #d97706; margin: 0 0 10px 0;"><i class="fas fa-hourglass-half"></i> Pèman an anba verifikasyon</h3>
-            <p style="margin: 0;">Administratè yo ap verifye kòd tranzaksyon w lan. Aksè w la ap debloke trè byento.</p>
-          </div>
-        `;
-      } else {
-        // POKO ENSKRI
-        if (isFree) {
-          // KOU GRATIS: Sote pèman, anrejistre dirèk
-          actionSection.innerHTML = `
-            <h3 style="color: #1e3f8a;">Kou sa se kado!</h3>
-            <p>Klike anba a pou w ajoute kou sa nan kont ou imedyatman san w pa peye anyen.</p>
-            <button id="enrollFreeBtn" class="btn btn-free"><i class="fas fa-unlock"></i> Kòmanse Kou a Gratis</button>
-          `;
-          document.getElementById('enrollFreeBtn').addEventListener('click', () => {
-            set(ref(db, `enskripsyon/${userId}/${courseId}`), {
-              estati: "valide",
-              dat: new Date().toISOString(),
-              tip: "gratis"
-            });
-          });
-        } else {
-          // KOU PEYE: Montre fòm pèman ak Logo MonCash/NatCash
-        // Pati sa a ranplase seksyon KOU PEYE nan kou.html la
-actionSection.innerHTML = `
-  <div style="text-align: left;">
-    <h3 style="color: #1e3f8a; text-align: center; margin-top: 0;">Pèman Fòmasyon an</h3>
-    <p style="font-size: 14px; color: #555; text-align: center;">Fè yon transfè <strong>${kou.pri} HTG</strong> sou youn nan nimewo sa yo:</p>
+    <button id="googleAuthBtn" class="btn btn-google" style="width:100%; margin-bottom:20px; font-size:15px;">
+      <i class="fab fa-google"></i> Kontinye ak Google
+    </button>
     
-    <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: center;">
-      <p style="margin: 5px 0;"><strong>MonCash:</strong> +509 3XXX-XXXX (Non W)</p>
-      <p style="margin: 5px 0;"><strong>NatCash:</strong> +509 4XXX-XXXX (Non W)</p>
+    <div style="display:flex; align-items:center; margin-bottom:20px;">
+      <div style="flex:1; height:1px; background:#ccc;"></div>
+      <span style="padding:0 10px; color:#888; font-size:12px;">OSWA</span>
+      <div style="flex:1; height:1px; background:#ccc;"></div>
     </div>
     
-    <div class="payment-input-group">
-      <label for="whatsappNum"><i class="fab fa-whatsapp" style="color:#25D366;"></i> Nimewo WhatsApp ou:</label>
-      <input type="text" id="whatsappNum" placeholder="+509 XXXX XXXX" required>
-    </div>
-
-    <div class="payment-input-group">
-      <label for="transCode">Kòd Tranzaksyon an (Trans. ID):</label>
-      <input type="text" id="transCode" placeholder="Egzanp: 1234567890" required>
-    </div>
+    <input type="text" id="authName" placeholder="Non konplè w" style="display:none; width:100%; padding:12px; margin-bottom:12px; border:1px solid #cbd5e1; border-radius:8px; box-sizing:border-box;">
     
-    <button id="submitPaymentBtn" class="btn btn-pay"><i class="fas fa-paper-plane"></i> Soumèt Pèman an</button>
+    <input type="email" id="authEmail" placeholder="Imel ou" style="width:100%; padding:12px; margin-bottom:12px; border:1px solid #cbd5e1; border-radius:8px; box-sizing:border-box;">
+    
+    <input type="password" id="authPassword" placeholder="Modpas (6 karaktè min.)" style="width:100%; padding:12px; margin-bottom:20px; border:1px solid #cbd5e1; border-radius:8px; box-sizing:border-box;">
+    
+    <button id="manualAuthBtn" class="btn" style="background:#1e3f8a; color:white; width:100%; border:none;">Konekte</button>
+    
+    <p style="margin-top:20px; font-size:14px; color:#555;">
+      <span id="authToggleText">Ou poko gen kont?</span> 
+      <a href="#" id="toggleAuthMode" style="color:#ff7a3d; font-weight:bold; text-decoration:none;">Kreye youn kounye a</a>
+    </p>
+
   </div>
-`;
-
-document.getElementById('submitPaymentBtn').addEventListener('click', () => {
-  const code = document.getElementById('transCode').value.trim();
-  const whatsapp = document.getElementById('whatsappNum').value.trim();
-
-  if(code.length > 4 && whatsapp.length > 7) {
-    set(ref(db, `enskripsyon/${userId}/${courseId}`), {
-      estati: "ann_atant",
-      kod_tranzaksyon: code,
-      whatsapp: whatsapp, // Nou anrejistre nimewo a
-      montan: kou.pri,
-      dat: new Date().toISOString()
-    }).then(() => {
-      alert("Mèsi! Nou resevwa pèman w lan. Administratè a ap valide l byento.");
-      window.location.reload(); // Rechaje paj la pou l wè estati ann atant lan
-    });
-  } else {
-    alert("Tanpri mete yon kòd tranzaksyon ak yon nimewo WhatsApp ki valab.");
-  }
-});
-
-        }
-      }
-    });
-  }
-</script>
-
+</div>
+<div id="toast" style="position:fixed; bottom:20px; right:20px; background:#333; color:#fff; padding:15px 25px; border-radius:5px; display:none; z-index:9999; text-align: center;"></div>
 </body>
 </html>
