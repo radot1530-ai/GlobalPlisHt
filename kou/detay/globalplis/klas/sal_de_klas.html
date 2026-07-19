@@ -39,16 +39,35 @@
     </header>
 
     <main class="max-w-4xl mx-auto p-4 md:p-6">
-        <div id="registrationCard" class="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-200 p-6 rounded-2xl shadow-md mb-8 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div class="flex-1">
-                <div class="flex items-center gap-2 mb-2">
-                    <span class="bg-yellow-400 text-yellow-900 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">Ofon Espesyal</span>
-                    <h2 class="text-2xl font-black text-slate-800">Vin yon Pwofesyonèl Web 🚀</h2>
-                </div>
-                <p class="text-slate-600 text-sm leading-relaxed">
-                    Pa ret nan gade sèlman! Degaje w peye sèlman <span class="font-bold text-orange-600 text-lg">500 GDS</span> pou w ka debloke tout modil yo, jwenn sètifika w, epi antre nan gwoup sipò VIP nou an.
-                </p>
-            </div>
+<div class="bg-slate-900 text-white p-6 rounded-2xl shadow-lg mb-6 flex flex-wrap justify-between items-center gap-6">
+    <!-- Logo ak Profil -->
+    <div class="flex items-center gap-4">
+        <img src="/image/logo_global_plus.png" alt="Logo" class="w-16 h-16 object-contain rounded-xl bg-white p-1">
+        <div>
+            <h1 class="text-xl font-black" id="userNameDisplay">Chaje non...</h1>
+            <p class="text-xs text-slate-400" id="userEmailDisplay">Chaje imel...</p>
+            <span id="displayId" class="hidden bg-blue-500/20 text-blue-400 text-[11px] font-bold px-2 py-0.5 rounded border border-blue-500/30 mt-1 inline-block"></span>
+        </div>
+    </div>
+
+    <!-- Estatistik Pwogrè -->
+    <div class="flex-1 min-w-[250px] bg-slate-800 p-4 rounded-xl border border-slate-700">
+        <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-bold text-slate-400">PWOGRÈ NAN KOU A</span>
+            <span class="text-sm font-black text-green-400" id="progressPercentage">0%</span>
+        </div>
+        <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
+            <div id="progressBar" class="bg-green-500 h-full w-0 transition-all duration-500"></div>
+        </div>
+    </div>
+
+    <!-- Bouton Aksyon yo -->
+    <div class="flex gap-3">
+        <button onclick="enterManualID()" id="loginBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-all shadow-md">🔑 Antre ID Elèv</button>
+        <button id="certifBtn" disabled class="bg-slate-700 text-slate-400 font-bold px-5 py-2.5 rounded-xl text-sm flex items-center gap-2 cursor-not-allowed">🎓 Sètifika</button>
+    </div>
+</div>
+
             <div class="text-center w-full md:w-auto">
                 <a href="https://wa.me/50940488401?text=Bonjou%20Global%20Plis,%20mwen%20vle%20enskri%20nan%20fòmasyon%20Web%20la" target="_blank" class="inline-block w-full md:w-auto bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-black text-lg shadow-lg hover:scale-105 transition-all">
                     Mwen vle Enskri Kounye a!
