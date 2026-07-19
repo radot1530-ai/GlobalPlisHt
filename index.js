@@ -1,31 +1,13 @@
-// 🔹 IMPORT FIREBASE (VÈSYON 10.7.1 POU PA GEN KONFLI AK KOU.HTML)
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, push, set, onValue, remove, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-import {getAuth, signInWithPopup, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail,GoogleAuthProvider
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-// 🔹 CONFIG FIREBASE
-const firebaseConfig = {
-    apiKey: "AIzaSyB1f26ZYfvHkFWf9x1Zm6bJlrUwbXWWBfk",
-    authDomain: "globalplis-9f740.firebaseapp.com",
-    databaseURL: "https://globalplis-9f740-default-rtdb.firebaseio.com",
-    projectId: "globalplis-9f740",
-    storageBucket: "globalplis-9f740.firebasestorage.app",
-    messagingSenderId: "907235331553",
-    appId: "1:907235331553:web:5b13a1497f857a0fec16a0",
-    measurementId: "G-R91CLS4MY8"
-  };
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
+// 🔹 IMPORT SOTI NAN FIREBASE-J.JS AK SDK YO
+import { db, auth, provider } from "./firebase-j.js";
+import { ref, push, set, onValue, remove, get } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
+import { signInWithPopup, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
 /* ================= GLOBAL ================= */
 let currentUser = null;
 let allProducts = [];
 let cart = [];
-let isSignUpMode = false; // Pou konnen si se enskri y ap enskri oswa konekte
+let isSignUpMode = false; 
 
 const loginBtn = document.getElementById("loginBtn");
 const adminPanel = document.getElementById("adminPanel");
@@ -33,7 +15,6 @@ const authModal = document.getElementById("authModal");
 
 /* ================= JERE SISTÈM KONEKSYON AN ================= */
 
-// Lè itilizatè a chanje ant "Konekte" ak "Kreye Kont" nan fòm nan
 document.getElementById("toggleAuthMode")?.addEventListener("click", (e) => {
   e.preventDefault();
   isSignUpMode = !isSignUpMode;
@@ -44,16 +25,24 @@ document.getElementById("toggleAuthMode")?.addEventListener("click", (e) => {
   e.target.innerText = isSignUpMode ? "Konekte" : "Kreye youn kounye a";
 });
 
-// Konekte ak Google
 document.getElementById("googleAuthBtn")?.addEventListener("click", () => {
   signInWithPopup(auth, provider).then(() => {
     authModal.style.display = "none";
   }).catch((error) => showToast("Erè Google: " + error.message));
 });
 
-// Konekte / Enskri ak Imel
-// Konekte / Enskri ak Imel
 document.getElementById("manualAuthBtn")?.addEventListener("click", () => {
+  // ==========================================
+  // 1. SEKRITE DOMÈN (Verifikasyon Otorizasyon)
+  // ==========================================
+  const domennOtorize = ["globalplisht.onrender.com", "localhost", "127.0.0.1"];
+  const domennAktyel = window.location.hostname;
+  
+  if (!domennOtorize.includes(domennAktyel)) {
+    return showToast("Erè Sekirite: Domèn sa a pa gen otorizasyon pou konekte oswa kreye kont sou sistèm nan.");
+  }
+  // ==========================================
+
   const email = document.getElementById("authEmail").value.trim();
   const pass = document.getElementById("authPassword").value.trim();
   const name = document.getElementById("authName").value.trim();
@@ -74,19 +63,12 @@ document.getElementById("manualAuthBtn")?.addEventListener("click", () => {
     
     createUserWithEmailAndPassword(auth, email, pass)
       .then(async (userCred) => {
-        // Voye imel verifikasyon an
         await sendEmailVerification(userCred.user);
-        
-        // Sove non an nan Database la
         await set(ref(db, `users/${userCred.user.uid}`), { non: name, email: email, role: "user", kreyeNan: Date.now() });
-        
-        // Fòse itilizatè a dekonekte pou l ka al verifye imel li anvan
         await signOut(auth);
         
         authModal.style.display = "none";
         showToast("Kont ou kreye! Tanpri tcheke bwat lèt ou (spam tou) pou verifye imel la.", 6000);
-        
-        // Retounen fòm nan sou mòd "Konekte" pou pwochen fwa a
         document.getElementById("toggleAuthMode").click();
       })
       .catch(err => {
@@ -100,7 +82,6 @@ document.getElementById("manualAuthBtn")?.addEventListener("click", () => {
   } else {
     signInWithEmailAndPassword(auth, email, pass)
       .then(async (userCred) => {
-        // Tcheke si imel la verifye
         if (!userCred.user.emailVerified) {
           await signOut(auth);
           showToast("Ou poko verifye imel ou. Tanpri tcheke mesaj nou te voye ba ou a.", 5000);
@@ -123,7 +104,6 @@ document.getElementById("manualAuthBtn")?.addEventListener("click", () => {
   }
 });
 
-// Dekonekte
 if (loginBtn) {
   loginBtn.addEventListener("click", () => {
     if (currentUser) {
@@ -134,10 +114,8 @@ if (loginBtn) {
   });
 }
 
-// Tcheke tout tan si moun nan konekte (Sa aplike pou Google AK fòm manyèl la)
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    // Chèche non moun nan
     let displayName = user.displayName || "Itilizatè";
     const userRef = ref(db, `users/${user.uid}`);
     const snap = await get(userRef);
@@ -147,7 +125,7 @@ onAuthStateChanged(auth, async (user) => {
       currentUser = { uid: user.uid, role: "user", email: user.email };
     } else {
       const data = snap.val();
-      displayName = data.non || displayName; // Pran non manyèl la si l te kreye ak imel
+      displayName = data.non || displayName;
       currentUser = { uid: user.uid, role: data.role, email: user.email };
     }
 
@@ -164,7 +142,7 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 
-/* ================= REST KÒD POU STORE LA (MENM JAN AN) ================= */
+/* ================= REST KÒD POU STORE LA ================= */
 window.addProduct = () => {
   if (!currentUser || currentUser.role !== "admin") return showToast("Sèlman administratè a ki ka ajoute pwodui.");
   const name = document.getElementById('pname').value.trim();
@@ -196,9 +174,8 @@ window.deleteProduct = id => {
   if (confirm("Èske w sèten ou vle efase pwodui sa nèt?")) remove(ref(db, "products/" + id));
 };
 
-// 🔹 NAN JAVASCRIPT PRENSIPAL OU A
 function renderCategory(rowId, category, list = allProducts) {
-  if (category === "Sponsorisé") return; // 🔥 PA RANN SPONSOR ISIT
+  if (category === "Sponsorisé") return; 
   
   const row = document.getElementById(rowId);
   if (!row) return;
@@ -211,22 +188,20 @@ function renderCategory(rowId, category, list = allProducts) {
     const card = document.createElement("div");
     card.className = "product-card";
     
-    // Nou kenbe menm HTML ou an, nou jis mete yon klas "click-to-view" ak cursor:pointer
     card.innerHTML = `
-      <img src="${p.img}" loading="lazy" class="click-to-view" style="cursor:pointer;" title="Klike pou wè detay">
-      <div class="click-to-view" style="cursor:pointer;">${p.name}</div>
-      <div>${p.price} HTG</div>
+      <div class="image-container click-to-view" style="cursor:pointer;" title="Klike pou wè detay">
+        <img src="${p.img}" loading="lazy" class="async-image" onload="this.classList.add('loaded')">
+      </div>
+      <div class="click-to-view" style="cursor:pointer; font-weight: bold; margin-top: 10px;">${p.name}</div>
+      <div style="margin-bottom: 10px;">${p.price} HTG</div>
       <button class="big-btn">Ajoute</button>
     `;
     
-    // 🔹 Lojik pou klike sou imaj la oswa tit la
     const goToProduct = () => window.location.href = `store/pwodui/produit.html?id=${p.id}`;
     card.querySelectorAll(".click-to-view").forEach(el => el.onclick = goToProduct);
     
-    // Bouton ajoute a rete menm jan an
     card.querySelector("button.big-btn").onclick = () => addToCart(p);
     
-    // Nou remete lojik ADMIN ou a ki te la anvan an
     if (currentUser?.role === "admin") {
       const del = document.createElement("button");
       del.textContent = "❌";
@@ -239,7 +214,6 @@ function renderCategory(rowId, category, list = allProducts) {
   });
 }
 
-// 🔹 POU SPONSOR A TOU
 let sponsorTimer = null;
 function startSponsorRotation() {
   const row = document.getElementById("sponsoriseRow");
@@ -256,19 +230,19 @@ function startSponsorRotation() {
       card.className = "product-card";
       
       card.innerHTML = `
-        <img src="${p.img}" class="click-to-view" style="cursor:pointer;" title="Klike pou wè detay">
-        <div class="click-to-view" style="cursor:pointer;">${p.name}</div>
-        <div>${p.price} HTG</div>
+        <div class="image-container click-to-view" style="cursor:pointer;" title="Klike pou wè detay">
+          <img src="${p.img}" class="async-image" onload="this.classList.add('loaded')">
+        </div>
+        <div class="click-to-view" style="cursor:pointer; font-weight: bold; margin-top: 10px;">${p.name}</div>
+        <div style="margin-bottom: 10px;">${p.price} HTG</div>
         <button class="big-btn">Ajoute</button>
       `;
       
-      // 🔹 Lojik pou klike sou imaj la oswa tit la
       const goToProduct = () => window.location.href = `produit.html?id=${p.id}`;
       card.querySelectorAll(".click-to-view").forEach(el => el.onclick = goToProduct);
 
       card.querySelector("button.big-btn").onclick = () => addToCart(p);
       
-      // Lojik Admin pou sponsor a tou
       if (currentUser?.role === "admin") {
         const del = document.createElement("button"); 
         del.textContent = "❌"; 
@@ -334,7 +308,6 @@ if (searchInput) {
 
 window.addEventListener("DOMContentLoaded", renderProducts);
 
-
 function showToast(message, duration = 3000) {
     const toast = document.getElementById("toast");
     toast.innerText = message;
@@ -342,18 +315,21 @@ function showToast(message, duration = 3000) {
     setTimeout(() => { toast.style.display = "none"; }, duration);
 }
 
-
 const menuBtn = document.getElementById('menuBtn');
 const closeMenu = document.getElementById('closeMenu');
 const sideMenu = document.getElementById('sideMenu');
 const menuOverlay = document.getElementById('menuOverlay');
 
-menuBtn.onclick = () => {
-  sideMenu.classList.add('active');
-  menuOverlay.classList.add('active');
-};
+if (menuBtn) {
+  menuBtn.onclick = () => {
+    sideMenu.classList.add('active');
+    menuOverlay.classList.add('active');
+  };
+}
 
-closeMenu.onclick = () => {
-  sideMenu.classList.remove('active');
-  menuOverlay.classList.remove('active');
-};
+if (closeMenu) {
+  closeMenu.onclick = () => {
+    sideMenu.classList.remove('active');
+    menuOverlay.classList.remove('active');
+  };
+}
