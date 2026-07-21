@@ -35,106 +35,72 @@
 
     <header class="gradient-bg text-white p-6 text-center shadow-lg border-b-4 border-blue-400">
         <h1 class="text-4xl font-black tracking-tight">GLOBAL PLiS <span class="text-yellow-400">+∞</span></h1>
-        <p class="text-sm text-blue-100 mt-2 font-medium tracking-wide">Fòmasyon Kreye Sit Entènèt ou</p>
+        <h2 id="courseTitle" class="text-xl font-bold mt-2 text-blue-100">Kou ap chaje...</h2>
     </header>
 
     <main class="max-w-4xl mx-auto p-4 md:p-6">
-<div class="bg-slate-900 text-white p-6 rounded-2xl shadow-lg mb-6 flex flex-wrap justify-between items-center gap-6">
-    <!-- Logo ak Profil -->
-    <div class="flex items-center gap-4">
-        <img src="/image/logo_global_plus.png" alt="Logo" class="w-16 h-16 object-contain rounded-xl bg-white p-1">
-        <div>
-            <h1 class="text-xl font-black" id="userNameDisplay">Chaje non...</h1>
-            <p class="text-xs text-slate-400" id="userEmailDisplay">Chaje imel...</p>
-            <span id="displayId" class="hidden bg-blue-500/20 text-blue-400 text-[11px] font-bold px-2 py-0.5 rounded border border-blue-500/30 mt-1 inline-block"></span>
-        </div>
-    </div>
 
-    <!-- Estatistik Pwogrè -->
-    <div class="flex-1 min-w-[250px] bg-slate-800 p-4 rounded-xl border border-slate-700">
-        <div class="flex justify-between items-center mb-2">
-            <span class="text-xs font-bold text-slate-400">PWOGRÈ NAN KOU A</span>
-            <span class="text-sm font-black text-green-400" id="progressPercentage">0%</span>
-        </div>
-        <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
-            <div id="progressBar" class="bg-green-500 h-full w-0 transition-all duration-500"></div>
-        </div>
-    </div>
-
-    <!-- Bouton Aksyon yo -->
-    <div class="flex gap-3">
-        <button onclick="enterManualID()" id="loginBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-all shadow-md">🔑 Antre ID Elèv</button>
-        <button id="certifBtn" disabled class="bg-slate-700 text-slate-400 font-bold px-5 py-2.5 rounded-xl text-sm flex items-center gap-2 cursor-not-allowed">🎓 Sètifika</button>
-    </div>
-</div>
-
-            <div class="text-center w-full md:w-auto">
-                <a href="https://wa.me/50940488401?text=Bonjou%20Global%20Plis,%20mwen%20vle%20enskri%20nan%20fòmasyon%20Web%20la" target="_blank" class="inline-block w-full md:w-auto bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-black text-lg shadow-lg hover:scale-105 transition-all">
-                    Mwen vle Enskri Kounye a!
-                </a>
-                <p class="text-[10px] text-slate-400 mt-2 italic font-medium">WhatsApp: +509 4048-8401</p>
+        <!-- ESTATISTIK AK SÈTIFIKA -->
+        <div class="bg-white p-5 rounded-xl shadow-md mb-8 border border-slate-100">
+            <div class="flex justify-between items-end mb-2">
+                <h3 class="font-bold text-slate-700 text-lg">Pwogresyon w nan Fòmasyon an</h3>
+                <span class="font-black text-2xl text-blue-600"><span id="progressText">0</span>%</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-4 mb-4 overflow-hidden shadow-inner">
+                <div id="progressBar" class="bg-gradient-to-r from-blue-500 to-green-500 h-4 rounded-full transition-all duration-1000 ease-out" style="width: 0%;"></div>
+            </div>
+            <div class="flex justify-end">
+                <button id="certBtn" disabled class="bg-slate-200 text-slate-400 font-bold px-6 py-3 rounded-xl cursor-not-allowed text-sm flex items-center gap-2 transition-all duration-500">
+                    🔒 Sètifika (Poko Disponib)
+                </button>
             </div>
         </div>
 
-        <div id="authBar" class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 mb-8 flex justify-between items-center transition-all">
+        <div id="authBar" class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 mb-8 flex flex-col md:flex-row justify-between items-center transition-all gap-4">
             <div id="userInfo" class="flex items-center gap-3">
-                <div id="statusIndicator" class="w-3 h-3 rounded-full bg-orange-400 animate-pulse"></div>
+                <div id="statusIndicator" class="w-3 h-3 rounded-full bg-green-400 animate-pulse"></div>
                 <div>
-                    <p class="text-slate-500 text-xs uppercase tracking-wider font-bold">Estati Aksè Kont</p>
-                    <p class="font-bold text-lg"><span id="userStatus" class="text-orange-500">Konekte - ID Pa Antre</span></p>
-                    <p id="displayId" class="font-bold text-blue-600 text-sm hidden"></p>
+                    <p id="userName" class="font-bold text-lg text-slate-800">Elèv...</p>
+                    <p id="userEmail" class="text-slate-500 text-xs font-bold"></p>
                 </div>
             </div>
             <div>
-                <!-- Bouton pou antre ID inik la -->
-                <button id="loginBtn" onclick="login()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-bold shadow-md transition-colors focus:ring-2 focus:ring-blue-400">Antre ID Klas la</button>
                 <!-- Bouton dekoneksyon konplè -->
-                <button id="logoutBtn" onclick="logout()" class="bg-slate-100 hover:bg-red-50 text-red-600 border border-slate-200 hover:border-red-200 px-4 py-2 rounded-md font-bold hidden transition-colors">Dekonekte nèt</button>
+                <button id="logoutBtn" onclick="logout()" class="bg-slate-100 hover:bg-red-50 text-red-600 border border-slate-200 hover:border-red-200 px-4 py-2 rounded-md font-bold transition-colors">Dekonekte nèt</button>
             </div>
         </div>
 
-        <div class="bg-white p-5 rounded-xl shadow-md border-l-4 border-blue-500 mb-8 transform hover:-translate-y-1 transition-transform duration-300">
-            <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-2">
-                <div>
-                    <span class="bg-blue-100 text-blue-800 text-xs font-black px-2 py-1 rounded uppercase tracking-wider">Gratis</span>
-                    <h2 class="font-bold text-xl text-slate-800 mt-1">Modil 1: Entwodiksyon</h2>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="toggleFullScreen('vid1')" class="bg-slate-800 hover:bg-slate-700 text-white p-2 rounded text-xs font-bold transition-colors">🔳 Pwen Ekran</button>
-                    <button onclick="rotateVideo('vid1')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 p-2 rounded text-xs font-bold border border-slate-200 transition-colors">🔄 Vire</button>
-                </div>
-            </div>
-            
-            <div class="aspect-video bg-black rounded-lg mb-3 overflow-hidden flex items-center justify-center shadow-inner">
-                <video id="vid1" controls controlsList="nodownload" oncontextmenu="return false;" class="w-full h-full transition-all">
-                    <source src="image/modil1.0.mp4" type="video/mp4">
-                    Navigatè w la pa sipòte videyo sa a.
-                </video>
-            </div>
-
-            <div class="flex flex-wrap gap-2 mb-4">
-                <button onclick="changeVideo('vid1', 'image/modil1.0.mp4')" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded text-xs font-bold transition-colors">▶ Pati 1</button>
-                <button onclick="changeVideo('vid1', 'image/modil1.1.mp4')" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded text-xs font-bold transition-colors">▶ Pati 2</button>
-                <button onclick="changeVideo('vid1', 'image/modil1.2.mp4')" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded text-xs font-bold transition-colors">▶ Pati 3</button>
-            </div>
-
-            <div class="flex gap-3 mt-4">
-                <button onclick="openQuiz(1)" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold w-full transition-colors shadow-md text-sm md:text-base">Pase Egzamen Modil 1</button>
-                <a href="image/modil1.pdf" target="_blank" class="bg-red-50 text-red-600 font-bold border border-red-200 px-5 py-3 rounded-lg text-sm flex items-center justify-center gap-2 transition-colors hover:bg-red-100 min-w-[100px]"><span class="text-lg">📄</span> PDF</a>
+        <!-- SEKSYON SEKIRITE APARÈY -->
+        <div id="deviceLockSection" class="hidden mb-8 bg-orange-50 border-2 border-orange-300 p-6 rounded-xl shadow-sm text-center">
+            <i class="fas fa-mobile-alt text-orange-500 text-4xl mb-3"></i>
+            <h2 class="text-xl font-bold text-orange-800 mb-2">Lye Aparèy Sa A</h2>
+            <p class="text-orange-700 mb-4 text-sm">Pou pwoteje kont ou, ou dwe lye telefòn/navigatè sa a. Antre ID itilizatè w la anba a:</p>
+            <div class="flex max-w-md mx-auto gap-2">
+                <input type="text" id="inputId" placeholder="Kole ID w la isit la..." class="flex-1 border border-orange-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+                <button onclick="linkDevice()" class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg font-bold transition">Lye</button>
             </div>
         </div>
 
-        <h3 class="font-black text-slate-400 uppercase tracking-widest text-sm mb-4">Pwogram konplè a</h3>
-        <div id="modulesContainer" class="space-y-6"></div>
+        <div id="deviceActiveSection" class="hidden">
+            <!-- Pwogram / Syllabus -->
+            <div class="mb-8">
+                <h3 class="font-black text-slate-400 uppercase tracking-widest text-sm mb-4">Pwogram konplè a</h3>
+                <ul id="syllabusList" class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3"></ul>
+            </div>
+
+            <!-- Modil Dinamik yo ap parèt isit la -->
+            <div id="modulesContainer" class="space-y-6"></div>
+        </div>
+        
     </main>
 
-    <!-- Rès eleman Quiz yo rete entak... -->
-    <div id="quizBox" class="fixed inset-0 bg-slate-900/90 hidden flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+    <!-- Modal Quiz -->
+    <div id="quizModal" class="fixed inset-0 bg-slate-900/90 hidden flex items-center justify-center z-50 p-4 backdrop-blur-sm">
         <div class="bg-white p-6 rounded-2xl w-full max-w-lg shadow-2xl relative transform transition-all">
             <button onclick="closeQuiz()" class="absolute top-4 right-4 bg-slate-100 hover:bg-red-100 text-slate-400 hover:text-red-500 w-8 h-8 rounded-full flex items-center justify-center font-bold transition-colors">&times;</button>
             <div class="flex items-center gap-3 mb-4 border-b pb-4">
                 <div class="bg-blue-100 p-2 rounded-lg"><span class="text-2xl">📝</span></div>
-                <h3 class="font-black text-2xl text-slate-800">Egzamen Modil <span id="qModNum" class="text-blue-600"></span></h3>
+                <h3 class="font-black text-2xl text-slate-800">Egzamen Modil <span id="currentModNum" class="text-blue-600"></span></h3>
             </div>
             <div id="quizContent" class="space-y-4 py-2 max-h-[55vh] overflow-y-auto px-1"></div>
             <div class="mt-6">
@@ -143,11 +109,7 @@
         </div>
     </div>
 
-    <div id="loadingOverlay" class="fixed inset-0 bg-white/80 hidden flex-col items-center justify-center z-50 backdrop-blur-sm">
-        <div class="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
-        <p class="mt-4 font-bold text-slate-600">Ap verifye done yo...</p>
-    </div>
-
-    <script type="module" src="klas.js"></script>
+    <!-- SCRIPT FIREBASE AK LOJIK -->
+<script type="module" src="klas.js"></script>
 </body>
 </html>
