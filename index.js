@@ -1,5 +1,5 @@
 // 🔹 IMPORT SOTI NAN FIREBASE-J.JS AK SDK YO
-import { db, auth, provider } from "/firebase-j.js";
+import { db, auth, provider } from "./firebase-j.js";
 import { ref, push, set, onValue, remove, get } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
 import { signInWithPopup, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
