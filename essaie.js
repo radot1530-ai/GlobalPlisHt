@@ -1,16 +1,31 @@
-// ==========================
-// IMPORT BAZ DONE AK APP FIREBASE
-// ==========================
+// ======================================================================
+// 1. IMPORT AK CONFIG FIREBASE (CDN Dirèk - Vèsyon 12.15.0)
+// ======================================================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
-// Enpòte 'app' ki sot nan lòt fichye w la (asire w chemen an bon)
-import { app } from "./firebase-j.js"; 
+import { getAuth, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
-// Initialize Database ak 'app' ou fèk enpòte a
+const firebaseConfig = {
+    apiKey: "AIzaSyB1f26ZYfvHkFWf9x1Zm6bJlrUwbXWWBfk",
+    authDomain: "globalplis-9f740.firebaseapp.com",
+    databaseURL: "https://globalplis-9f740-default-rtdb.firebaseio.com",
+    projectId: "globalplis-9f740",
+    storageBucket: "globalplis-9f740.firebasestorage.app",
+    messagingSenderId: "907235331553",
+    appId: "1:907235331553:web:5b13a1497f857a0fec16a0",
+    measurementId: "G-R91CLS4MY8"
+};
+
+// Initialisation globale
+const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
-// ==========================
-// AFICHE KOU YO (Li konpatib ak Base64)
-// ==========================
+
+// ======================================================================
+// 2. LOJIK POU AFICHE KOU YO SOT NAN FIREBASE (Realtime Database)
+// ======================================================================
 const courseWrapper = document.getElementById("courseWrapper");
 
 if (courseWrapper) {
@@ -57,10 +72,10 @@ if (courseWrapper) {
   });
 }
 
-// ==========================
-// SLIDER PIBLISITE PRO
-// ==========================
 
+// ======================================================================
+// 3. LOJIK POU SLIDER PIBLISITE PRO (Pa itilize Firebase, sèlman JSON)
+// ======================================================================
 const slides = document.getElementById("slides");
 const dots = document.getElementById("dots");
 const prevBtn = document.getElementById("prev");
@@ -129,14 +144,14 @@ function prevSlide() {
     afficher();
 }
 
-if(nextBtn) {
+if (nextBtn) {
     nextBtn.addEventListener("click", () => {
         nextSlide();
         resetInterval();
     });
 }
 
-if(prevBtn) {
+if (prevBtn) {
     prevBtn.addEventListener("click", () => {
         prevSlide();
         resetInterval();
@@ -153,6 +168,6 @@ function resetInterval() {
 }
 
 // Sèlman chaje slider a si eleman an egziste nan paj la
-if(slides) {
+if (slides) {
     loadSliderData();
 }
