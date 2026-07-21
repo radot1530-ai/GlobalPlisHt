@@ -16,9 +16,123 @@
   <meta property="og:url" content="https://globalplisht.onrender.com/">
   <meta property="og:type" content="website">
 
-</head>
+<!-- ESTIL AK ANIMASYON PRELOADER -->
+<style>
+    /* Estil totalman endepandan pou evite tout konfli CSS */
+    #globalPreloader {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        background: #0f172a !important;
+        z-index: 99999 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: opacity 0.5s ease !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .preloader-hidden {
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
 
+    .preloader-wrapper {
+        position: relative !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin-bottom: 24px !important;
+        animation: slideFromLeft 1s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    }
+
+    /* Rido limyè k ap vire a */
+    .preloader-spinner {
+        width: 96px !important;
+        height: 96px !important;
+        border: 4px solid transparent !important;
+        border-top-color: #3b82f6 !important;
+        border-right-color: #facc15 !important;
+        border-radius: 50% !important;
+        animation: spinLoader 1s linear infinite !important;
+        position: absolute !important;
+    }
+
+    /* Logo a mete a 50% (~64px) ak tout santraj */
+    .preloader-logo-box {
+        width: 64px !important;
+        height: 64px !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        overflow: hidden !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+        padding: 4px !important;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.6) !important;
+        animation: customPulse 1.8s infinite ease-in-out !important;
+        z-index: 2 !important;
+    }
+
+    .preloader-logo-box img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
+    }
+
+    .preloader-text {
+        color: #93c5fd !important;
+        font-family: sans-serif !important;
+        font-weight: 700 !important;
+        font-size: 14px !important;
+        letter-spacing: 2px !important;
+        text-transform: uppercase !important;
+        margin-top: 16px !important;
+        animation: textPulse 1.5s infinite ease-in-out !important;
+    }
+
+    /* Animasyon yo */
+    @keyframes slideFromLeft {
+        0% { transform: translateX(-150px); opacity: 0; }
+        100% { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes spinLoader {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @keyframes customPulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(1.08); }
+    }
+
+    @keyframes textPulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
+    }
+</style>
+
+
+
+<!-- GLOBAL PLIS PRELOADER -->
+
+</head>
 <body>
+  <div id="globalPreloader">
+    <div class="preloader-wrapper">
+        <div class="preloader-spinner"></div>
+        <div class="preloader-logo-box">
+            <img src="/image/1768017763381.png" alt="Global Plis Logo">
+        </div>
+    </div>
+    <p class="preloader-text">Global Plis ap chaje...</p>
+</div>
 
 <!-------------DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD------>
 <header class="main-header">
@@ -298,7 +412,17 @@
 <script src="data.js"></script>
 <script src="app.js"></script>
 
-
+<script>
+    window.addEventListener('load', () => {
+        const preloader = document.getElementById('globalPreloader');
+        if (preloader) {
+            preloader.classList.add('preloader-hidden');
+            setTimeout(() => {
+                preloader.style.display = 'none';
+            }, 500);
+        }
+    });
+</script>
 <div id="authModal" class="popups" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
   <div style="background:#fff; padding:30px; border-radius:12px; width:90%; max-width:400px; text-align:center; position:relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
     <span onclick="document.getElementById('authModal').style.display='none'" style="position:absolute; right:15px; top:10px; cursor:pointer; font-size:24px; font-weight:bold; color:#666;">&times;</span>
