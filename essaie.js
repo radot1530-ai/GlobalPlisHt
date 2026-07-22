@@ -1,9 +1,9 @@
 // ======================================================================
-// 1. IMPORT AK CONFIG FIREBASE (CDN Dirèk - Vèsyon 12.15.0)
+// 1. IMPORT AK CONFIG FIREBASE (Sèlman sa k nesesè pou DB a)
 // ======================================================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
-import { getAuth, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+// ❌ Mwen retire import Auth la isit la
 
 const firebaseConfig = {
     apiKey: "AIzaSyB1f26ZYfvHkFWf9x1Zm6bJlrUwbXWWBfk",
@@ -19,8 +19,7 @@ const firebaseConfig = {
 // Initialisation globale
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
+// ❌ Mwen retire const auth ak const provider isit la
 
 
 // ======================================================================
