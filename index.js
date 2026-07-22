@@ -1,6 +1,6 @@
-// 🔹 IMPORT FIREBASE (Vèsyon 12.7.0 jan w te mande l la)
+ // 🔹 IMPORT FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { push, getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+import { push, set, getDatabase, ref, onValue, runTransaction, remove, get } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
 // 🔹 CONFIG FIREBASE
 const firebaseConfig = {
@@ -19,6 +19,7 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 /* ================= GLOBAL ================= */
+let currentUser = null;
 let allProducts = [];
 let cart = [];
 
@@ -40,7 +41,7 @@ function startSponsorRotation() {
     return;
   }
   
-  // ✅ preload sèlman 4 premye
+  // ✅ preload sèlman 4 premye (pa tout lis la)
   sponsors.slice(0, 2).forEach(p => {
     const img = new Image();
     img.src = p.img;
@@ -53,6 +54,7 @@ function startSponsorRotation() {
       const card = document.createElement("div");
       card.className = "product-card";
       
+      // ❌ retire lazy loading pou slider
       card.innerHTML = `
         <img src="${p.img}">
         <div>${p.name}</div>
@@ -61,6 +63,16 @@ function startSponsorRotation() {
       `;
       
       card.querySelector("button").onclick = () => addToCart(p);
+      
+      // ADMIN DELETE (kenbe lojik Code 2)
+      if (currentUser?.role === "admin") {
+        const del = document.createElement("button");
+        del.textContent = "❌";
+        del.classList.add("buttons");
+        del.onclick = () => deleteProduct(p.id);
+        card.appendChild(del);
+      }
+      
       row.appendChild(card);
     });
   }
@@ -73,7 +85,6 @@ function startSponsorRotation() {
     render(sponsors);
   }, 5000);
 }
-
 /* ================= SPINNER ================= */
 function showSpinner(show = true) {
   document.querySelectorAll(".spinner").forEach(sp => {
@@ -81,16 +92,51 @@ function showSpinner(show = true) {
   });
 }
 
+/* ================= LOGIN ================= */
+window.login = async () => {
+  const code = document.getElementById("code").value.trim();
+  if (!code) return alert("Antre kòd");
+  
+  if (code === "admin125") {
+    currentUser = { code, role: "admin" };
+    addBox.classList.remove("hidden");
+    adminBox.classList.remove("hidden");
+    alert("Admin konekte ✔️");
+  } else {
+    const snap = await get(ref(db, "users/" + code));
+    if (!snap.exists()) return alert("Code invalide");
+    
+    const role = snap.val().role || "user";
+    currentUser = { code, role };
+    
+    if (role === "user" || role === "premium") {
+      addBox.classList.remove("hidden");
+    }
+    
+    alert(`Login ✔️ (${role})`);
+  }
+  
+  renderProducts();
+  renderUsers(); // ✅ Rele global
+};
+
+
 /* ================= ADD PRODUCT ================= */
 window.addProduct = () => {
-  const name = document.getElementById("pname")?.value.trim();
-  const price = document.getElementById("pprice")?.value.trim();
-  const desc = document.getElementById("description")?.value.trim();
-  const fileInput = document.getElementById("pfile");
-  const file = fileInput?.files[0];
-  let category = document.getElementById("pcategory")?.value;
+  if (!currentUser) return alert("Ou pa konekte");
   
-  if (!name || !price || !desc || !file) return alert("Tout chan yo oblije ranpli");
+  const name = pname.value.trim();
+  const price = pprice.value.trim();
+  const desc = description.value.trim();
+  const file = pfile.files[0];
+  let category = pcategory.value;
+  
+  if (!name || !price || !desc || !file) return alert("Champs vid");
+  
+  if (currentUser.role === "user" && category === "Sponsorisé") {
+    alert("Ou pa gen dwa Sponsorisé");
+    category = "Mache";
+  }
   
   const reader = new FileReader();
   reader.onload = () => {
@@ -100,22 +146,22 @@ window.addProduct = () => {
       description: desc,
       category,
       img: reader.result,
-      premium: category === "Sponsorisé",
+      user: currentUser.code,
+      premium: currentUser.role === "premium" || category === "Sponsorisé",
       time: Date.now()
-    }).then(() => {
-        alert("Pwodui ajoute ak siksè !");
-        document.getElementById("pname").value = "";
-        document.getElementById("pprice").value = "";
-        document.getElementById("description").value = "";
-        fileInput.value = "";
     });
+    
+    pname.value = "";
+    pprice.value = "";
+    description.value = "";
+    pfile.value = "";
   };
   reader.readAsDataURL(file);
 };
 
 /* ================= CATEGORY RENDER ================= */
 function renderCategory(rowId, category, list = allProducts) {
-  if (category === "Sponsorisé") return; 
+  if (category === "Sponsorisé") return; // 🔥 PA RANN SPONSOR ISIT
   
   const row = document.getElementById(rowId);
   if (!row) return;
@@ -136,6 +182,15 @@ function renderCategory(rowId, category, list = allProducts) {
     `;
     
     card.querySelector("button").onclick = () => addToCart(p);
+    
+    if (currentUser?.role === "admin") {
+      const del = document.createElement("button");
+      del.textContent = "❌";
+      del.classList.add("buttons");
+      del.onclick = () => deleteProduct(p.id);
+      card.appendChild(del);
+    }
+    
     row.appendChild(card);
   });
 }
@@ -157,9 +212,7 @@ function initSearch() {
     );
     
     ["macheRow", "immobilierRow", "abimanRow", "zoutiRow"]
-    .forEach(id => {
-        if(document.getElementById(id)) document.getElementById(id).innerHTML = "";
-    });
+    .forEach(id => document.getElementById(id).innerHTML = "");
     
     const map = {
       "Mache": "macheRow",
@@ -168,34 +221,25 @@ function initSearch() {
       "Zouti": "zoutiRow"
     };
     
-    filtered.forEach(p => {
-        if(map[p.category]) renderCategory(map[p.category], p.category, filtered);
-    });
+    filtered.forEach(p => renderCategory(map[p.category], p.category, filtered));
     
     showSpinner(false);
   });
 }
 
 /* ================= DELETE ================= */
-// Opsyonèl: Ou ka itilize sa nan konsole a siw bezwen efase yon pwodui
 window.deleteProduct = id => {
-  if (confirm("Èske w sèten ou vle efase pwodui sa?")) remove(ref(db, "products/" + id));
+  if (currentUser?.role !== "admin") return alert("Ou pa admin");
+  if (confirm("Supprimer ?")) remove(ref(db, "products/" + id));
 };
 
 /* ================= CART ================= */
 function addToCart(p) {
   cart.push(p);
   renderCart();
-  alert(`${p.name} ajoute nan panyen w lan!`);
 }
 
 function renderCart() {
-  const cartItems = document.getElementById("cartItems");
-  const totalPrice = document.getElementById("totalPrice");
-  const cartCount = document.getElementById("cartCount");
-  
-  if (!cartItems || !totalPrice || !cartCount) return;
-
   cartItems.innerHTML = "";
   let total = 0;
   
@@ -203,7 +247,7 @@ function renderCart() {
     total += Number(p.price);
     
     const div = document.createElement("div");
-    div.innerHTML = `${p.name} (${p.price} HTG) <button style="color:red; border:none; background:none; cursor:pointer;">X</button>`;
+    div.innerHTML = `${p.name} (${p.price}) <button>X</button>`;
     
     div.querySelector("button").onclick = () => {
       cart.splice(i, 1);
@@ -217,26 +261,22 @@ function renderCart() {
   cartCount.innerText = cart.length;
 }
 
-const cartBtn = document.getElementById("cartBtn");
-if(cartBtn) cartBtn.onclick = () => document.getElementById("cartPopup")?.classList.toggle("show");
+cartBtn.onclick = () => cartPopup.classList.toggle("show");
 
-const whatsappBtn = document.getElementById("whatsappBtn");
-if (whatsappBtn) {
-    whatsappBtn.onclick = () => {
-      if (cart.length === 0) return alert("Panyen w lan vid!");
-      
-      let msg = "Bonjou, mwen vle kòmande:\n";
-      let total = 0;
-      
-      cart.forEach(p => {
-        msg += `▪️ ${p.name} - ${p.price} HTG\n`;
-        total += Number(p.price);
-      });
-      
-      msg += `\nTotal: ${total} HTG`;
-      window.open("https://wa.me/50940488401?text=" + encodeURIComponent(msg));
-    };
-}
+whatsappBtn.onclick = () => {
+  if (cart.length === 0) return alert("Panier vid");
+  
+  let msg = "Bonjou, mwen vle kòmande:\n";
+  let total = 0;
+  
+  cart.forEach(p => {
+    msg += `${p.name} - ${p.price}\n`;
+    total += Number(p.price);
+  });
+  
+  msg += "Total: " + total;
+  window.open("https://wa.me/50940488401?text=" + encodeURIComponent(msg));
+};
 
 /* ================= RENDER PRODUCTS ================= */
 function renderProducts() {
@@ -251,13 +291,13 @@ function renderProducts() {
       });
     }
     
-    // Rann kategori yo
+    // 🔥 RANN LÒT KATEGORI SELMAN
     renderCategory("macheRow", "Mache");
     renderCategory("immobilierRow", "Immobilier");
     renderCategory("abimanRow", "Abiman & Tekstil");
     renderCategory("zoutiRow", "Zouti");
     
-    // Slider
+    // 🔥 SLIDER
     startSponsorRotation();
     
     showSpinner(false);
@@ -270,41 +310,98 @@ window.addEventListener("DOMContentLoaded", () => {
   initSearch();
 });
 
-/* ================= MENU LOGIC ================= */
+
+/* ================= LOGIN POPUP ================= */
+window.openLogin = () => {
+  document.getElementById("loginPopup").style.display = "flex";
+};
+
+window.closeLogin = () => {
+  document.getElementById("loginPopup").style.display = "none";
+};
+
+// Fèmen si klike deyò
+window.addEventListener("click", e => {
+  const popup = document.getElementById("loginPopup");
+  if (e.target === popup) popup.style.display = "none";
+});
+
+
 const menuBtn = document.getElementById('menuBtn');
 const closeMenu = document.getElementById('closeMenu');
 const sideMenu = document.getElementById('sideMenu');
 const menuOverlay = document.getElementById('menuOverlay');
 
-if (menuBtn) {
-    menuBtn.onclick = () => {
-      sideMenu.classList.add('active');
-      menuOverlay.classList.add('active');
-    };
-}
+menuBtn.onclick = () => {
+  sideMenu.classList.add('active');
+  menuOverlay.classList.add('active');
+};
 
-if (closeMenu) {
-    closeMenu.onclick = () => {
-      sideMenu.classList.remove('active');
-      menuOverlay.classList.remove('active');
-    };
-}
+closeMenu.onclick = () => {
+  sideMenu.classList.remove('active');
+  menuOverlay.classList.remove('active');
+};
 
-if (menuOverlay) {
-    menuOverlay.onclick = () => {
-      sideMenu.classList.remove('active');
-      menuOverlay.classList.remove('active');
-    };
-}
+// Fèmen menu a si moun nan klike sou overlay a
+menuOverlay.onclick = () => {
+  sideMenu.classList.remove('active');
+  menuOverlay.classList.remove('active');
+};
 
-/* ================= DOWNLOAD PAGE ================= */
-window.downloadPage = () => {
+
+// TELECHAJE PAJ LA OTOMATIKMAN
+function downloadPage() {
   const html = document.documentElement.outerHTML;
+
   const blob = new Blob([html], { type: "text/html" });
   const url = URL.createObjectURL(blob);
+
   const a = document.createElement("a");
   a.href = url;
   a.download = "globalplus_offline.html";
   a.click();
+
   URL.revokeObjectURL(url);
+}
+
+
+/* ================= ADMIN USERS ================= */
+async function renderUsers() {
+  if (currentUser?.role !== "admin") return;
+
+  const box = document.getElementById("usersBox");
+  if (!box) return;
+
+  box.innerHTML = "";
+
+  const snap = await get(ref(db, "users"));
+  if (!snap.exists()) return;
+
+  snap.forEach(u => {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      ${u.key} (${u.val().role})
+      <button class="buttons">❌</button>
+    `;
+
+    div.querySelector("button").onclick = () => {
+      if (confirm("Supprimer user?")) {
+        remove(ref(db, "users/" + u.key)).then(() => renderUsers());
+      }
+    };
+
+    box.appendChild(div);
+  });
+}
+
+window.addUser = async () => {
+  if (currentUser?.role !== "admin") return alert("Ou pa admin");
+
+  const code = prompt("Code user");
+  if (!code) return;
+
+  const role = prompt("Role: user/premium", "user");
+
+  await set(ref(db, "users/" + code), { role });
+  renderUsers();
 };
