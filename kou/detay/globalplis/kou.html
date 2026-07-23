@@ -31,7 +31,7 @@
       }
       @keyframes spinLoader { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-      /* Lazy Loading (Skeleton Effect) */
+      /* Lazy Loading (Skeleton Effect) Pwòp ak CSS */
       .image-container {
           background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
           background-size: 200% 100%;
@@ -70,7 +70,7 @@
       <div class="brand-container" style="color: white; font-weight: bold; font-size: 1.2rem;">
         🌐 GLOBAL PLIS
       </div>
-      <button id="loginBtn" class="login-pill" onclick="document.getElementById('authModal').style.display='flex'"><span>🔐</span> Konekte</button>
+      <button id="loginBtn" class="login-pill"><span>🔐</span> Konekte</button>
     </div>
 
     <nav class="tabs-container">
@@ -177,7 +177,7 @@
       </div>
     </section>
 
-    <!-- SÈVIS + (Kou) -->
+    <!-- SÈVIS + (Kou sèlman) -->
     <section id="sèv" class="tab-content active">
       <section class="course-section" style="padding: 20px;">
         <div class="course-grid" id="courseWrapper" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;"></div>
@@ -185,6 +185,7 @@
     </section>
   </main>
 
+  <!-- ANSYEN FOOTER A -->
   <footer class="footer-container">
     <div class="footer-bottom">
       <p>&copy; 2026 Global Plis +∞. Fòme yon lòt jenerasyon pou Ayiti.</p>
@@ -212,8 +213,8 @@
 
   <div id="toast" style="position:fixed; bottom:20px; right:20px; background:#333; color:#fff; padding:15px; border-radius:5px; display:none; z-index:9999;"></div>
 
+  <!-- JAVASCRIPT -->
   <script type="module">
-    // 🔹 IMPORT SOTI NAN FIREBASE-J.JS AK SDK YO
     import { db, auth, provider } from "./firebase-j.js";
     import { ref, push, set, onValue, remove, get } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
     import { 
@@ -227,7 +228,7 @@
     } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
     /* ================= GLOBAL ================= */
-    window.currentUser = null;
+    let currentUser = null;
     let allProducts = [];
     let cart = [];
     let isSignUpMode = false; 
@@ -235,13 +236,6 @@
     const loginBtn = document.getElementById("loginBtn");
     const adminPanel = document.getElementById("adminPanel");
     const authModal = document.getElementById("authModal");
-
-    window.showToast = function(message, duration = 3000) {
-      const toast = document.getElementById("toast");
-      toast.innerText = message;
-      toast.style.display = "block";
-      setTimeout(() => { toast.style.display = "none"; }, duration);
-    }
 
     window.chanjeOnglet = function(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
@@ -269,29 +263,16 @@
       }).catch((error) => showToast("Erè Google: " + error.message));
     });
 
-    /* ================= LOJIK BLIYE MODPAS ================= */
     document.getElementById("forgotPasswordBtn")?.addEventListener("click", (e) => {
       e.preventDefault();
       const email = document.getElementById("authEmail").value.trim();
       if (!email) return showToast("Tanpri rantre imel ou nan chan an dabò pou n voye lyen an ba ou.");
-
       sendPasswordResetEmail(auth, email)
         .then(() => showToast("Nou voye yon lyen pou re-inisyalize modpas ou nan imel ou. Tcheke bwat lèt ou!", 6000))
-        .catch((err) => {
-          if (err.code === "auth/user-not-found") showToast("Pa gen okenn kont ki anrejistre ak imel sa a.");
-          else showToast("Erè: " + err.message);
-        });
+        .catch((err) => showToast("Erè: " + err.message));
     });
 
-    /* ================= MANOEL AUTHENTICATION ================= */
     document.getElementById("manualAuthBtn")?.addEventListener("click", () => {
-      const domennOtorize = ["globalplisht.onrender.com", "localhost", "127.0.0.1"];
-      const domennAktyel = window.location.hostname;
-      
-      if (!domennOtorize.includes(domennAktyel) && domennAktyel !== "") {
-        return showToast("Erè Sekirite: Domèn sa a pa gen otorizasyon pou konekte oswa kreye kont sou sistèm nan.");
-      }
-
       const email = document.getElementById("authEmail").value.trim();
       const pass = document.getElementById("authPassword").value.trim();
       const name = document.getElementById("authName").value.trim();
@@ -304,42 +285,22 @@
 
       if (isSignUpMode) {
         if (!name) { btn.innerText = "Enskri kounye a"; btn.disabled = false; return showToast("Tanpri mete non w."); }
-        
         createUserWithEmailAndPassword(auth, email, pass)
           .then(async (userCred) => {
             await sendEmailVerification(userCred.user);
             await set(ref(db, `users/${userCred.user.uid}`), { non: name, email: email, role: "user", kreyeNan: Date.now() });
             await signOut(auth);
-            
             authModal.style.display = "none";
-            showToast("Kont ou kreye! Tanpri tcheke bwat lèt ou (spam tou) pou verifye imel la.", 6000);
+            showToast("Kont ou kreye! Tanpri tcheke bwat lèt ou pou verifye imel la.", 6000);
             document.getElementById("toggleAuthMode").click();
           })
-          .catch(err => {
-            if (err.code === 'auth/email-already-in-use') showToast("Imel sa a gen yon kont deja.");
-            else showToast("Erè: " + err.message);
-          })
+          .catch(err => showToast("Erè: " + err.message))
           .finally(() => { btn.innerText = "Enskri kounye a"; btn.disabled = false; });
       } else {
         signInWithEmailAndPassword(auth, email, pass)
           .then(async (userCred) => {
             if (!userCred.user.emailVerified) {
-              const kounyeA = Date.now();
-              const dnyeRevoye = localStorage.getItem(`lastEmailSent_${email}`);
-              const limitTan = 60000;
-              let mesaj = "Ou poko verifye imel ou. Tanpri tcheke bwat lèt ou.";
-
-              if (!dnyeRevoye || (kounyeA - dnyeRevoye) > limitTan) {
-                let chwa = confirm(`${mesaj}\n\nÈske w vle nou revoye yon lòt lyen verifikasyon ba ou kounye a?`);
-                if (chwa) {
-                  await sendEmailVerification(userCred.user);
-                  localStorage.setItem(`lastEmailSent_${email}`, kounyeA);
-                  showToast("Nou revoye yon nouvo mesaj verifikasyon! Tcheke bwat lèt ak spam ou.", 6000);
-                }
-              } else {
-                const segonnKiRete = Math.ceil((limitTan - (kounyeA - dnyeRevoye)) / 1000);
-                showToast(`${mesaj} Ou ka mande yon lòt nan ${segonnKiRete} segonn.`, 5000);
-              }
+              showToast("Ou poko verifye imel ou. Tanpri tcheke bwat lèt ou.");
               await signOut(auth);
               btn.innerText = "Konekte"; btn.disabled = false;
               return;
@@ -347,15 +308,18 @@
             authModal.style.display = "none"; 
             showToast("Ou konekte ak siksè!");
           })
-          .catch(err => { showToast("Imel oswa modpas la pa bon."); })
-          .finally(() => { if(btn.innerText === "Ap chaje...") { btn.innerText = "Konekte"; btn.disabled = false; }});
+          .catch(() => showToast("Imel oswa modpas la pa bon."))
+          .finally(() => { btn.innerText = "Konekte"; btn.disabled = false; });
       }
     });
 
     if (loginBtn) {
       loginBtn.addEventListener("click", () => {
-        if (window.currentUser) { if (confirm("Ou vle dekonekte?")) signOut(auth); } 
-        else { authModal.style.display = "flex"; }
+        if (currentUser) {
+          if (confirm("Ou vle dekonekte?")) signOut(auth);
+        } else {
+          authModal.style.display = "flex";
+        }
       });
     }
 
@@ -367,37 +331,32 @@
         
         if (!snap.exists()) {
           await set(userRef, { non: displayName, email: user.email, role: "user", kreyeNan: Date.now() });
-          window.currentUser = { uid: user.uid, role: "user", email: user.email };
+          currentUser = { uid: user.uid, role: "user", email: user.email };
         } else {
           const data = snap.val();
           displayName = data.non || displayName;
-          window.currentUser = { uid: user.uid, role: data.role, email: user.email };
+          currentUser = { uid: user.uid, role: data.role, email: user.email };
         }
 
         loginBtn.innerHTML = `<span>👤</span> Sòti (${displayName.split(" ")[0]})`;
-        if(adminPanel) adminPanel.style.display = (window.currentUser.role === "admin") ? "block" : "none";
-        
-        renderProducts();
+        if(adminPanel) adminPanel.style.display = (currentUser.role === "admin") ? "block" : "none";
       } else {
-        window.currentUser = null;
+        currentUser = null;
         loginBtn.innerHTML = `<span>🔐</span> Konekte`;
         if(adminPanel) adminPanel.style.display = "none";
-        renderProducts();
       }
+      renderProducts();
     });
 
-    /* ================= STORE ================= */
+    /* ================= STORE & PRODUCTS ================= */
     window.addProduct = () => {
-      if (!window.currentUser || window.currentUser.role !== "admin") return showToast("Sèlman administratè a ki ka ajoute pwodui.");
+      if (!currentUser || currentUser.role !== "admin") return showToast("Sèlman administratè a ki ka ajoute pwodui.");
       const name = document.getElementById('pname').value.trim();
       const price = document.getElementById('pprice').value.trim();
       const desc = document.getElementById('description').value.trim();
       const file = document.getElementById('pfile').files[0];
       let category = document.getElementById('pcategory').value;
       if (!name || !price || !desc || !file) return showToast("Tout chan yo oblije ranpli");
-      
-      const btnSubmit = document.querySelector("#adminPanel button");
-      btnSubmit.innerText = "Ap chaje..."; btnSubmit.disabled = true;
       
       const reader = new FileReader();
       reader.onload = () => {
@@ -408,13 +367,12 @@
           document.getElementById('pname').value = ""; document.getElementById('pprice').value = "";
           document.getElementById('description').value = ""; document.getElementById('pfile').value = "";
         });
-        btnSubmit.innerText = "Ajoute Pwodui"; btnSubmit.disabled = false;
       };
       reader.readAsDataURL(file);
     };
 
     window.deleteProduct = id => {
-      if (!window.currentUser || window.currentUser.role !== "admin") return;
+      if (!currentUser || currentUser.role !== "admin") return;
       if (confirm("Èske w sèten ou vle efase pwodui sa nèt?")) remove(ref(db, "products/" + id));
     };
 
@@ -432,26 +390,25 @@
         card.className = "product-card";
         
         card.innerHTML = `
-          <div class="image-container click-to-view" style="height: 160px; cursor:pointer; border-radius: 8px 8px 0 0;" title="Klike pou wè detay">
-            <img src="${p.img}" loading="lazy" class="async-image" onload="this.classList.add('loaded')">
-          </div>
-          <div class="click-to-view" style="cursor:pointer; font-weight: bold; margin-top: 10px;">${p.name}</div>
+          <a href="store/pwodui/produit.html?id=${p.id}" style="display:block; text-decoration:none; color:inherit;">
+            <div class="image-container" style="height: 160px; border-radius: 8px 8px 0 0;" title="Klike pou wè detay">
+              <img src="${p.img}" loading="lazy" class="async-image" onload="this.classList.add('loaded')" alt="${p.name}">
+            </div>
+            <div style="font-weight: bold; margin-top: 10px;">${p.name}</div>
+          </a>
           <div style="margin-bottom: 10px;">${p.price} HTG</div>
-          <button class="big-btn" onclick="addToCart({name:'${p.name}', price:'${p.price}'})">Ajoute</button>
+          <button class="big-btn">Ajoute</button>
         `;
         
-        // Lyen an korije kounye a
-        const goToProduct = () => window.location.href = `store/pwodui/produit.html?id=${p.id}`;
-        card.querySelectorAll(".click-to-view").forEach(el => el.onclick = goToProduct);
+        card.querySelector("button.big-btn").onclick = () => addToCart(p);
         
-        if (window.currentUser?.role === "admin") {
+        if (currentUser?.role === "admin") {
           const del = document.createElement("button");
           del.textContent = "❌ Efase";
           del.style.marginTop = "5px";
           del.onclick = () => deleteProduct(p.id);
           card.appendChild(del);
         }
-        
         row.appendChild(card);
       });
     }
@@ -472,45 +429,79 @@
           card.className = "product-card";
           
           card.innerHTML = `
-            <div class="image-container click-to-view" style="height: 160px; cursor:pointer; border-radius: 8px 8px 0 0;" title="Klike pou wè detay">
-              <img src="${p.img}" loading="lazy" class="async-image" onload="this.classList.add('loaded')">
-            </div>
-            <div class="click-to-view" style="cursor:pointer; font-weight: bold; margin-top: 10px;">${p.name}</div>
+            <a href="store/pwodui/produit.html?id=${p.id}" style="display:block; text-decoration:none; color:inherit;">
+              <div class="image-container" style="height: 160px; border-radius: 8px 8px 0 0;" title="Klike pou wè detay">
+                <img src="${p.img}" loading="lazy" class="async-image" onload="this.classList.add('loaded')" alt="${p.name}">
+              </div>
+              <div style="font-weight: bold; margin-top: 10px;">${p.name}</div>
+            </a>
             <div style="margin-bottom: 10px;">${p.price} HTG</div>
-            <button class="big-btn" onclick="addToCart({name:'${p.name}', price:'${p.price}'})">Ajoute</button>
+            <button class="big-btn">Ajoute</button>
           `;
           
-          // Lyen an korije kounye a
-          const goToProduct = () => window.location.href = `store/pwodui/produit.html?id=${p.id}`;
-          card.querySelectorAll(".click-to-view").forEach(el => el.onclick = goToProduct);
+          card.querySelector("button.big-btn").onclick = () => addToCart(p);
           
-          if (window.currentUser?.role === "admin") {
+          if (currentUser?.role === "admin") {
             const del = document.createElement("button"); 
             del.textContent = "❌ Efase"; 
             del.style.marginTop = "5px";
             del.onclick = () => deleteProduct(p.id); 
             card.appendChild(del);
           }
-          
           row.appendChild(card);
         });
       }
-      
       render(sponsors);
       sponsorTimer = setInterval(() => { const first = sponsors.shift(); sponsors.push(first); render(sponsors); }, 5000);
     }
 
-    window.renderProducts = function() {
+    function renderProducts() {
       onValue(ref(db, "products"), snap => {
         allProducts = [];
         if (snap.exists()) { snap.forEach(s => { allProducts.push({ id: s.key, ...s.val() }); }); }
-        renderCategory("macheRow", "Mache"); renderCategory("immobilierRow", "Immobilier");
-        renderCategory("abimanRow", "Abiman & Tekstil"); renderCategory("zoutiRow", "Zouti");
+        renderCategory("macheRow", "Mache"); 
+        renderCategory("immobilierRow", "Immobilier");
+        renderCategory("abimanRow", "Abiman & Tekstil"); 
+        renderCategory("zoutiRow", "Zouti");
         startSponsorRotation();
       });
     }
 
-    window.addToCart = function(p) { cart.push(p); renderCart(); showToast(`${p.name} ajoute nan panyen w lan!`); }
+    /* ================= KOU (COURSES) AK LAZY LOADING ================= */
+    const courseWrapper = document.getElementById("courseWrapper");
+    if (courseWrapper) {
+      onValue(ref(db, "kou"), (snapshot) => {
+        courseWrapper.innerHTML = ""; 
+        if (!snapshot.exists()) {
+          courseWrapper.innerHTML = "<p>Pa gen kou ki disponib pou kounye a.</p>";
+          return;
+        }
+        Object.entries(snapshot.val()).forEach(([id, kou]) => {
+          courseWrapper.innerHTML += `
+            <div class="course-card" style="width:300px; border:1px solid #ddd; border-radius:16px; background:#fff; overflow:hidden;">
+              <div class="image-container" style="height: 190px;">
+                <img src="${kou.imajUrl}" alt="${kou.non}" loading="lazy" class="async-image" onload="this.classList.add('loaded')">
+              </div>
+              <div class="course-content" style="padding: 15px;">
+                <span class="course-badge" style="background:#e0e7ff; color:#3730a3; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:bold;">${kou.badge || "FÒMASYON"}</span>
+                <h2 class="course-title" style="margin:10px 0; font-size:18px;">${kou.non}</h2>
+                <p class="course-objective" style="font-size:14px; color:#555;"><strong>Objektif:</strong> ${kou.objektif}</p>
+                <div class="course-meta" style="margin-bottom:15px; font-size:13px; color:#666;">
+                  <span>⏰ ${kou.dire || "N/A"}</span> | <span>📈 ${kou.nivo || "Tout nivo"}</span>
+                </div>
+                <div class="btn-group" style="display:flex; justify-content:space-between; align-items:center;">
+                  <span class="btn btn-price" style="font-weight:bold; color:#1e3f8a;">${kou.pri} HTG</span>
+                  <a href="kou/detay/globalplis/kou.html?id=${id}" class="btn btn-enroll" style="background:#3b82f6; color:#fff; padding:8px 12px; text-decoration:none; border-radius:6px; font-size:14px;">Detay / Enskri</a>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      });
+    }
+
+    /* ================= CART & UI UTILS ================= */
+    function addToCart(p) { cart.push(p); renderCart(); showToast(`${p.name} ajoute nan panyen w lan!`); }
 
     function renderCart() {
       const cartItems = document.getElementById('cartItems'); 
@@ -524,7 +515,8 @@
         div.querySelector("button").onclick = () => { cart.splice(i, 1); renderCart(); };
         cartItems.appendChild(div);
       });
-      totalPrice.innerText = "Total: " + total + " HTG"; cartCount.innerText = cart.length;
+      totalPrice.innerText = "Total: " + total + " HTG"; 
+      cartCount.innerText = cart.length;
     }
 
     document.getElementById('cartBtn').onclick = () => document.getElementById('cartPopup').classList.toggle("show");
@@ -535,68 +527,11 @@
       msg += `\nTotal: ${total} HTG`; window.open("https://wa.me/50940488401?text=" + encodeURIComponent(msg));
     };
 
-    const searchInput = document.getElementById("searchService");
-    if (searchInput) {
-      searchInput.addEventListener("input", e => {
-        const term = e.target.value.toLowerCase().trim();
-        if (!term) return renderProducts();
-        const filtered = allProducts.filter(p => p.name.toLowerCase().includes(term));
-        ["macheRow", "immobilierRow", "abimanRow", "zoutiRow"].forEach(id => {
-            const row = document.getElementById(id);
-            if(row) row.innerHTML = "";
-        });
-        const map = { "Mache": "macheRow", "Immobilier": "immobilierRow", "Abiman & Tekstil": "abimanRow", "Zouti": "zoutiRow" };
-        filtered.forEach(p => renderCategory(map[p.category], p.category, filtered));
-      });
+    function showToast(message, duration = 3000) {
+      const toast = document.getElementById("toast");
+      if(toast) { toast.innerText = message; toast.style.display = "block"; setTimeout(() => { toast.style.display = "none"; }, duration); }
     }
 
-    // --- LOJIK KOU YO AK LAZY LOADING CSS (Lyen korije) ---
-    const courseWrapper = document.getElementById("courseWrapper");
-    if (courseWrapper) {
-      courseWrapper.innerHTML = `
-        <div style="width: 100%; text-align: center; padding: 40px; color: #1e3f8a;">
-          <p>⏳ Ap chaje kou yo... Tanpri tann.</p>
-        </div>
-      `;
-
-      onValue(ref(db, "kou"), (snapshot) => {
-        courseWrapper.innerHTML = ""; 
-        
-        if (!snapshot.exists()) {
-          courseWrapper.innerHTML = "<p>Pa gen kou ki disponib pou kounye a.</p>";
-          return;
-        }
-        
-        Object.entries(snapshot.val()).forEach(([id, kou]) => {
-          courseWrapper.innerHTML += `
-            <div class="course-card" style="width:300px; border:1px solid #ddd; border-radius:16px; background:#fff; overflow:hidden; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-              <a href="kou/detay/globalplis/kou.html?id=${id}" style="display:block; text-decoration:none; color:inherit;">
-                  <div class="image-container" style="height: 190px;">
-                    <img src="${kou.imajUrl}" alt="${kou.non}" loading="lazy" class="async-image" onload="this.classList.add('loaded')">
-                  </div>
-                  
-                  <div class="course-content" style="padding: 15px;">
-                    <span class="course-badge" style="background:#e0e7ff; color:#3730a3; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:bold;">${kou.badge || "FÒMASYON"}</span>
-                    <h2 class="course-title" style="margin:10px 0; font-size:18px;">${kou.non}</h2>
-                    <p class="course-objective" style="font-size:14px; color:#555; margin-bottom:15px;"><strong>Objektif:</strong> ${kou.objektif}</p>
-                    <div class="course-meta" style="margin-bottom:15px; font-size:13px; color:#666;">
-                      <span>⏰ ${kou.dire || "N/A"}</span> | <span>📈 ${kou.nivo || "Tout nivo"}</span>
-                    </div>
-                    <div class="btn-group" style="display:flex; justify-content:space-between; align-items:center;">
-                      <span class="btn btn-price" style="font-weight:bold; color:#1e3f8a;">${kou.pri} HTG</span>
-                      <span class="btn btn-enroll" style="background:#3b82f6; color:#fff; padding:8px 12px; border-radius:6px; font-size:14px;">Detay / Enskri</span>
-                    </div>
-                  </div>
-              </a>
-            </div>
-          `;
-        });
-      }, (error) => {
-        courseWrapper.innerHTML = "<p style='color:red;'>Koneksyon an echwe. Tanpri verifye entènèt ou.</p>";
-      });
-    }
-
-    // --- ANIMASYON MENU AK PRELOADER INIT ---
     window.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         const p = document.getElementById('globalPreloader');
@@ -604,14 +539,18 @@
       }, 1000);
 
       const menuBtn = document.getElementById('menuBtn');
+      const closeMenu = document.getElementById('closeMenu');
       const sideMenu = document.getElementById('sideMenu');
       const menuOverlay = document.getElementById('menuOverlay');
-      if(menuBtn) menuBtn.onclick = () => { sideMenu.classList.add('active'); menuOverlay.classList.add('active'); };
-      if(document.getElementById('closeMenu')) document.getElementById('closeMenu').onclick = menuOverlay.onclick = () => { 
-        sideMenu.classList.remove('active'); menuOverlay.classList.remove('active'); 
-      };
 
-      renderProducts();
+      if (menuBtn) {
+        menuBtn.onclick = () => { sideMenu.classList.add('active'); menuOverlay.classList.add('active'); };
+      }
+      if (closeMenu) {
+        closeMenu.onclick = menuOverlay.onclick = () => { 
+          sideMenu.classList.remove('active'); menuOverlay.classList.remove('active'); 
+        };
+      }
     });
   </script>
 </body>
