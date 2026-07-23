@@ -1,483 +1,385 @@
-<!DOCTYPE html>
-<html lang="ht">
-<head>
-  
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Global Plis Ayiti - Sèvis</title>
-  
-  <link rel="icon" href="https://globalplisht.onrender.com/image/Fotoglobalweb.png" type="image/png">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+// 🔹 IMPORT SOTI NAN FIREBASE-J.JS AK SDK YO
+import { db, auth, provider } from "./firebase-j.js";
+import { ref, push, set, onValue, remove, get } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
+import { 
+  signInWithPopup, 
+  onAuthStateChanged, 
+  signOut, 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  sendEmailVerification,
+  sendPasswordResetEmail 
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
-<link rel="stylesheet" href="essai.css">
-  <meta property="og:title" content="Global Plis Ayiti">
-  <meta property="og:description" content="Yon platfòm, plizyè solisyon: Konkou, Biznis, Imobilye, Teknoloji, Sèvis.">
-  <meta property="og:image" content="https://globalplisht.onrender.com/image/FotoWGP512x512.png">
-  <meta property="og:url" content="https://globalplisht.onrender.com/">
-  <meta property="og:type" content="website">
-  
-  <!-- ESTIL PRELOADER -->
-<!-- ESTIL AK ANIMASYON PRELOADER -->
-<style>
-    /* Estil totalman endepandan pou evite tout konfli CSS */
-    #globalPreloader {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100vw !important;
-        height: 100vh !important;
-        background: #0f172a !important;
-        z-index: 99999 !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        justify-content: center !important;
-        transition: opacity 0.5s ease !important;
-        overflow: hidden !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-    
-    .preloader-hidden {
-        opacity: 0 !important;
-        pointer-events: none !important;
-    }
+/* ================= GLOBAL ================= */
+let currentUser = null;
+let allProducts = [];
+let cart = [];
+let isSignUpMode = false; 
 
-    .preloader-wrapper {
-        position: relative !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        margin-bottom: 24px !important;
-        animation: slideFromLeft 1s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
-    }
+const loginBtn = document.getElementById("loginBtn");
+const adminPanel = document.getElementById("adminPanel");
+const authModal = document.getElementById("authModal");
 
-    /* Rido limyè k ap vire a */
-    .preloader-spinner {
-        width: 96px !important;
-        height: 96px !important;
-        border: 4px solid transparent !important;
-        border-top-color: #3b82f6 !important;
-        border-right-color: #facc15 !important;
-        border-radius: 50% !important;
-        animation: spinLoader 1s linear infinite !important;
-        position: absolute !important;
-    }
+/* ================= JERE SISTÈM KONEKSYON AN ================= */
 
-    /* Logo a mete a 50% (~64px) ak tout santraj */
-    .preloader-logo-box {
-        width: 64px !important;
-        height: 64px !important;
-        border-radius: 50% !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        overflow: hidden !important;
-        background: rgba(255, 255, 255, 0.1) !important;
-        padding: 4px !important;
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.6) !important;
-        animation: customPulse 1.8s infinite ease-in-out !important;
-        z-index: 2 !important;
-    }
+document.getElementById("toggleAuthMode")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  isSignUpMode = !isSignUpMode;
+  document.getElementById("authTitle").innerText = isSignUpMode ? "Kreye yon Kont" : "Konekte";
+  document.getElementById("authName").style.display = isSignUpMode ? "block" : "none";
+  document.getElementById("manualAuthBtn").innerText = isSignUpMode ? "Enskri kounye a" : "Konekte";
+  document.getElementById("authToggleText").innerText = isSignUpMode ? "Ou gentan gen yon kont?" : "Ou poko gen kont?";
+  e.target.innerText = isSignUpMode ? "Konekte" : "Kreye youn kounye a";
+});
 
-    .preloader-logo-box img {
-        width: 100% !important;
-        height: 100% !important;
-        object-fit: contain !important;
-    }
+document.getElementById("googleAuthBtn")?.addEventListener("click", () => {
+  signInWithPopup(auth, provider).then(() => {
+    authModal.style.display = "none";
+  }).catch((error) => showToast("Erè Google: " + error.message));
+});
 
-    .preloader-text {
-        color: #93c5fd !important;
-        font-family: sans-serif !important;
-        font-weight: 700 !important;
-        font-size: 14px !important;
-        letter-spacing: 2px !important;
-        text-transform: uppercase !important;
-        margin-top: 16px !important;
-        animation: textPulse 1.5s infinite ease-in-out !important;
-    }
+/* ================= LOJIK BLIYE MODPAS (FORGOT PASSWORD) ================= */
+document.getElementById("forgotPasswordBtn")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  const email = document.getElementById("authEmail").value.trim();
 
-    /* Animasyon yo */
-    @keyframes slideFromLeft {
-        0% { transform: translateX(-150px); opacity: 0; }
-        100% { transform: translateX(0); opacity: 1; }
-    }
+  if (!email) {
+    return showToast("Tanpri rantre imel ou nan chan an dabò pou n voye lyen an ba ou.");
+  }
 
-    @keyframes spinLoader {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-
-    @keyframes customPulse {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.5; transform: scale(1.08); }
-    }
-
-    @keyframes textPulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.4; }
-    }
-</style>
-
-
-
-<!-- GLOBAL PLIS PRELOADER -->
-
-</head>
-
-<body>
-  <div id="globalPreloader">
-    <div class="preloader-wrapper">
-        <div class="preloader-spinner"></div>
-        <div class="preloader-logo-box">
-            <img src="/image/1768017763381.png" alt="Global Plis Logo">
-        </div>
-    </div>
-    <p class="preloader-text">Global Plis ap chaje...</p>
-</div>
-<!-- GLOBAL PLIS PRELOADER -->
-
-
-<!-------------DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD------>
-<header class="main-header">
-  <div class="header-top-bar">
-    <button id="menuBtn" class="nav-toggle" aria-label="Ouvri Menu">☰</button>
-    <div class="brand-container">
-      <img src="/image/1768017763381.png" alt="Global Plis Logo" class="main-logo" onerror="this.src='https://via.placeholder.com/150x40?text=Global+Plis'">
-    </div>
-<button id="loginBtn" class="login-pill" onclick="document.getElementById('authModal').style.display='flex'"><span>🔐</span> Enskri</button>
-
-  </div>
-
-  <nav class="tabs-container">
-    <div class="tabs">
-      <button class="tab" data-tab="konkou">Konkou</button>
-      <button class="tab" data-tab="accueil">Imobilye</button>
-      <button class="tab" data-tab="productCategories">Store</button>
-      <button class="tab active" data-tab="sèv">Sèvis +</button>
-    </div>
-  </nav>
-
-  <div id="sideMenu" class="side-menu">
-    <div class="menu-header">
-      <span>☰ Menu Global Plis</span>
-      <button id="closeMenu" aria-label="Fèmen Menu">✕</button>
-    </div>
-
-    <div class="menu-content">
-      <!-- Seksyon Apropos -->
-      <div class="menu-section">
-        <h3>ℹ️ Apropos</h3>
-        <p>
-          Global Plus se yon platfòm polivalan ki bay sèvis vann, achte, lwe kay, 
-          epi mete sèvis yo sou entènèt fasilman. Objektif nou se konekte tout moun ak opòtinite rapid.
-        </p>
-      </div>
-
-      <!-- Seksyon Sèvis -->
-      <div class="menu-section">
-        <h3>🚀 Global Plis enfini</h3>
-        <p>
-          Nou bay sèvis:<br>
-          • Òganizasyon Konkou<br>
-          • Marketplace (achte & vann)<br>
-          • Immobilier (lwe / vann kay)<br>
-          • Pwomosyon pwodwi sponsorisé<br>
-          • Panier ak commande WhatsApp
-        </p>
-        <a href="image/globalplis.apk" download class="big-btn" style="text-decoration: none;">⬇️ Telechaje APK</a>
-      </div>
-
-      <!-- Seksyon Gid -->
-      <div class="menu-section">
-        <h3>📖 Kijan pou itilize sit la</h3>
-        <ol>
-          <li>Kreye kont oswa konekte</li>
-          <li>Ajoute pwodui ou oswa chèche sa ou bezwen</li>
-          <li>Ajoute nan panier</li>
-          <li>Voye commande pa WhatsApp</li>
-        </ol>
-        <a href="https://wa.me/+50940488401" target="_blank" class="big-btn" style="text-decoration: none;">💬 Ale sou WhatsApp (Plis enfòmasyon)</a>
-      </div>
-
-      <!-- Seksyon Pwosede -->
-      <div class="menu-section">
-        <h3>💡 Pwosede yo</h3>
-        <p>
-          ✔ Pwodui sponsorisé parèt an premye<br>
-          ✔ Mete bon imaj pou vann pi vit<br>
-          ✔ Sèvi ak deskripsyon klè
-        </p>
-      </div>
-
-      <!-- Seksyon Kontak -->
-      <div class="menu-section footer-contact">
-        <h3>📞 Kontak</h3>
-        <p>
-          WhatsApp: +509 40 48 84 01<br>
-          Email: storetechnologie9@email.com
-        </p>
-      </div>
-    </div>
-  </div>
-  
-  <div id="menuOverlay" class="menu-overlay"></div>
-</header>
-
-<main>
-  
-  <!-------------DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD------>
-<section id="konkou" class="tab-content">
-<section class="contest-section">
-  <div class="maintenance-card">
-    <div class="card-icon">⏳</div>
-    <h2>Pa gen konkou pou kounye a</h2>
-    <p>Pou moman sa a, pa gen okenn konkou aktif sou platfòm lan. Men, pa enkyete w, nou ap prepare bèl sipriz pou ou trè byento!</p>
-    
-    <div class="divider"></div>
-    
-    <p class="cta-text">Pandan w ap tann, pwofite dekouvri lòt ribrik nou yo:</p>
-    
-    <div class="card-actions">
-      <button class="btn-secondary" onclick="chanjeOnglet('accueil')">🏠 Ale nan Imobilye</button>
-      <button class="btn-secondary" onclick="chanjeOnglet('productCategories')">🛒 Vizite Store la</button>
-            <button class="btn-secondary" onclick="chanjeOnglet('sèv')">💻Swiv fòmasyon</button>
-    </div>
-  </div>
-</section>
-
-</section>
-
-<!-------------DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD------>
-  <section id="accueil" class="tab-content">
-    <div class="immo-header">
-      <h2>🏠 Jwenn Espas Rèv Ou</h2>
-      <p>Kay ak Teren nan pi bon pri sou mache a</p>
-      <div class="search-filter-box">
-        <input type="text" id="immoSearch" placeholder="Chèche yon zòn (egz: Taba)...">
-        <select id="typeFilter">
-          <option value="tout">Tout Kategori</option>
-          <option value="kay">Kay</option>
-          <option value="teren">Teren</option>
-        </select>
-      </div>
-    </div>
-    <div id="immo-list" class="immo-grid"></div>
-  </section>
-
-<!-------------DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD------>
-  <section id="productCategories" class="tab-content">
-
-<!-- LOGIN POPUP -->
-<div id="loginPopup" class="popups">
-  <div class="popup-boxs">
-    <span class="closes" onclick="closeLogin()">✖</span>
-    
-    <h3>Konekte</h3>
-    
-    <input type="text" id="code" placeholder="Antre kòd ou..." class="popup-inputs">
-    
-    <button onclick="login()" class="buttons">Antre</button>
-    
-      <!-- Admin / User Add Product -->
-  <div id="addBox" class="box hidden">
-    <h3>Ajoute Pwodui</h3>
-    <input type="text" id="pname" placeholder="Non pwodui" class="popup-inputs">
-    <input type="text" id="pprice" placeholder="Pri pwodui" class="popup-inputs">
-    <input type="text" id="description" placeholder="Deskripsyon" class="popup-inputs">
-    <select id="pcategory" class="popup-inputs">
-      <option value="Sponsorisé">Sponsorisé</option>
-      <option value="Mache">Mache</option>
-      <option value="Immobilier">Immobilier</option>
-      <option value="Abiman & Tekstil">Abiman & Tekstil</option>
-      <option value="Zouti">Zouti</option>
-    </select>
-    <input type="file" id="pfile">
-    <button onclick="addProduct()" class="buttons">Ajoute Pwodui</button>
-</div>
-
-<!-- Admin Users -->  
-<div id="adminBox" class="hidden">  
-    <h3>Jere Itilizatè</h3>  
-    <button onclick="addUser()">Ajoute User</button>  
-    <div id="usersBox"></div>  
-  </div>  
-  </div>
-</div>
-
-  <!-- Search -->
-  <input type="text" id="searchService" placeholder="Rechèch pwodui..." class="search-bar">
-
-  <!-- Categories -->
-  <div class="category">
-    <h2 class="tabo">Sponsorisé</h2>
-    <div class="product-row" id="sponsoriseRow"></div>
-    <div id="spinner" class="spinner"></div>
-  </div>
-
-  <div class="category">
-    <h2 class="tabo">Mache</h2>
-    <div class="product-row" id="macheRow"></div>
-    <div id="spinner" class="spinner"></div>
-  </div>
-
-  <div class="category">
-    <h2 class="tabo">Immobilier</h2>
-    <div class="product-row" id="immobilierRow"></div>
-    <div id="spinner" class="spinner"></div>
-  </div>
-
-  <div class="category">
-    <h2 class="tabo">Abiman & Tekstil</h2>
-    <div class="product-row" id="abimanRow"></div>
-    <div id="spinner" class="spinner"></div>
-  </div>
-
-  <div class="category">
-    <h2 class="tabo">Zouti</h2>
-    <div class="product-row" id="zoutiRow"></div>
-        <div id="spinner" class="spinner"></div>
-  </div>
-
-  <!-- Floating Cart -->
-  <button id="cartBtn">🛒 <span id="cartCount">0</span></button>
-
-  <!-- Cart Popup -->
-  <div id="cartPopup">
-    <h3>Panier</h3>
-    <div id="cartItems"></div>
-    <div id="totalPrice">Total: 0 HTG</div>
-    <button id="whatsappBtn">Voye pa WhatsApp</button>
-  </div>
-  </section>
-
-<!-------------DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD------>
-<section id="sèv" class="tab-content active">
-
-    <div class="slider-container">
-        <div class="slider">
-            <div class="slides" id="slides">
-                </div>
-
-            <button class="slider-btn" id="prev" aria-label="Imaj anvan">&#10094;</button>
-            <button class="slider-btn" id="next" aria-label="Imaj swivan">&#10095;</button>
-
-            <div id="dots" class="dots-container"></div>
-        </div>
-    </div>
-
-
-  <section class="course-section" style="padding: 20px;">
-    <div class="course-grid" id="courseWrapper" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;"></div>
-  </section>
-</section>
-
-</main>
-
-<!-------------DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD------>
-<footer class="footer-container">
-  <div class="footer-content">
-    <div class="footer-section">
-      <h3>Global Plis +∞</h3>
-      <p style="font-style: italic; color: #fff;">"Nou kwè teknoloji se youn nan fason ki ka fè Ayiti amelyore, lè nou bay jèn yo zouti pou yo avanse."</p>
-    </div>
-    <div class="footer-section">
-      <h3>Sa Nou Ofri</h3>
-      <ul>
-        <li><span>🎓</span> <a href="#">NS4 Support Plus</a></li>
-        <li><span>🏗️</span> <a href="#">Immobilier</a></li>
-        <li><span>🛒</span> <a href="#">E-commerce</a></li>
-      </ul>
-    </div>
-    <div class="footer-section">
-      <h3>Konekte Ak Nou</h3>
-      <div class="social-icons-wrapper">
-        <a href="https://wa.me/+50940488401" target="_blank"><img src="/image/Screenshot_20260612-165809.png" alt="WA" onerror="this.src='https://via.placeholder.com/30'"></a>
-        <a href="https://www.instagram.com/globalplis?igsh=YjQzaXM3MnkzdTlx"><img src="/image/Screenshot_20260612-165727.png" alt="IG" onerror="this.src='https://via.placeholder.com/30'"></a>
-                <a href="https://www.facebook.com/globalplisht?mibextid=ZbWKwL"><img src="/image/Screenshot_20260612-164509.png" alt="Facebook" onerror="this.src='https://via.placeholder.com/30'"></a>
-                
-                <a href="tiktok.com/@globalplisht000"><img src="/image/Screenshot_20260612-171753.png" alt="Tiktok" onerror="this.src='https://via.placeholder.com/30'"></a>
-                
-                <a href="/NS4supportplus/telechaje/NS4 Support Plus.html"><img src="/image/IMG-20260329-WA0000_copy_192x192_1.jpg" alt="Ns4 Support Plus" onerror="this.src='https://via.placeholder.com/30'"></a>
-      </div>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <p>&copy; 2026 Global Plis +∞. Fòme yon lòt jenerasyon pou Ayiti. Tout dwa rezève.</p>
-  </div>
-</footer>
-
-<!-------------DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD------>
-
-<script type="module" src="indexv1.1.1.js"></script>
-<script type="module" src="essaie.js?v=10"></script>
-<script type="module" src="konkou.js"></script>
-<script type="module" src="auth.js?v=1"></script>
-<script src="data.js"></script>
-<script src="app.js"></script>
-
-<!-- SCRIPT POU KACHE PRELOADER A LÈ PAJ LA FIN CHAJE -->
-
-<script>
-    // Nou kreye yon fonksyon apa pou kache preloader a
-    function kachePreloader() {
-        const preloader = document.getElementById('globalPreloader');
-        if (preloader && !preloader.classList.contains('preloader-hidden')) {
-            preloader.classList.add('preloader-hidden');
-            setTimeout(() => {
-                preloader.style.display = 'none';
-            }, 500);
-        }
-    }
-
-    // 1. Eseye kache l lè DOM nan pare (Paj la estriktire, menm si tout imaj poko la)
-    document.addEventListener('DOMContentLoaded', () => {
-        // Nou ka bay yon ti delè tou piti pou animasyon an gen tan jwe
-        setTimeout(kachePreloader, 1500); 
+  sendPasswordResetEmail(auth, email)
+    .then(() => {
+      showToast("Nou voye yon lyen pou re-inisyalize modpas ou nan imel ou. Tcheke bwat lèt ou!", 6000);
+    })
+    .catch((err) => {
+      if (err.code === "auth/user-not-found") {
+        showToast("Pa gen okenn kont ki anrejistre ak imel sa a.");
+      } else {
+        showToast("Erè: " + err.message);
+      }
     });
+});
 
-    // 2. Kache l si tout bagay chaje nòmalman anvan sa
-    window.addEventListener('load', kachePreloader);
+/* ================= MANOEL AUTHENTICATION (LOGIN & SIGNUP) ================= */
+document.getElementById("manualAuthBtn")?.addEventListener("click", () => {
+  // ==========================================
+  // 1. SEKRITE DOMÈN (Verifikasyon Otorizasyon)
+  // ==========================================
+  const domennOtorize = ["globalplisht.onrender.com", "localhost", "127.0.0.1"];
+  const domennAktyel = window.location.hostname;
+  
+  if (!domennOtorize.includes(domennAktyel)) {
+    return showToast("Erè Sekirite: Domèn sa a pa gen otorizasyon pou konekte oswa kreye kont sou sistèm nan.");
+  }
+  // ==========================================
 
-    // 3. PLAN B (Failsafe pou ansyen telefòn tankou Android 9): 
-    // Si pa gen anyen ki mache, fòse l fèmen apre 4 segonn.
-    setTimeout(kachePreloader, 10000); 
-</script>
-<script>(function(s){s.dataset.zone='11368040',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+  const email = document.getElementById("authEmail").value.trim();
+  const pass = document.getElementById("authPassword").value.trim();
+  const name = document.getElementById("authName").value.trim();
 
-<div id="authModal" class="popups" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
-  <div style="background:#fff; padding:30px; border-radius:12px; width:90%; max-width:400px; text-align:center; position:relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
-    <span onclick="document.getElementById('authModal').style.display='none'" style="position:absolute; right:15px; top:10px; cursor:pointer; font-size:24px; font-weight:bold; color:#666;">&times;</span>
-    
-    <h3 id="authTitle" style="color:#1e3f8a; margin-top:0;">Konekte</h3>
-    
-    <button id="googleAuthBtn" class="btn btn-google" style="width:100%; margin-bottom:20px; font-size:15px;">
-      <i class="fab fa-google"></i> Kontinye ak Google
-    </button>
-    
-    <div style="display:flex; align-items:center; margin-bottom:20px;">
-      <div style="flex:1; height:1px; background:#ccc;"></div>
-      <span style="padding:0 10px; color:#888; font-size:12px;">OSWA</span>
-      <div style="flex:1; height:1px; background:#ccc;"></div>
-    </div>
-    
-    <input type="text" id="authName" placeholder="Non konplè w" style="display:none; width:100%; padding:12px; margin-bottom:12px; border:1px solid #cbd5e1; border-radius:8px; box-sizing:border-box;">
-    
-    <input type="email" id="authEmail" placeholder="Imel ou" style="width:100%; padding:12px; margin-bottom:12px; border:1px solid #cbd5e1; border-radius:8px; box-sizing:border-box;">
-    
-    <input type="password" id="authPassword" placeholder="Modpas (6 karaktè min.)" style="width:100%; padding:12px; margin-bottom:20px; border:1px solid #cbd5e1; border-radius:8px; box-sizing:border-box;">
-    
-    <button id="manualAuthBtn" class="btn" style="background:#1e3f8a; color:white; width:100%; border:none;">Konekte</button>
-    <a href="#" id="forgotPasswordBtn" style="font-size: 12px; color: #007bff;">Modpas bliye?</a>
+  if (!email || !pass) return showToast("Tanpri mete imel ak modpas ou.");
+  if (pass.length < 6) return showToast("Modpas la dwe gen omwen 6 karaktè.");
 
-    <p style="margin-top:20px; font-size:14px; color:#555;">
-      <span id="authToggleText">Ou poko gen kont?</span> 
-      <a href="#" id="toggleAuthMode" style="color:#ff7a3d; font-weight:bold; text-decoration:none;">Kreye youn kounye a</a>
-    </p>
+  const btn = document.getElementById("manualAuthBtn");
+  btn.innerText = "Ap chaje...";
+  btn.disabled = true;
 
-  </div>
-</div>
-<div id="toast" style="position:fixed; bottom:20px; right:20px; background:#333; color:#fff; padding:15px 25px; border-radius:5px; display:none; z-index:9999; text-align: center;"></div>
+  if (isSignUpMode) {
+    if (!name) { 
+      btn.innerText = "Enskri kounye a"; 
+      btn.disabled = false; 
+      return showToast("Tanpri mete non w."); 
+    }
+    
+    createUserWithEmailAndPassword(auth, email, pass)
+      .then(async (userCred) => {
+        await sendEmailVerification(userCred.user);
+        await set(ref(db, `users/${userCred.user.uid}`), { non: name, email: email, role: "user", kreyeNan: Date.now() });
+        await signOut(auth);
+        
+        authModal.style.display = "none";
+        showToast("Kont ou kreye! Tanpri tcheke bwat lèt ou (spam tou) pou verifye imel la.", 6000);
+        document.getElementById("toggleAuthMode").click();
+      })
+      .catch(err => {
+        if (err.code === 'auth/email-already-in-use') {
+          showToast("Imel sa a gen yon kont deja.");
+        } else {
+          showToast("Erè: " + err.message);
+        }
+      })
+      .finally(() => { btn.innerText = "Enskri kounye a"; btn.disabled = false; });
+  } else {
+    signInWithEmailAndPassword(auth, email, pass)
+      .then(async (userCred) => {
+        // --- 2. JERE VERIFIKASYON IMEL AK REVOYE AK LIMIT TAN ---
+        if (!userCred.user.emailVerified) {
+          const kounyeA = Date.now();
+          const dnyeRevoye = localStorage.getItem(`lastEmailSent_${email}`);
+          const limitTan = 60000; // 60 segonn limit tan
 
-</body>
-</html>
+          let mesaj = "Ou poko verifye imel ou. Tanpri tcheke bwat lèt ou.";
+
+          if (!dnyeRevoye || (kounyeA - dnyeRevoye) > limitTan) {
+            let chwa = confirm(`${mesaj}\n\nÈske w vle nou revoye yon lòt lyen verifikasyon ba ou kounye a?`);
+            if (chwa) {
+              await sendEmailVerification(userCred.user);
+              localStorage.setItem(`lastEmailSent_${email}`, kounyeA);
+              showToast("Nou revoye yon nouvo mesaj verifikasyon! Tcheke bwat lèt ak spam ou.", 6000);
+            }
+          } else {
+            const segonnKiRete = Math.ceil((limitTan - (kounyeA - dnyeRevoye)) / 1000);
+            showToast(`${mesaj} Ou ka mande yon lòt nan ${segonnKiRete} segonn.`, 5000);
+          }
+
+          await signOut(auth);
+          btn.innerText = "Konekte"; 
+          btn.disabled = false;
+          return;
+        }
+
+        authModal.style.display = "none"; 
+        showToast("Ou konekte ak siksè!");
+      })
+      .catch(err => {
+        showToast("Imel oswa modpas la pa bon.");
+      })
+      .finally(() => { 
+        if(btn.innerText === "Ap chaje...") {
+          btn.innerText = "Konekte"; 
+          btn.disabled = false; 
+        }
+      });
+  }
+});
+
+if (loginBtn) {
+  loginBtn.addEventListener("click", () => {
+    if (currentUser) {
+      if (confirm("Ou vle dekonekte?")) signOut(auth);
+    } else {
+      authModal.style.display = "flex";
+    }
+  });
+}
+
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    let displayName = user.displayName || "Itilizatè";
+    const userRef = ref(db, `users/${user.uid}`);
+    const snap = await get(userRef);
+    
+    if (!snap.exists()) {
+      await set(userRef, { non: displayName, email: user.email, role: "user", kreyeNan: Date.now() });
+      currentUser = { uid: user.uid, role: "user", email: user.email };
+    } else {
+      const data = snap.val();
+      displayName = data.non || displayName;
+      currentUser = { uid: user.uid, role: data.role, email: user.email };
+    }
+
+    loginBtn.innerHTML = `<span>👤</span> Sòti (${displayName.split(" ")[0]})`;
+    if(adminPanel) adminPanel.style.display = (currentUser.role === "admin") ? "block" : "none";
+    
+    renderProducts();
+  } else {
+    currentUser = null;
+    loginBtn.innerHTML = `<span>🔐</span> Konekte`;
+    if(adminPanel) adminPanel.style.display = "none";
+    renderProducts();
+  }
+});
+
+
+/* ================= REST KÒD POU STORE LA ================= */
+window.addProduct = () => {
+  if (!currentUser || currentUser.role !== "admin") return showToast("Sèlman administratè a ki ka ajoute pwodui.");
+  const name = document.getElementById('pname').value.trim();
+  const price = document.getElementById('pprice').value.trim();
+  const desc = document.getElementById('description').value.trim();
+  const file = document.getElementById('pfile').files[0];
+  let category = document.getElementById('pcategory').value;
+  if (!name || !price || !desc || !file) return showToast("Tout chan yo oblije ranpli");
+  
+  const btnSubmit = document.querySelector("#adminPanel button");
+  btnSubmit.innerText = "Ap chaje..."; btnSubmit.disabled = true;
+  
+  const reader = new FileReader();
+  reader.onload = () => {
+    push(ref(db, "products"), {
+      name, price, description: desc, category, img: reader.result, premium: category === "Sponsorisé", time: Date.now()
+    }).then(() => {
+      showToast("✅ Pwodui ajoute ak siksè!");
+      document.getElementById('pname').value = ""; document.getElementById('pprice').value = "";
+      document.getElementById('description').value = ""; document.getElementById('pfile').value = "";
+    });
+    btnSubmit.innerText = "Ajoute Pwodui"; btnSubmit.disabled = false;
+  };
+  reader.readAsDataURL(file);
+};
+
+window.deleteProduct = id => {
+  if (!currentUser || currentUser.role !== "admin") return;
+  if (confirm("Èske w sèten ou vle efase pwodui sa nèt?")) remove(ref(db, "products/" + id));
+};
+
+function renderCategory(rowId, category, list = allProducts) {
+  if (category === "Sponsorisé") return; 
+  
+  const row = document.getElementById(rowId);
+  if (!row) return;
+  row.innerHTML = "";
+  
+  let products = list.filter(p => p.category === category);
+  products.sort((a, b) => b.time - a.time);
+  
+  products.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "product-card";
+    
+    card.innerHTML = `
+      <div class="image-container click-to-view" style="cursor:pointer;" title="Klike pou wè detay">
+        <img src="${p.img}" loading="lazy" class="async-image" onload="this.classList.add('loaded')">
+      </div>
+      <div class="click-to-view" style="cursor:pointer; font-weight: bold; margin-top: 10px;">${p.name}</div>
+      <div style="margin-bottom: 10px;">${p.price} HTG</div>
+      <button class="big-btn">Ajoute</button>
+    `;
+    
+    const goToProduct = () => window.location.href = `store/pwodui/produit.html?id=${p.id}`;
+    card.querySelectorAll(".click-to-view").forEach(el => el.onclick = goToProduct);
+    
+    card.querySelector("button.big-btn").onclick = () => addToCart(p);
+    
+    if (currentUser?.role === "admin") {
+      const del = document.createElement("button");
+      del.textContent = "❌";
+      del.classList.add("buttons");
+      del.onclick = () => deleteProduct(p.id);
+      card.appendChild(del);
+    }
+    
+    row.appendChild(card);
+  });
+}
+
+let sponsorTimer = null;
+function startSponsorRotation() {
+  const row = document.getElementById("sponsoriseRow");
+  if (!row) return;
+  if (sponsorTimer) clearInterval(sponsorTimer);
+  
+  let sponsors = allProducts.filter(p => p.category === "Sponsorisé").sort((a, b) => b.time - a.time);
+  if (sponsors.length === 0) { row.innerHTML = ""; return; }
+  
+  function render(list) {
+    row.innerHTML = "";
+    list.slice(0, 4).forEach(p => {
+      const card = document.createElement("div"); 
+      card.className = "product-card";
+      
+      card.innerHTML = `
+        <div class="image-container click-to-view" style="cursor:pointer;" title="Klike pou wè detay">
+          <img src="${p.img}" class="async-image" onload="this.classList.add('loaded')">
+        </div>
+        <div class="click-to-view" style="cursor:pointer; font-weight: bold; margin-top: 10px;">${p.name}</div>
+        <div style="margin-bottom: 10px;">${p.price} HTG</div>
+        <button class="big-btn">Ajoute</button>
+      `;
+      
+      const goToProduct = () => window.location.href = `produit.html?id=${p.id}`;
+      card.querySelectorAll(".click-to-view").forEach(el => el.onclick = goToProduct);
+
+      card.querySelector("button.big-btn").onclick = () => addToCart(p);
+      
+      if (currentUser?.role === "admin") {
+        const del = document.createElement("button"); 
+        del.textContent = "❌"; 
+        del.classList.add("buttons");
+        del.onclick = () => deleteProduct(p.id); 
+        card.appendChild(del);
+      }
+      
+      row.appendChild(card);
+    });
+  }
+  
+  render(sponsors);
+  sponsorTimer = setInterval(() => { const first = sponsors.shift(); sponsors.push(first); render(sponsors); }, 5000);
+}
+
+function renderProducts() {
+  document.querySelectorAll(".spinner").forEach(sp => sp.style.display = "block");
+  onValue(ref(db, "products"), snap => {
+    allProducts = [];
+    if (snap.exists()) { snap.forEach(s => { allProducts.push({ id: s.key, ...s.val() }); }); }
+    renderCategory("macheRow", "Mache"); renderCategory("immobilierRow", "Immobilier");
+    renderCategory("abimanRow", "Abiman & Tekstil"); renderCategory("zoutiRow", "Zouti");
+    startSponsorRotation();
+    document.querySelectorAll(".spinner").forEach(sp => sp.style.display = "none");
+  });
+}
+
+function addToCart(p) { cart.push(p); renderCart(); showToast(`${p.name} ajoute nan panyen w lan!`); }
+
+function renderCart() {
+  const cartItems = document.getElementById('cartItems'); const totalPrice = document.getElementById('totalPrice'); const cartCount = document.getElementById('cartCount');
+  cartItems.innerHTML = ""; let total = 0;
+  cart.forEach((p, i) => {
+    total += Number(p.price);
+    const div = document.createElement("div");
+    div.innerHTML = `${p.name} (${p.price} HTG) <button style="color:red; cursor:pointer; border:none; background:none;">✖</button>`;
+    div.querySelector("button").onclick = () => { cart.splice(i, 1); renderCart(); };
+    cartItems.appendChild(div);
+  });
+  totalPrice.innerText = "Total: " + total + " HTG"; cartCount.innerText = cart.length;
+}
+
+document.getElementById('cartBtn').onclick = () => document.getElementById('cartPopup').classList.toggle("show");
+document.getElementById('whatsappBtn').onclick = () => {
+  if (cart.length === 0) return showToast("Panyen an vid!");
+  let msg = "Bonjou, mwen vle kòmande sou Global Plis:\n\n"; let total = 0;
+  cart.forEach(p => { msg += `▪️ ${p.name} - ${p.price} HTG\n`; total += Number(p.price); });
+  msg += `\nTotal: ${total} HTG`; window.open("https://wa.me/50940488401?text=" + encodeURIComponent(msg));
+};
+
+const searchInput = document.getElementById("searchService");
+if (searchInput) {
+  searchInput.addEventListener("input", e => {
+    const term = e.target.value.toLowerCase().trim();
+    if (!term) return renderProducts();
+    const filtered = allProducts.filter(p => p.name.toLowerCase().includes(term));
+    ["macheRow", "immobilierRow", "abimanRow", "zoutiRow"].forEach(id => document.getElementById(id).innerHTML = "");
+    const map = { "Mache": "macheRow", "Immobilier": "immobilierRow", "Abiman & Tekstil": "abimanRow", "Zouti": "zoutiRow" };
+    filtered.forEach(p => renderCategory(map[p.category], p.category, filtered));
+  });
+}
+
+window.addEventListener("DOMContentLoaded", renderProducts);
+
+function showToast(message, duration = 3000) {
+    const toast = document.getElementById("toast");
+    toast.innerText = message;
+    toast.style.display = "block";
+    setTimeout(() => { toast.style.display = "none"; }, duration);
+}
+
+const menuBtn = document.getElementById('menuBtn');
+const closeMenu = document.getElementById('closeMenu');
+const sideMenu = document.getElementById('sideMenu');
+const menuOverlay = document.getElementById('menuOverlay');
+
+if (menuBtn) {
+  menuBtn.onclick = () => {
+    sideMenu.classList.add('active');
+    menuOverlay.classList.add('active');
+  };
+}
+
+if (closeMenu) {
+  closeMenu.onclick = () => {
+    sideMenu.classList.remove('active');
+    menuOverlay.classList.remove('active');
+  };
+}
