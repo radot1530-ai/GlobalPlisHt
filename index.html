@@ -6,7 +6,7 @@
   <title>Global Plis Ayiti - Sèvis</title>
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="essai.css">
   
   <!-- ESTIL PRELOADER & LAZY LOADING -->
   <style>
@@ -70,7 +70,7 @@
       <div class="brand-container" style="color: white; font-weight: bold; font-size: 1.2rem;">
         🌐 GLOBAL PLIS
       </div>
-      <button id="loginBtn" class="login-pill" onclick="document.getElementById('authModal').style.display='flex'"><span>🔐</span> Konekte</button>
+      <button id="loginBtn" class="login-pill"><span>🔐</span> Konekte</button>
     </div>
 
     <nav class="tabs-container">
@@ -177,7 +177,7 @@
       </div>
     </section>
 
-    <!-- SÈVIS + (Kou sèlman - Pa gen Slider ankò) -->
+    <!-- SÈVIS + (Kou sèlman) -->
     <section id="sèv" class="tab-content active">
       <section class="course-section" style="padding: 20px;">
         <div class="course-grid" id="courseWrapper" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;"></div>
@@ -185,6 +185,7 @@
     </section>
   </main>
 
+  <!-- ANSYEN FOOTER A -->
   <footer class="footer-container">
     <div class="footer-bottom">
       <p>&copy; 2026 Global Plis +∞. Fòme yon lòt jenerasyon pou Ayiti.</p>
@@ -212,42 +213,29 @@
 
   <div id="toast" style="position:fixed; bottom:20px; right:20px; background:#333; color:#fff; padding:15px; border-radius:5px; display:none; z-index:9999;"></div>
 
-  <!-- ======================================================= -->
-  <!-- TOUT JAVASCRIPT YO INIFYE ANNDAN YON SÈL BALIZ SCRIPT -->
-  <!-- ======================================================= -->
+  <!-- JAVASCRIPT -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-    import { getDatabase, ref, onValue, push, set, remove, get } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
-    
-    /* Mwen kite Auth isit la sèlman paske paj index.html sa a gen bouton koneksyon an ak panyen / admin panel. 
-       Li nesesè pou pati Store la fonksyone byen si moun nan se admin. */
-    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+    import { db, auth, provider } from "./firebase-j.js";
+    import { ref, push, set, onValue, remove, get } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
+    import { 
+      signInWithPopup, 
+      onAuthStateChanged, 
+      signOut, 
+      createUserWithEmailAndPassword, 
+      signInWithEmailAndPassword, 
+      sendEmailVerification,
+      sendPasswordResetEmail 
+    } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyB1f26ZYfvHkFWf9x1Zm6bJlrUwbXWWBfk",
-      authDomain: "globalplis-9f740.firebaseapp.com",
-      databaseURL: "https://globalplis-9f740-default-rtdb.firebaseio.com",
-      projectId: "globalplis-9f740",
-      storageBucket: "globalplis-9f740.firebasestorage.app",
-      messagingSenderId: "907235331553",
-      appId: "1:907235331553:web:5b13a1497f857a0fec16a0",
-      measurementId: "G-R91CLS4MY8"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
-
-    window.currentUser = null;
+    /* ================= GLOBAL ================= */
+    let currentUser = null;
     let allProducts = [];
     let cart = [];
-    let isSignUpMode = false;
+    let isSignUpMode = false; 
 
-    window.showToast = function(message, duration = 3000) {
-      const toast = document.getElementById("toast");
-      if(toast) { toast.innerText = message; toast.style.display = "block"; setTimeout(() => toast.style.display = "none", duration); }
-    };
+    const loginBtn = document.getElementById("loginBtn");
+    const adminPanel = document.getElementById("adminPanel");
+    const authModal = document.getElementById("authModal");
 
     window.chanjeOnglet = function(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
@@ -258,182 +246,242 @@
       if(tabBtn) tabBtn.classList.add('active');
     };
 
-    // --- AUTH LOGIC POU BOUTON KONEKTE A ---
+    /* ================= JERE SISTÈM KONEKSYON AN ================= */
     document.getElementById("toggleAuthMode")?.addEventListener("click", (e) => {
       e.preventDefault();
       isSignUpMode = !isSignUpMode;
       document.getElementById("authTitle").innerText = isSignUpMode ? "Kreye yon Kont" : "Konekte";
       document.getElementById("authName").style.display = isSignUpMode ? "block" : "none";
-      document.getElementById("manualAuthBtn").innerText = isSignUpMode ? "Enskri" : "Konekte";
+      document.getElementById("manualAuthBtn").innerText = isSignUpMode ? "Enskri kounye a" : "Konekte";
       document.getElementById("authToggleText").innerText = isSignUpMode ? "Ou gentan gen yon kont?" : "Ou poko gen kont?";
-      e.target.innerText = isSignUpMode ? "Konekte" : "Kreye youn";
+      e.target.innerText = isSignUpMode ? "Konekte" : "Kreye youn kounye a";
     });
 
     document.getElementById("googleAuthBtn")?.addEventListener("click", () => {
-      signInWithPopup(auth, provider).then(() => document.getElementById("authModal").style.display = "none")
-      .catch(error => showToast("Erè Google: " + error.message));
+      signInWithPopup(auth, provider).then(() => {
+        authModal.style.display = "none";
+      }).catch((error) => showToast("Erè Google: " + error.message));
+    });
+
+    document.getElementById("forgotPasswordBtn")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("authEmail").value.trim();
+      if (!email) return showToast("Tanpri rantre imel ou nan chan an dabò pou n voye lyen an ba ou.");
+      sendPasswordResetEmail(auth, email)
+        .then(() => showToast("Nou voye yon lyen pou re-inisyalize modpas ou nan imel ou. Tcheke bwat lèt ou!", 6000))
+        .catch((err) => showToast("Erè: " + err.message));
     });
 
     document.getElementById("manualAuthBtn")?.addEventListener("click", () => {
       const email = document.getElementById("authEmail").value.trim();
       const pass = document.getElementById("authPassword").value.trim();
       const name = document.getElementById("authName").value.trim();
+
       if (!email || !pass) return showToast("Tanpri mete imel ak modpas ou.");
-      const btn = document.getElementById("manualAuthBtn"); btn.innerText = "Ap chaje..."; btn.disabled = true;
+      if (pass.length < 6) return showToast("Modpas la dwe gen omwen 6 karaktè.");
+
+      const btn = document.getElementById("manualAuthBtn");
+      btn.innerText = "Ap chaje..."; btn.disabled = true;
 
       if (isSignUpMode) {
-        createUserWithEmailAndPassword(auth, email, pass).then(async (userCred) => {
-          await set(ref(db, `users/${userCred.user.uid}`), { non: name, email, role: "user" });
-          document.getElementById("authModal").style.display = "none";
-          showToast("Kont ou kreye ak siksè!");
-        }).catch(err => showToast("Erè: " + err.message)).finally(() => { btn.innerText = "Enskri"; btn.disabled = false; });
+        if (!name) { btn.innerText = "Enskri kounye a"; btn.disabled = false; return showToast("Tanpri mete non w."); }
+        createUserWithEmailAndPassword(auth, email, pass)
+          .then(async (userCred) => {
+            await sendEmailVerification(userCred.user);
+            await set(ref(db, `users/${userCred.user.uid}`), { non: name, email: email, role: "user", kreyeNan: Date.now() });
+            await signOut(auth);
+            authModal.style.display = "none";
+            showToast("Kont ou kreye! Tanpri tcheke bwat lèt ou pou verifye imel la.", 6000);
+            document.getElementById("toggleAuthMode").click();
+          })
+          .catch(err => showToast("Erè: " + err.message))
+          .finally(() => { btn.innerText = "Enskri kounye a"; btn.disabled = false; });
       } else {
-        signInWithEmailAndPassword(auth, email, pass).then(() => {
-          document.getElementById("authModal").style.display = "none";
-          showToast("Ou konekte ak siksè!");
-        }).catch(() => showToast("Imel oswa modpas la pa bon."))
-        .finally(() => { btn.innerText = "Konekte"; btn.disabled = false; });
+        signInWithEmailAndPassword(auth, email, pass)
+          .then(async (userCred) => {
+            if (!userCred.user.emailVerified) {
+              showToast("Ou poko verifye imel ou. Tanpri tcheke bwat lèt ou.");
+              await signOut(auth);
+              btn.innerText = "Konekte"; btn.disabled = false;
+              return;
+            }
+            authModal.style.display = "none"; 
+            showToast("Ou konekte ak siksè!");
+          })
+          .catch(() => showToast("Imel oswa modpas la pa bon."))
+          .finally(() => { btn.innerText = "Konekte"; btn.disabled = false; });
       }
     });
 
+    if (loginBtn) {
+      loginBtn.addEventListener("click", () => {
+        if (currentUser) {
+          if (confirm("Ou vle dekonekte?")) signOut(auth);
+        } else {
+          authModal.style.display = "flex";
+        }
+      });
+    }
+
     onAuthStateChanged(auth, async (user) => {
-      const loginBtn = document.getElementById("loginBtn");
-      const adminPanel = document.getElementById("adminPanel");
       if (user) {
-        const snap = await get(ref(db, `users/${user.uid}`));
-        const role = snap.exists() ? snap.val().role : "user";
-        window.currentUser = { uid: user.uid, role, email: user.email };
-        loginBtn.innerHTML = `<span>👤</span> Sòti`;
-        if(adminPanel) adminPanel.style.display = (role === "admin") ? "block" : "none";
+        let displayName = user.displayName || "Itilizatè";
+        const userRef = ref(db, `users/${user.uid}`);
+        const snap = await get(userRef);
+        
+        if (!snap.exists()) {
+          await set(userRef, { non: displayName, email: user.email, role: "user", kreyeNan: Date.now() });
+          currentUser = { uid: user.uid, role: "user", email: user.email };
+        } else {
+          const data = snap.val();
+          displayName = data.non || displayName;
+          currentUser = { uid: user.uid, role: data.role, email: user.email };
+        }
+
+        loginBtn.innerHTML = `<span>👤</span> Sòti (${displayName.split(" ")[0]})`;
+        if(adminPanel) adminPanel.style.display = (currentUser.role === "admin") ? "block" : "none";
       } else {
-        window.currentUser = null;
+        currentUser = null;
         loginBtn.innerHTML = `<span>🔐</span> Konekte`;
         if(adminPanel) adminPanel.style.display = "none";
       }
-      if (typeof window.renderProducts === "function") renderProducts();
+      renderProducts();
     });
 
-    document.getElementById("loginBtn")?.addEventListener("click", () => {
-      if (window.currentUser) { if (confirm("Ou vle dekonekte?")) signOut(auth); } 
-      else { document.getElementById('authModal').style.display = 'flex'; }
-    });
-
-    // --- STORE LOGIC ---
+    /* ================= STORE & PRODUCTS ================= */
     window.addProduct = () => {
-      if (!window.currentUser || window.currentUser.role !== "admin") return showToast("Sèlman administratè a ki ka ajoute pwodui.");
+      if (!currentUser || currentUser.role !== "admin") return showToast("Sèlman administratè a ki ka ajoute pwodui.");
       const name = document.getElementById('pname').value.trim();
       const price = document.getElementById('pprice').value.trim();
       const desc = document.getElementById('description').value.trim();
       const file = document.getElementById('pfile').files[0];
-      const category = document.getElementById('pcategory').value;
-      if (!name || !price || !desc || !file) return showToast("Ranpli tout chan yo.");
+      let category = document.getElementById('pcategory').value;
+      if (!name || !price || !desc || !file) return showToast("Tout chan yo oblije ranpli");
       
       const reader = new FileReader();
       reader.onload = () => {
-        push(ref(db, "products"), { name, price, description: desc, category, img: reader.result, time: Date.now() })
-        .then(() => { showToast("Pwodui ajoute!"); });
+        push(ref(db, "products"), {
+          name, price, description: desc, category, img: reader.result, premium: category === "Sponsorisé", time: Date.now()
+        }).then(() => {
+          showToast("✅ Pwodui ajoute ak siksè!");
+          document.getElementById('pname').value = ""; document.getElementById('pprice').value = "";
+          document.getElementById('description').value = ""; document.getElementById('pfile').value = "";
+        });
       };
       reader.readAsDataURL(file);
     };
 
     window.deleteProduct = id => {
-      if (!window.currentUser || window.currentUser.role !== "admin") return;
-      if (confirm("Efase pwodui sa?")) remove(ref(db, "products/" + id));
+      if (!currentUser || currentUser.role !== "admin") return;
+      if (confirm("Èske w sèten ou vle efase pwodui sa nèt?")) remove(ref(db, "products/" + id));
     };
 
-    window.addToCart = (p) => { cart.push(p); renderCart(); showToast(`${p.name} nan panyen w!`); };
-
-    function renderCart() {
-      const cartItems = document.getElementById('cartItems'); 
-      cartItems.innerHTML = ""; let total = 0;
-      cart.forEach((p, i) => {
-        total += Number(p.price);
-        const div = document.createElement("div");
-        div.innerHTML = `${p.name} (${p.price} HTG) <button style="color:red; background:none; border:none;" onclick="cart.splice(${i}, 1); renderCart();">✖</button>`;
-        cartItems.appendChild(div);
+    function renderCategory(rowId, category, list = allProducts) {
+      if (category === "Sponsorisé") return; 
+      const row = document.getElementById(rowId);
+      if (!row) return;
+      row.innerHTML = "";
+      
+      let products = list.filter(p => p.category === category);
+      products.sort((a, b) => b.time - a.time);
+      
+      products.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "product-card";
+        
+        card.innerHTML = `
+          <a href="store/pwodui/produit.html?id=${p.id}" style="display:block; text-decoration:none; color:inherit;">
+            <div class="image-container" style="height: 160px; border-radius: 8px 8px 0 0;" title="Klike pou wè detay">
+              <img src="${p.img}" loading="lazy" class="async-image" onload="this.classList.add('loaded')" alt="${p.name}">
+            </div>
+            <div style="font-weight: bold; margin-top: 10px;">${p.name}</div>
+          </a>
+          <div style="margin-bottom: 10px;">${p.price} HTG</div>
+          <button class="big-btn">Ajoute</button>
+        `;
+        
+        card.querySelector("button.big-btn").onclick = () => addToCart(p);
+        
+        if (currentUser?.role === "admin") {
+          const del = document.createElement("button");
+          del.textContent = "❌ Efase";
+          del.style.marginTop = "5px";
+          del.onclick = () => deleteProduct(p.id);
+          card.appendChild(del);
+        }
+        row.appendChild(card);
       });
-      document.getElementById('totalPrice').innerText = "Total: " + total + " HTG"; 
-      document.getElementById('cartCount').innerText = cart.length;
     }
 
-    document.getElementById('cartBtn').onclick = () => document.getElementById('cartPopup').classList.toggle("show");
-    document.getElementById('whatsappBtn').onclick = () => {
-      if (cart.length === 0) return showToast("Panyen an vid!");
-      let msg = "Bonjou, mwen kòmande:\n"; let total = 0;
-      cart.forEach(p => { msg += `- ${p.name}: ${p.price} HTG\n`; total += Number(p.price); });
-      window.open("https://wa.me/50940488401?text=" + encodeURIComponent(msg + "\nTotal: " + total + " HTG"));
-    };
+    let sponsorTimer = null;
+    function startSponsorRotation() {
+      const row = document.getElementById("sponsoriseRow");
+      if (!row) return;
+      if (sponsorTimer) clearInterval(sponsorTimer);
+      
+      let sponsors = allProducts.filter(p => p.category === "Sponsorisé").sort((a, b) => b.time - a.time);
+      if (sponsors.length === 0) { row.innerHTML = ""; return; }
+      
+      function render(list) {
+        row.innerHTML = "";
+        list.slice(0, 4).forEach(p => {
+          const card = document.createElement("div"); 
+          card.className = "product-card";
+          
+          card.innerHTML = `
+            <a href="store/pwodui/produit.html?id=${p.id}" style="display:block; text-decoration:none; color:inherit;">
+              <div class="image-container" style="height: 160px; border-radius: 8px 8px 0 0;" title="Klike pou wè detay">
+                <img src="${p.img}" loading="lazy" class="async-image" onload="this.classList.add('loaded')" alt="${p.name}">
+              </div>
+              <div style="font-weight: bold; margin-top: 10px;">${p.name}</div>
+            </a>
+            <div style="margin-bottom: 10px;">${p.price} HTG</div>
+            <button class="big-btn">Ajoute</button>
+          `;
+          
+          card.querySelector("button.big-btn").onclick = () => addToCart(p);
+          
+          if (currentUser?.role === "admin") {
+            const del = document.createElement("button"); 
+            del.textContent = "❌ Efase"; 
+            del.style.marginTop = "5px";
+            del.onclick = () => deleteProduct(p.id); 
+            card.appendChild(del);
+          }
+          row.appendChild(card);
+        });
+      }
+      render(sponsors);
+      sponsorTimer = setInterval(() => { const first = sponsors.shift(); sponsors.push(first); render(sponsors); }, 5000);
+    }
 
-    window.renderProducts = function() {
+    function renderProducts() {
       onValue(ref(db, "products"), snap => {
         allProducts = [];
-        if (snap.exists()) snap.forEach(s => allProducts.push({ id: s.key, ...s.val() }));
-        
-        ['macheRow', 'immobilierRow', 'abimanRow', 'zoutiRow', 'sponsoriseRow'].forEach(id => {
-          if(document.getElementById(id)) document.getElementById(id).innerHTML = "";
-        });
-
-        allProducts.forEach(p => {
-          let targetRowId = "";
-          if(p.category === "Mache") targetRowId = "macheRow";
-          else if(p.category === "Immobilier") targetRowId = "immobilierRow";
-          else if(p.category === "Abiman & Tekstil") targetRowId = "abimanRow";
-          else if(p.category === "Zouti") targetRowId = "zoutiRow";
-          else if(p.category === "Sponsorisé") targetRowId = "sponsoriseRow";
-
-          const row = document.getElementById(targetRowId);
-          if(row) {
-            const card = document.createElement("div"); 
-            card.className = "product-card";
-            // 👉 NOUVO LOJIK: Imaj pwodui a se yon lyen + li gen Lazy Loading Skeleton nan
-            card.innerHTML = `
-              <a href="produit.html?id=${p.id}" style="display:block; text-decoration:none;">
-                <div class="image-container" style="height: 160px; border-radius: 8px 8px 0 0;">
-                  <img src="${p.img}" loading="lazy" class="async-image" onload="this.classList.add('loaded')" alt="${p.name}">
-                </div>
-              </a>
-              <div style="font-weight:bold; margin-top:10px;">${p.name}</div>
-              <div style="margin-bottom:10px;">${p.price} HTG</div>
-              <button class="big-btn" onclick="addToCart({name:'${p.name}', price:'${p.price}'})">Ajoute</button>
-            `;
-            if (window.currentUser?.role === "admin") {
-              const del = document.createElement("button"); 
-              del.textContent = "❌ Efase"; 
-              del.style.marginTop = "5px";
-              del.onclick = () => deleteProduct(p.id); 
-              card.appendChild(del);
-            }
-            row.appendChild(card);
-          }
-        });
+        if (snap.exists()) { snap.forEach(s => { allProducts.push({ id: s.key, ...s.val() }); }); }
+        renderCategory("macheRow", "Mache"); 
+        renderCategory("immobilierRow", "Immobilier");
+        renderCategory("abimanRow", "Abiman & Tekstil"); 
+        renderCategory("zoutiRow", "Zouti");
+        startSponsorRotation();
       });
     }
 
-    // --- LOJIK KOU YO AK LAZY LOADING CSS + BOUTON DETAY ---
+    /* ================= KOU (COURSES) AK LAZY LOADING ================= */
     const courseWrapper = document.getElementById("courseWrapper");
     if (courseWrapper) {
-      courseWrapper.innerHTML = `
-        <div style="width: 100%; text-align: center; padding: 40px; color: #1e3f8a;">
-          <p>⏳ Ap chaje kou yo... Tanpri tann.</p>
-        </div>
-      `;
-
       onValue(ref(db, "kou"), (snapshot) => {
         courseWrapper.innerHTML = ""; 
-        
         if (!snapshot.exists()) {
           courseWrapper.innerHTML = "<p>Pa gen kou ki disponib pou kounye a.</p>";
           return;
         }
-        
         Object.entries(snapshot.val()).forEach(([id, kou]) => {
-          // 👉 NOUVO LOJIK: Afichaj Kou ou te mande a ak lyen pou paj kou a
           courseWrapper.innerHTML += `
             <div class="course-card" style="width:300px; border:1px solid #ddd; border-radius:16px; background:#fff; overflow:hidden;">
               <div class="image-container" style="height: 190px;">
                 <img src="${kou.imajUrl}" alt="${kou.non}" loading="lazy" class="async-image" onload="this.classList.add('loaded')">
               </div>
-              
               <div class="course-content" style="padding: 15px;">
                 <span class="course-badge" style="background:#e0e7ff; color:#3730a3; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:bold;">${kou.badge || "FÒMASYON"}</span>
                 <h2 class="course-title" style="margin:10px 0; font-size:18px;">${kou.non}</h2>
@@ -443,19 +491,47 @@
                 </div>
                 <div class="btn-group" style="display:flex; justify-content:space-between; align-items:center;">
                   <span class="btn btn-price" style="font-weight:bold; color:#1e3f8a;">${kou.pri} HTG</span>
-                  <a href="kou/detay/globalplis/kou.html?id=${id}" class="btn btn-enroll" style="background:#3b82f6; color:#fff; padding:8px 12px; text-decoration:none; border-radius:6px; font-size:14px; transition:0.3s;">Detay / Enskri</a>
+                  <a href="kou/detay/globalplis/kou.html?id=${id}" class="btn btn-enroll" style="background:#3b82f6; color:#fff; padding:8px 12px; text-decoration:none; border-radius:6px; font-size:14px;">Detay / Enskri</a>
                 </div>
               </div>
             </div>
           `;
         });
-      }, (error) => {
-        courseWrapper.innerHTML = "<p style='color:red;'>Koneksyon an echwe. Tanpri verifye entènèt ou.</p>";
       });
     }
 
+    /* ================= CART & UI UTILS ================= */
+    function addToCart(p) { cart.push(p); renderCart(); showToast(`${p.name} ajoute nan panyen w lan!`); }
 
-    // --- ANIMASYON MENU AK PRELOADER INIT ---
+    function renderCart() {
+      const cartItems = document.getElementById('cartItems'); 
+      const totalPrice = document.getElementById('totalPrice'); 
+      const cartCount = document.getElementById('cartCount');
+      cartItems.innerHTML = ""; let total = 0;
+      cart.forEach((p, i) => {
+        total += Number(p.price);
+        const div = document.createElement("div");
+        div.innerHTML = `${p.name} (${p.price} HTG) <button style="color:red; cursor:pointer; border:none; background:none;">✖</button>`;
+        div.querySelector("button").onclick = () => { cart.splice(i, 1); renderCart(); };
+        cartItems.appendChild(div);
+      });
+      totalPrice.innerText = "Total: " + total + " HTG"; 
+      cartCount.innerText = cart.length;
+    }
+
+    document.getElementById('cartBtn').onclick = () => document.getElementById('cartPopup').classList.toggle("show");
+    document.getElementById('whatsappBtn').onclick = () => {
+      if (cart.length === 0) return showToast("Panyen an vid!");
+      let msg = "Bonjou, mwen vle kòmande sou Global Plis:\n\n"; let total = 0;
+      cart.forEach(p => { msg += `▪️ ${p.name} - ${p.price} HTG\n`; total += Number(p.price); });
+      msg += `\nTotal: ${total} HTG`; window.open("https://wa.me/50940488401?text=" + encodeURIComponent(msg));
+    };
+
+    function showToast(message, duration = 3000) {
+      const toast = document.getElementById("toast");
+      if(toast) { toast.innerText = message; toast.style.display = "block"; setTimeout(() => { toast.style.display = "none"; }, duration); }
+    }
+
     window.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         const p = document.getElementById('globalPreloader');
@@ -463,14 +539,18 @@
       }, 1000);
 
       const menuBtn = document.getElementById('menuBtn');
+      const closeMenu = document.getElementById('closeMenu');
       const sideMenu = document.getElementById('sideMenu');
       const menuOverlay = document.getElementById('menuOverlay');
-      menuBtn.onclick = () => { sideMenu.classList.add('active'); menuOverlay.classList.add('active'); };
-      document.getElementById('closeMenu').onclick = menuOverlay.onclick = () => { 
-        sideMenu.classList.remove('active'); menuOverlay.classList.remove('active'); 
-      };
 
-      renderProducts();
+      if (menuBtn) {
+        menuBtn.onclick = () => { sideMenu.classList.add('active'); menuOverlay.classList.add('active'); };
+      }
+      if (closeMenu) {
+        closeMenu.onclick = menuOverlay.onclick = () => { 
+          sideMenu.classList.remove('active'); menuOverlay.classList.remove('active'); 
+        };
+      }
     });
   </script>
 </body>
