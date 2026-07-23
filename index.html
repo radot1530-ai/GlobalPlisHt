@@ -6,9 +6,9 @@
   <title>Global Plis Ayiti - Sèvis</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="essai.css">
 
-  <!-- ESTIL PRELOADER & LAZY LOADING & VOIR PLUS -->
+  <!-- ESTIL PRELOADER & LAZY LOADING -->
   <style>
       /* Preloader */
       #globalPreloader {
@@ -53,39 +53,6 @@
       }
       .async-image.loaded {
           opacity: 1;
-      }
-
-      /* Skeleton Default Cards (pou afichaj rapid la) */
-      .skeleton-card {
-          flex: 0 0 150px; background: #fff; border-radius: 10px; padding: 10px;
-          box-shadow: 0 3px 10px rgba(0,0,0,0.08); display: flex; flex-direction: column; gap: 8px;
-      }
-      .skeleton-line { height: 14px; border-radius: 4px; background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%); background-size: 200% 100%; animation: skeletonLoading 1.5s infinite; }
-
-      /* Wè Plis (Voir plus) CSS */
-      .objektif-text {
-          display: -webkit-box;
-          -webkit-line-clamp: 3;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-          transition: all 0.3s ease;
-      }
-      .objektif-text.expanded {
-          -webkit-line-clamp: unset;
-      }
-      .voir-plus-btn {
-          color: #3b82f6;
-          background: none;
-          border: none;
-          font-weight: bold;
-          font-size: 13px;
-          cursor: pointer;
-          padding: 0;
-          margin-top: 5px;
-          text-align: left;
-      }
-      .voir-plus-btn:hover {
-          text-decoration: underline;
       }
   </style>
 </head>
@@ -149,6 +116,9 @@
       </section>
     </section>
 
+    <!-- IMOBILYE -->
+   
+
     <!-- STORE -->
     <section id="productCategories" class="tab-content" style="display: none;">
 
@@ -171,42 +141,25 @@
 
       <input type="text" id="searchService" placeholder="Rechèch pwodui..." class="search-bar">
 
-      <!-- SPONSORISÉ -->
       <div class="category">
         <h2 class="tabo">Sponsorisé</h2>
-        <div class="product-row" id="sponsoriseRow">
-          <!-- Skeleton statik pou rapidite -->
-          <div class="skeleton-card"><div class="image-container" style="height: 120px; border-radius: 8px 8px 0 0;"></div><div class="skeleton-line" style="width: 80%;"></div><div class="skeleton-line" style="width: 50%;"></div><div class="skeleton-line" style="height: 30px; margin-top: auto;"></div></div>
-        </div>
+        <div class="product-row" id="sponsoriseRow"></div>
       </div>
-      <!-- MACHE -->
       <div class="category">
         <h2 class="tabo">Mache</h2>
-        <div class="product-row" id="macheRow">
-          <div class="skeleton-card"><div class="image-container" style="height: 120px; border-radius: 8px 8px 0 0;"></div><div class="skeleton-line" style="width: 80%;"></div><div class="skeleton-line" style="width: 50%;"></div></div>
-          <div class="skeleton-card"><div class="image-container" style="height: 120px; border-radius: 8px 8px 0 0;"></div><div class="skeleton-line" style="width: 80%;"></div><div class="skeleton-line" style="width: 50%;"></div></div>
-        </div>
+        <div class="product-row" id="macheRow"></div>
       </div>
-      <!-- IMMOBILIER -->
       <div class="category">
         <h2 class="tabo">Immobilier</h2>
-        <div class="product-row" id="immobilierRow">
-          <div class="skeleton-card"><div class="image-container" style="height: 120px; border-radius: 8px 8px 0 0;"></div><div class="skeleton-line" style="width: 80%;"></div><div class="skeleton-line" style="width: 50%;"></div></div>
-        </div>
+        <div class="product-row" id="immobilierRow"></div>
       </div>
-      <!-- ABIMAN & TEKSTIL -->
       <div class="category">
         <h2 class="tabo">Abiman & Tekstil</h2>
-        <div class="product-row" id="abimanRow">
-          <div class="skeleton-card"><div class="image-container" style="height: 120px; border-radius: 8px 8px 0 0;"></div><div class="skeleton-line" style="width: 80%;"></div><div class="skeleton-line" style="width: 50%;"></div></div>
-        </div>
+        <div class="product-row" id="abimanRow"></div>
       </div>
-      <!-- ZOUTI -->
       <div class="category">
         <h2 class="tabo">Zouti</h2>
-        <div class="product-row" id="zoutiRow">
-          <div class="skeleton-card"><div class="image-container" style="height: 120px; border-radius: 8px 8px 0 0;"></div><div class="skeleton-line" style="width: 80%;"></div><div class="skeleton-line" style="width: 50%;"></div></div>
-        </div>
+        <div class="product-row" id="zoutiRow"></div>
       </div>
 
       <button id="cartBtn">🛒 <span id="cartCount">0</span></button>
@@ -221,22 +174,12 @@
     <!-- SÈVIS + (Kou sèlman) -->
     <section id="sèv" class="tab-content active">
       <section class="course-section" style="padding: 20px;">
-        <div class="course-grid" id="courseWrapper" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
-          <!-- Skeleton pou Kou yo (Rapidite) -->
-          <div class="course-card" style="width:300px; border:1px solid #ddd; border-radius:16px; background:#fff; overflow:hidden;">
-            <div class="image-container" style="height: 190px;"></div>
-            <div style="padding: 15px; display: flex; flex-direction: column; gap: 10px;">
-              <div class="skeleton-line" style="width: 40%; height: 20px;"></div>
-              <div class="skeleton-line" style="width: 90%;"></div>
-              <div class="skeleton-line" style="width: 70%;"></div>
-              <div class="skeleton-line" style="width: 100%; height: 40px; margin-top: 10px;"></div>
-            </div>
-          </div>
-        </div>
+        <div class="course-grid" id="courseWrapper" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;"></div>
       </section>
     </section>
   </main>
 
+  <!-- ANSYEN FOOTER A -->
   <footer class="footer-container">
   <div class="footer-content">
     <div class="footer-section">
@@ -256,27 +199,30 @@
       <div class="social-icons-wrapper">
         <a href="https://wa.me/+50940488401" target="_blank"><img src="/image/Screenshot_20260612-165809.png" alt="WA" onerror="this.src='https://via.placeholder.com/30'"></a>
         <a href="https://www.instagram.com/globalplis?igsh=YjQzaXM3MnkzdTlx"><img src="/image/Screenshot_20260612-165727.png" alt="IG" onerror="this.src='https://via.placeholder.com/30'"></a>
-        <a href="https://www.facebook.com/globalplisht?mibextid=ZbWKwL"><img src="/image/Screenshot_20260612-164509.png" alt="Facebook" onerror="this.src='https://via.placeholder.com/30'"></a>
-        <a href="tiktok.com/@globalplisht000"><img src="/image/Screenshot_20260612-171753.png" alt="Tiktok" onerror="this.src='https://via.placeholder.com/30'"></a>
-        <a href="/NS4supportplus/telechaje/NS4 Support Plus.html"><img src="/image/IMG-20260329-WA0000_copy_192x192_1.jpg" alt="Ns4 Support Plus" onerror="this.src='https://via.placeholder.com/30'"></a>
+                <a href="https://www.facebook.com/globalplisht?mibextid=ZbWKwL"><img src="/image/Screenshot_20260612-164509.png" alt="Facebook" onerror="this.src='https://via.placeholder.com/30'"></a>
+
+                <a href="tiktok.com/@globalplisht000"><img src="/image/Screenshot_20260612-171753.png" alt="Tiktok" onerror="this.src='https://via.placeholder.com/30'"></a>
+
+                <a href="/NS4supportplus/telechaje/NS4 Support Plus.html"><img src="/image/IMG-20260329-WA0000_copy_192x192_1.jpg" alt="Ns4 Support Plus" onerror="this.src='https://via.placeholder.com/30'"></a>
       </div>
     </div>
   </div>
   <div class="footer-bottom">
     <p>&copy; 2026 Global Plis +∞. Fòme yon lòt jenerasyon pou Ayiti. Tout dwa rezève.</p>
   </div>
-  </footer>
-
+</footer>
   <!-- MODAL AUTHENTIFICATION -->
   <div id="authModal" class="popups" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
     <div style="background:#fff; padding:30px; border-radius:12px; width:90%; max-width:400px; text-align:center; position:relative;">
       <span onclick="document.getElementById('authModal').style.display='none'" style="position:absolute; right:15px; top:10px; cursor:pointer; font-size:24px;">&times;</span>
+
       <h3 id="authTitle">Konekte</h3>
       <button id="googleAuthBtn" class="btn btn-google" style="width:100%; margin-bottom:15px;"><i class="fab fa-google"></i> Kontinye ak Google</button>
       <hr>
       <input type="text" id="authName" placeholder="Non konplè w" style="display:none; width:100%; padding:10px; margin-bottom:10px;">
       <input type="email" id="authEmail" placeholder="Imel ou" style="width:100%; padding:10px; margin-bottom:10px;">
       <input type="password" id="authPassword" placeholder="Modpas" style="width:100%; padding:10px; margin-bottom:10px;">
+
       <button id="manualAuthBtn" class="btn" style="background:#1e3f8a; color:white; width:100%;">Konekte</button>
       <br><br>
       <a href="#" id="forgotPasswordBtn">Modpas bliye?</a>
@@ -319,17 +265,6 @@
       if(tabBtn) tabBtn.classList.add('active');
     };
 
-    /* Fonksyon pou Wè Plis nan Kou yo */
-    window.toggleObjektif = function(btn) {
-      const p = btn.previousElementSibling;
-      p.classList.toggle("expanded");
-      if(p.classList.contains("expanded")) {
-        btn.innerText = "Wè mwens";
-      } else {
-        btn.innerText = "Wè plis";
-      }
-    };
-
     /* ================= JERE SISTÈM KONEKSYON AN ================= */
     document.getElementById("toggleAuthMode")?.addEventListener("click", (e) => {
       e.preventDefault();
@@ -345,6 +280,15 @@
       signInWithPopup(auth, provider).then(() => {
         authModal.style.display = "none";
       }).catch((error) => showToast("Erè Google: " + error.message));
+    });
+
+    document.getElementById("forgotPasswordBtn")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("authEmail").value.trim();
+      if (!email) return showToast("Tanpri rantre imel ou nan chan an dabò pou n voye lyen an ba ou.");
+      sendPasswordResetEmail(auth, email)
+        .then(() => showToast("Nou voye yon lyen pou re-inisyalize modpas ou nan imel ou. Tcheke bwat lèt ou!", 6000))
+        .catch((err) => showToast("Erè: " + err.message));
     });
 
     document.getElementById("manualAuthBtn")?.addEventListener("click", () => {
@@ -387,6 +331,16 @@
           .finally(() => { btn.innerText = "Konekte"; btn.disabled = false; });
       }
     });
+
+    if (loginBtn) {
+      loginBtn.addEventListener("click", () => {
+        if (currentUser) {
+          if (confirm("Ou vle dekonekte?")) signOut(auth);
+        } else {
+          authModal.style.display = "flex";
+        }
+      });
+    }
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -454,10 +408,9 @@
         const card = document.createElement("div");
         card.className = "product-card";
 
-        /* Kat Pwodui: Wotè imaj pase a 120px pito 160px pou evite depasman */
         card.innerHTML = `
           <a href="store/pwodui/produit.html?id=${p.id}" style="display:block; text-decoration:none; color:inherit;">
-            <div class="image-container" style="height: 120px; border-radius: 8px 8px 0 0;" title="Klike pou wè detay">
+            <div class="image-container" style="height: 160px; border-radius: 8px 8px 0 0;" title="Klike pou wè detay">
               <img src="${p.img}" loading="lazy" class="async-image" onload="this.classList.add('loaded')" alt="${p.name}">
             </div>
             <div style="font-weight: bold; margin-top: 10px;">${p.name}</div>
@@ -494,10 +447,9 @@
           const card = document.createElement("div"); 
           card.className = "product-card";
 
-          /* Wotè mete nan 120px menm jan ak enstriksyon anlè a */
           card.innerHTML = `
             <a href="store/pwodui/produit.html?id=${p.id}" style="display:block; text-decoration:none; color:inherit;">
-              <div class="image-container" style="height: 120px; border-radius: 8px 8px 0 0;" title="Klike pou wè detay">
+              <div class="image-container" style="height: 160px; border-radius: 8px 8px 0 0;" title="Klike pou wè detay">
                 <img src="${p.img}" loading="lazy" class="async-image" onload="this.classList.add('loaded')" alt="${p.name}">
               </div>
               <div style="font-weight: bold; margin-top: 10px;">${p.name}</div>
@@ -534,7 +486,7 @@
       });
     }
 
-    /* ================= KOU (COURSES) AK VOIR PLUS ================= */
+    /* ================= KOU (COURSES) AK LAZY LOADING ================= */
     const courseWrapper = document.getElementById("courseWrapper");
     if (courseWrapper) {
       onValue(ref(db, "kou"), (snapshot) => {
@@ -552,12 +504,7 @@
               <div class="course-content" style="padding: 15px;">
                 <span class="course-badge" style="background:#e0e7ff; color:#3730a3; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:bold;">${kou.badge || "FÒMASYON"}</span>
                 <h2 class="course-title" style="margin:10px 0; font-size:18px;">${kou.non}</h2>
-                
-                <div style="margin-bottom:15px;">
-                  <p class="course-objective objektif-text" style="font-size:14px; color:#555; margin-bottom: 0;"><strong>Objektif:</strong> ${kou.objektif}</p>
-                  <button class="voir-plus-btn" onclick="toggleObjektif(this)">Wè plis</button>
-                </div>
-
+                <p class="course-objective" style="font-size:14px; color:#555;"><strong>Objektif:</strong> ${kou.objektif}</p>
                 <div class="course-meta" style="margin-bottom:15px; font-size:13px; color:#666;">
                   <span>⏰ ${kou.dire || "N/A"}</span> | <span>📈 ${kou.nivo || "Tout nivo"}</span>
                 </div>
@@ -605,11 +552,10 @@
     }
 
     window.addEventListener("DOMContentLoaded", () => {
-      /* Retire Preloader an prèske menm kote a pou bay aksè ak "Skeleton Cards" yo */
       setTimeout(() => {
         const p = document.getElementById('globalPreloader');
-        if(p) { p.classList.add('preloader-hidden'); setTimeout(()=> p.style.display='none', 300); }
-      }, 150);
+        if(p) { p.classList.add('preloader-hidden'); setTimeout(()=> p.style.display='none', 500); }
+      }, 1000);
 
       const menuBtn = document.getElementById('menuBtn');
       const closeMenu = document.getElementById('closeMenu');
