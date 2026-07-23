@@ -31,14 +31,18 @@
       }
       @keyframes spinLoader { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-      /* Lazy Loading (Async Image) */
+      /* Lazy Loading (Skeleton Effect) Pwòp ak CSS */
       .image-container {
-          background: #e2e8f0; /* Koulè background anvan imaj la chaje */
+          background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+          background-size: 200% 100%;
+          animation: skeletonLoading 1.5s infinite;
           overflow: hidden;
           position: relative;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          width: 100%;
+      }
+      @keyframes skeletonLoading {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
       }
       .async-image {
           opacity: 0;
@@ -173,19 +177,8 @@
       </div>
     </section>
 
-    <!-- SÈVIS + (Kou / Slider) -->
+    <!-- SÈVIS + (Kou sèlman - Pa gen Slider ankò) -->
     <section id="sèv" class="tab-content active">
-      <!-- SLIDER PIBLISITE -->
-      <div class="slider-container" style="overflow: hidden; position: relative;">
-          <div class="slider" style="display: flex; transition: transform 0.5s ease-in-out;">
-              <div class="slides" id="slides" style="display: flex; width: 100%;"></div>
-          </div>
-          <button class="slider-btn" id="prev" style="position:absolute; left:10px; top:50%; transform:translateY(-50%);">&#10094;</button>
-          <button class="slider-btn" id="next" style="position:absolute; right:10px; top:50%; transform:translateY(-50%);">&#10095;</button>
-          <div id="dots" class="dots-container" style="text-align:center; margin-top:10px;"></div>
-      </div>
-
-      <!-- KOU SECTION -->
       <section class="course-section" style="padding: 20px;">
         <div class="course-grid" id="courseWrapper" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;"></div>
       </section>
@@ -223,12 +216,13 @@
   <!-- TOUT JAVASCRIPT YO INIFYE ANNDAN YON SÈL BALIZ SCRIPT -->
   <!-- ======================================================= -->
   <script type="module">
-    // 1. IMPORTASYON FIREBASE DIREK
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, set, remove, get } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
+    
+    /* Mwen kite Auth isit la sèlman paske paj index.html sa a gen bouton koneksyon an ak panyen / admin panel. 
+       Li nesesè pou pati Store la fonksyone byen si moun nan se admin. */
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
-    // 2. KONFIGIRASYON FIREBASE
     const firebaseConfig = {
       apiKey: "AIzaSyB1f26ZYfvHkFWf9x1Zm6bJlrUwbXWWBfk",
       authDomain: "globalplis-9f740.firebaseapp.com",
@@ -242,34 +236,29 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    const auth = getAuth(app); // Note: Mwen kenbe Auth la pou sistèm koneksyon w lan toujou ka mache.
+    const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    // 3. VARYAB GLOBAL
     window.currentUser = null;
     let allProducts = [];
     let cart = [];
     let isSignUpMode = false;
 
-    // FONKSYON TOAST
     window.showToast = function(message, duration = 3000) {
       const toast = document.getElementById("toast");
       if(toast) { toast.innerText = message; toast.style.display = "block"; setTimeout(() => toast.style.display = "none", duration); }
     };
 
-    // 4. LOJIK ONGLET (TABS)
     window.chanjeOnglet = function(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
       document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
-      
       const target = document.getElementById(tabId);
       if(target) target.style.display = 'block';
-      
       const tabBtn = document.querySelector(`.tab[data-tab="${tabId}"]`);
       if(tabBtn) tabBtn.classList.add('active');
     };
 
-    // 5. SISTÈM KONEKSYON (AUTH)
+    // --- AUTH LOGIC POU BOUTON KONEKTE A ---
     document.getElementById("toggleAuthMode")?.addEventListener("click", (e) => {
       e.preventDefault();
       isSignUpMode = !isSignUpMode;
@@ -289,7 +278,6 @@
       const email = document.getElementById("authEmail").value.trim();
       const pass = document.getElementById("authPassword").value.trim();
       const name = document.getElementById("authName").value.trim();
-
       if (!email || !pass) return showToast("Tanpri mete imel ak modpas ou.");
       const btn = document.getElementById("manualAuthBtn"); btn.innerText = "Ap chaje..."; btn.disabled = true;
 
@@ -330,7 +318,7 @@
       else { document.getElementById('authModal').style.display = 'flex'; }
     });
 
-    // 6. STORE.JS LOJIK
+    // --- STORE LOGIC ---
     window.addProduct = () => {
       if (!window.currentUser || window.currentUser.role !== "admin") return showToast("Sèlman administratè a ki ka ajoute pwodui.");
       const name = document.getElementById('pname').value.trim();
@@ -395,18 +383,25 @@
 
           const row = document.getElementById(targetRowId);
           if(row) {
-            const card = document.createElement("div"); card.className = "product-card";
+            const card = document.createElement("div"); 
+            card.className = "product-card";
+            // 👉 NOUVO LOJIK: Imaj pwodui a se yon lyen + li gen Lazy Loading Skeleton nan
             card.innerHTML = `
-              <div class="image-container" style="border-radius:8px; height:150px;">
-                <img src="${p.img}" loading="lazy" class="async-image" onload="this.classList.add('loaded')">
-              </div>
+              <a href="produit.html?id=${p.id}" style="display:block; text-decoration:none;">
+                <div class="image-container" style="height: 160px; border-radius: 8px 8px 0 0;">
+                  <img src="${p.img}" loading="lazy" class="async-image" onload="this.classList.add('loaded')" alt="${p.name}">
+                </div>
+              </a>
               <div style="font-weight:bold; margin-top:10px;">${p.name}</div>
               <div style="margin-bottom:10px;">${p.price} HTG</div>
               <button class="big-btn" onclick="addToCart({name:'${p.name}', price:'${p.price}'})">Ajoute</button>
             `;
             if (window.currentUser?.role === "admin") {
-              const del = document.createElement("button"); del.textContent = "❌ Efase"; 
-              del.onclick = () => deleteProduct(p.id); card.appendChild(del);
+              const del = document.createElement("button"); 
+              del.textContent = "❌ Efase"; 
+              del.style.marginTop = "5px";
+              del.onclick = () => deleteProduct(p.id); 
+              card.appendChild(del);
             }
             row.appendChild(card);
           }
@@ -414,15 +409,11 @@
       });
     }
 
-
-    // ======================================================================
-    // 7. LOJIK POU AFICHE KOU YO SOT NAN FIREBASE (Ou te voye a)
-    // ======================================================================
+    // --- LOJIK KOU YO AK LAZY LOADING CSS + BOUTON DETAY ---
     const courseWrapper = document.getElementById("courseWrapper");
     if (courseWrapper) {
       courseWrapper.innerHTML = `
         <div style="width: 100%; text-align: center; padding: 40px; color: #1e3f8a;">
-          <i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 10px;"></i>
           <p>⏳ Ap chaje kou yo... Tanpri tann.</p>
         </div>
       `;
@@ -436,23 +427,23 @@
         }
         
         Object.entries(snapshot.val()).forEach(([id, kou]) => {
+          // 👉 NOUVO LOJIK: Afichaj Kou ou te mande a ak lyen pou paj kou a
           courseWrapper.innerHTML += `
-            <div class="course-card" style="width:300px; padding: 15px; border: 1px solid #ccc; border-radius: 16px;">
-              <!-- 🔹 NOUVO LOJIK IMAJ LA POU KOU YO 🔹 -->
-              <div class="image-container" style="height: 190px; border-radius: 16px 16px 0 0;">
+            <div class="course-card" style="width:300px; border:1px solid #ddd; border-radius:16px; background:#fff; overflow:hidden;">
+              <div class="image-container" style="height: 190px;">
                 <img src="${kou.imajUrl}" alt="${kou.non}" loading="lazy" class="async-image" onload="this.classList.add('loaded')">
               </div>
               
-              <div class="course-content" style="margin-top: 10px;">
-                <span class="course-badge" style="background:#1e3f8a; color:white; padding:3px 8px; border-radius:5px; font-size:0.8em;">${kou.badge || "FÒMASYON"}</span>
-                <h2 class="course-title" style="font-size:1.2rem; margin:10px 0;">${kou.non}</h2>
-                <p class="course-objective" style="font-size:0.9rem; color:#555;"><strong>Objektif:</strong> ${kou.objektif}</p>
-                <div class="course-meta" style="font-size:0.8rem; margin-bottom: 15px;">
-                  <span>⏰ ${kou.dire || 'N/A'}</span> | <span>📈 ${kou.nivo || 'N/A'}</span>
+              <div class="course-content" style="padding: 15px;">
+                <span class="course-badge" style="background:#e0e7ff; color:#3730a3; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:bold;">${kou.badge || "FÒMASYON"}</span>
+                <h2 class="course-title" style="margin:10px 0; font-size:18px;">${kou.non}</h2>
+                <p class="course-objective" style="font-size:14px; color:#555;"><strong>Objektif:</strong> ${kou.objektif}</p>
+                <div class="course-meta" style="margin-bottom:15px; font-size:13px; color:#666;">
+                  <span>⏰ ${kou.dire || "N/A"}</span> | <span>📈 ${kou.nivo || "Tout nivo"}</span>
                 </div>
                 <div class="btn-group" style="display:flex; justify-content:space-between; align-items:center;">
                   <span class="btn btn-price" style="font-weight:bold; color:#1e3f8a;">${kou.pri} HTG</span>
-                  <a href="kou/detay/globalplis/kou.html?id=${id}" class="btn btn-enroll" style="background:#facc15; color:#000; padding:8px 12px; border-radius:8px; text-decoration:none; font-weight:bold;">Detay / Enskri</a>
+                  <a href="kou/detay/globalplis/kou.html?id=${id}" class="btn btn-enroll" style="background:#3b82f6; color:#fff; padding:8px 12px; text-decoration:none; border-radius:6px; font-size:14px; transition:0.3s;">Detay / Enskri</a>
                 </div>
               </div>
             </div>
@@ -464,113 +455,13 @@
     }
 
 
-    // ======================================================================
-    // 8. LOJIK POU SLIDER PIBLISITE PRO (Avèk JSON)
-    // ======================================================================
-    const slides = document.getElementById("slides");
-    const dots = document.getElementById("dots");
-    const prevBtn = document.getElementById("prev");
-    const nextBtn = document.getElementById("next");
-
-    let current = 0;
-    let total = 0;
-    let autoPlayInterval;
-
-    async function loadSliderData() {
-        try {
-            const response = await fetch("publicites.json");
-            if (!response.ok) throw new Error("Pa ka jwenn fichye JSON lan");
-            
-            const data = await response.json();
-            total = data.length;
-
-            if (total === 0) return;
-
-            data.forEach((item, index) => {
-                const slideDiv = document.createElement('div');
-                slideDiv.className = 'slide';
-                slideDiv.style.minWidth = '100%';
-                slideDiv.innerHTML = `
-                    <a href="${item.lien || '#'}">
-                        <!-- 🔹 NOUVO LOJIK IMAJ LA POU SLIDER A 🔹 -->
-                        <div class="image-container" style="height: auto; aspect-ratio: 16 / 9; border-radius: 16px;">
-                            <img src="${item.image}" alt="Piblisite ${index + 1}" class="async-image" onload="this.classList.add('loaded')">
-                        </div>
-                    </a>
-                `;
-                slides.appendChild(slideDiv);
-                dots.innerHTML += `<span class="dot" data-index="${index}" style="height: 10px; width: 10px; margin: 0 5px; background-color: #bbb; border-radius: 50%; display: inline-block; cursor: pointer;"></span>`;
-            });
-
-            document.querySelectorAll(".dot").forEach((dot, index) => {
-                dot.addEventListener("click", () => {
-                    current = index;
-                    afficher();
-                    resetInterval(); 
-                });
-            });
-
-            afficher();
-            startAutoPlay();
-
-        } catch (error) {
-            console.error("Erè pandan chajman slider a:", error);
-        }
-    }
-
-    function afficher() {
-        if(total === 0) return;
-        const slideWidth = 100;
-        slides.style.transform = `translateX(-${current * slideWidth}%)`;
-
-        document.querySelectorAll(".dot").forEach((d, i) => {
-            d.style.backgroundColor = (i === current) ? "#1e3f8a" : "#bbb";
-        });
-    }
-
-    function nextSlide() {
-        current = (current + 1) % total;
-        afficher();
-    }
-
-    function prevSlide() {
-        current = (current - 1 + total) % total;
-        afficher();
-    }
-
-    if (nextBtn) {
-        nextBtn.addEventListener("click", () => {
-            nextSlide();
-            resetInterval();
-        });
-    }
-
-    if (prevBtn) {
-        prevBtn.addEventListener("click", () => {
-            prevSlide();
-            resetInterval();
-        });
-    }
-
-    function startAutoPlay() {
-        autoPlayInterval = setInterval(nextSlide, 4000);
-    }
-
-    function resetInterval() {
-        clearInterval(autoPlayInterval);
-        startAutoPlay();
-    }
-
-
-    // 9. ANIMASYON MENU, PRELOADER INIT AK APP LOAD
+    // --- ANIMASYON MENU AK PRELOADER INIT ---
     window.addEventListener("DOMContentLoaded", () => {
-      // Retire preloader a
       setTimeout(() => {
         const p = document.getElementById('globalPreloader');
         if(p) { p.classList.add('preloader-hidden'); setTimeout(()=> p.style.display='none', 500); }
       }, 1000);
 
-      // Meni
       const menuBtn = document.getElementById('menuBtn');
       const sideMenu = document.getElementById('sideMenu');
       const menuOverlay = document.getElementById('menuOverlay');
@@ -579,15 +470,8 @@
         sideMenu.classList.remove('active'); menuOverlay.classList.remove('active'); 
       };
 
-      // Chaje Pwodui Store la
       renderProducts();
-      
-      // Chaje Slider si div la la
-      if (slides) {
-          loadSliderData();
-      }
     });
-
   </script>
 </body>
 </html>
