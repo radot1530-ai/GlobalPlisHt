@@ -219,3 +219,37 @@ const DATA_SERVICES = [
     image: "image/repair.jpg"
   }
 ];
+
+[
+  {
+    "image": "/image/file_0000000096ec722fb9472db73865427d.png",
+    "titre": "Promotion 1",
+    "description": "Jiska 50% rabè",
+    "lien": "i.jpg"
+  },
+  {
+    "image":"/image/file_00000000a2e071f7b6a2f5c397b74577.png",
+    "titre": "Promotion 2",
+    "description": "NS4 Support Plus",
+    "lien": "i.jpg"
+  },
+
+  {
+    "image": "image/file_0000000088b8720ca11513fdd775a71c.png",
+    "titre": "Promotion 1",
+    "description": "Jiska 50% rabè",
+    "lien": "i.jpg"
+  },
+  {
+    "image": "image/file_00000000a11c720cb2bfbaf0e5fd8221.png",
+    "titre": "Promotion 3",
+    "description": "Pi bon pri",
+    "lien": "i.jpg"
+  },
+{
+    "image": "image/file_000000001644722f94c5e70ce8a5d993.png",
+    "titre": "Promotion 3",
+    "description": "Pi bon pri",
+    "lien": "i.jpg"
+  }
+]
