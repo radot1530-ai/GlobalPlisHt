@@ -86,7 +86,7 @@ let autoPlayInterval;
 
 async function loadSliderData() {
     try {
-        const response = await fetch("publicites.json");
+        const response = await fetch("data.js");
         if (!response.ok) throw new Error("Pa ka jwenn fichye JSON lan");
         
         const data = await response.json();
