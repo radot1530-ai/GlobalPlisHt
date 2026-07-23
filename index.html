@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Global Plis Ayiti - Sèvis</title>
-  
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
-  
-  <!-- ESTIL PRELOADER & LAZY LOADING -->
+
+  <!-- ESTIL PRELOADER & LAZY LOADING (SKELETON) LEJÈ -->
   <style>
       /* Preloader */
       #globalPreloader {
@@ -31,7 +31,7 @@
       }
       @keyframes spinLoader { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-      /* Lazy Loading (Skeleton Effect) Pwòp ak CSS */
+      /* Lazy Loading & Skeleton Effect Lejè */
       .image-container {
           background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
           background-size: 200% 100%;
@@ -46,13 +46,24 @@
       }
       .async-image {
           opacity: 0;
-          transition: opacity 0.5s ease-in-out;
+          transition: opacity 0.4s ease-in-out;
           width: 100%;
           height: 100%;
           object-fit: cover;
       }
       .async-image.loaded {
           opacity: 1;
+      }
+
+      /* Skeleton Placeholders Lejè pandan done yo ap chaje nan Firebase */
+      .skeleton-card {
+          flex: 0 0 150px; background: #fff; border-radius: 10px; padding: 10px;
+          box-shadow: 0 3px 10px rgba(0,0,0,0.08); display: flex; flex-direction: column; gap: 8px;
+      }
+      .skeleton-line { 
+          height: 14px; border-radius: 4px; 
+          background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%); 
+          background-size: 200% 100%; animation: skeletonLoading 1.5s infinite; 
       }
   </style>
 </head>
@@ -76,7 +87,6 @@
     <nav class="tabs-container">
       <div class="tabs">
         <button class="tab" data-tab="konkou" onclick="chanjeOnglet('konkou')">Konkou</button>
-        <button class="tab" data-tab="accueil" onclick="chanjeOnglet('accueil')">Imobilye</button>
         <button class="tab" data-tab="productCategories" onclick="chanjeOnglet('productCategories')">Store</button>
         <button class="tab active" data-tab="sèv" onclick="chanjeOnglet('sèv')">Sèvis +</button>
       </div>
@@ -110,7 +120,7 @@
           <div class="card-icon">⏳</div>
           <h2>Pa gen konkou pou kounye a</h2>
           <div class="card-actions">
-            <button class="btn-secondary" onclick="chanjeOnglet('accueil')">🏠 Ale nan Imobilye</button>
+            <button class="btn-secondary" onclick="chanjeOnglet('sèvis')">🏠 Swiv Fòmasyon</button>
             <button class="btn-secondary" onclick="chanjeOnglet('productCategories')">🛒 Vizite Store la</button>
           </div>
         </div>
@@ -118,16 +128,10 @@
     </section>
 
     <!-- IMOBILYE -->
-    <section id="accueil" class="tab-content" style="display: none;">
-      <div class="immo-header">
-        <h2>🏠 Jwenn Espas Rèv Ou</h2>
-      </div>
-      <div id="immo-list" class="immo-grid"></div>
-    </section>
 
     <!-- STORE -->
     <section id="productCategories" class="tab-content" style="display: none;">
-      
+
       <!-- ADMIN PANEL -->
       <div id="adminPanel" style="display: none; padding: 15px; background: #f0f8ff; border: 1px solid #cce7ff; margin-bottom: 20px;">
         <h3>⚙️ Ajoute Pwodui (Admin)</h3>
@@ -147,25 +151,40 @@
 
       <input type="text" id="searchService" placeholder="Rechèch pwodui..." class="search-bar">
 
+      <!-- SPONSORISÉ -->
       <div class="category">
         <h2 class="tabo">Sponsorisé</h2>
-        <div class="product-row" id="sponsoriseRow"></div>
+        <div class="product-row" id="sponsoriseRow">
+          <div class="skeleton-card"><div class="image-container" style="height: 160px; border-radius: 8px 8px 0 0;"></div><div class="skeleton-line" style="width: 80%;"></div><div class="skeleton-line" style="width: 50%;"></div></div>
+        </div>
       </div>
+      <!-- MACHE -->
       <div class="category">
         <h2 class="tabo">Mache</h2>
-        <div class="product-row" id="macheRow"></div>
+        <div class="product-row" id="macheRow">
+          <div class="skeleton-card"><div class="image-container" style="height: 160px; border-radius: 8px 8px 0 0;"></div><div class="skeleton-line" style="width: 80%;"></div><div class="skeleton-line" style="width: 50%;"></div></div>
+        </div>
       </div>
+      <!-- IMMOBILIER -->
       <div class="category">
         <h2 class="tabo">Immobilier</h2>
-        <div class="product-row" id="immobilierRow"></div>
+        <div class="product-row" id="immobilierRow">
+          <div class="skeleton-card"><div class="image-container" style="height: 160px; border-radius: 8px 8px 0 0;"></div><div class="skeleton-line" style="width: 80%;"></div><div class="skeleton-line" style="width: 50%;"></div></div>
+        </div>
       </div>
+      <!-- ABIMAN & TEKSTIL -->
       <div class="category">
         <h2 class="tabo">Abiman & Tekstil</h2>
-        <div class="product-row" id="abimanRow"></div>
+        <div class="product-row" id="abimanRow">
+          <div class="skeleton-card"><div class="image-container" style="height: 160px; border-radius: 8px 8px 0 0;"></div><div class="skeleton-line" style="width: 80%;"></div><div class="skeleton-line" style="width: 50%;"></div></div>
+        </div>
       </div>
+      <!-- ZOUTI -->
       <div class="category">
         <h2 class="tabo">Zouti</h2>
-        <div class="product-row" id="zoutiRow"></div>
+        <div class="product-row" id="zoutiRow">
+          <div class="skeleton-card"><div class="image-container" style="height: 160px; border-radius: 8px 8px 0 0;"></div><div class="skeleton-line" style="width: 80%;"></div><div class="skeleton-line" style="width: 50%;"></div></div>
+        </div>
       </div>
 
       <button id="cartBtn">🛒 <span id="cartCount">0</span></button>
@@ -180,7 +199,17 @@
     <!-- SÈVIS + (Kou sèlman) -->
     <section id="sèv" class="tab-content active">
       <section class="course-section" style="padding: 20px;">
-        <div class="course-grid" id="courseWrapper" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;"></div>
+        <div class="course-grid" id="courseWrapper" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+          <!-- Skeleton lejè pou Kou yo pandan rezo a ap rantre -->
+          <div class="course-card" style="width:300px; border:1px solid #ddd; border-radius:16px; background:#fff; overflow:hidden;">
+            <div class="image-container" style="height: 190px;"></div>
+            <div style="padding: 15px; display: flex; flex-direction: column; gap: 10px;">
+              <div class="skeleton-line" style="width: 40%; height: 20px;"></div>
+              <div class="skeleton-line" style="width: 90%;"></div>
+              <div class="skeleton-line" style="width: 70%;"></div>
+            </div>
+          </div>
+        </div>
       </section>
     </section>
   </main>
@@ -196,14 +225,14 @@
   <div id="authModal" class="popups" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
     <div style="background:#fff; padding:30px; border-radius:12px; width:90%; max-width:400px; text-align:center; position:relative;">
       <span onclick="document.getElementById('authModal').style.display='none'" style="position:absolute; right:15px; top:10px; cursor:pointer; font-size:24px;">&times;</span>
-      
+
       <h3 id="authTitle">Konekte</h3>
       <button id="googleAuthBtn" class="btn btn-google" style="width:100%; margin-bottom:15px;"><i class="fab fa-google"></i> Kontinye ak Google</button>
       <hr>
       <input type="text" id="authName" placeholder="Non konplè w" style="display:none; width:100%; padding:10px; margin-bottom:10px;">
       <input type="email" id="authEmail" placeholder="Imel ou" style="width:100%; padding:10px; margin-bottom:10px;">
       <input type="password" id="authPassword" placeholder="Modpas" style="width:100%; padding:10px; margin-bottom:10px;">
-      
+
       <button id="manualAuthBtn" class="btn" style="background:#1e3f8a; color:white; width:100%;">Konekte</button>
       <br><br>
       <a href="#" id="forgotPasswordBtn">Modpas bliye?</a>
@@ -328,7 +357,7 @@
         let displayName = user.displayName || "Itilizatè";
         const userRef = ref(db, `users/${user.uid}`);
         const snap = await get(userRef);
-        
+
         if (!snap.exists()) {
           await set(userRef, { non: displayName, email: user.email, role: "user", kreyeNan: Date.now() });
           currentUser = { uid: user.uid, role: "user", email: user.email };
@@ -357,7 +386,7 @@
       const file = document.getElementById('pfile').files[0];
       let category = document.getElementById('pcategory').value;
       if (!name || !price || !desc || !file) return showToast("Tout chan yo oblije ranpli");
-      
+
       const reader = new FileReader();
       reader.onload = () => {
         push(ref(db, "products"), {
@@ -381,14 +410,15 @@
       const row = document.getElementById(rowId);
       if (!row) return;
       row.innerHTML = "";
-      
+
       let products = list.filter(p => p.category === category);
       products.sort((a, b) => b.time - a.time);
-      
+
       products.forEach(p => {
         const card = document.createElement("div");
         card.className = "product-card";
-        
+
+        /* Lazy loading ak efè skeleton sou imaj yo */
         card.innerHTML = `
           <a href="store/pwodui/produit.html?id=${p.id}" style="display:block; text-decoration:none; color:inherit;">
             <div class="image-container" style="height: 160px; border-radius: 8px 8px 0 0;" title="Klike pou wè detay">
@@ -399,9 +429,9 @@
           <div style="margin-bottom: 10px;">${p.price} HTG</div>
           <button class="big-btn">Ajoute</button>
         `;
-        
+
         card.querySelector("button.big-btn").onclick = () => addToCart(p);
-        
+
         if (currentUser?.role === "admin") {
           const del = document.createElement("button");
           del.textContent = "❌ Efase";
@@ -418,16 +448,16 @@
       const row = document.getElementById("sponsoriseRow");
       if (!row) return;
       if (sponsorTimer) clearInterval(sponsorTimer);
-      
+
       let sponsors = allProducts.filter(p => p.category === "Sponsorisé").sort((a, b) => b.time - a.time);
       if (sponsors.length === 0) { row.innerHTML = ""; return; }
-      
+
       function render(list) {
         row.innerHTML = "";
         list.slice(0, 4).forEach(p => {
           const card = document.createElement("div"); 
           card.className = "product-card";
-          
+
           card.innerHTML = `
             <a href="store/pwodui/produit.html?id=${p.id}" style="display:block; text-decoration:none; color:inherit;">
               <div class="image-container" style="height: 160px; border-radius: 8px 8px 0 0;" title="Klike pou wè detay">
@@ -438,9 +468,9 @@
             <div style="margin-bottom: 10px;">${p.price} HTG</div>
             <button class="big-btn">Ajoute</button>
           `;
-          
+
           card.querySelector("button.big-btn").onclick = () => addToCart(p);
-          
+
           if (currentUser?.role === "admin") {
             const del = document.createElement("button"); 
             del.textContent = "❌ Efase"; 
@@ -533,10 +563,11 @@
     }
 
     window.addEventListener("DOMContentLoaded", () => {
+      /* Optimisation preloader rapid san bloke paj la */
       setTimeout(() => {
         const p = document.getElementById('globalPreloader');
-        if(p) { p.classList.add('preloader-hidden'); setTimeout(()=> p.style.display='none', 500); }
-      }, 1000);
+        if(p) { p.classList.add('preloader-hidden'); setTimeout(()=> p.style.display='none', 300); }
+      }, 300);
 
       const menuBtn = document.getElementById('menuBtn');
       const closeMenu = document.getElementById('closeMenu');
