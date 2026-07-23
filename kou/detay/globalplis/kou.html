@@ -3,139 +3,616 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Detay Kou a | Global Plis +∞</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="/style.css">
+  <title>Global Plis Ayiti - Sèvis</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="essai.css">
+  
+  <!-- ESTIL PRELOADER & LAZY LOADING -->
   <style>
-    /* --- DESIGN GLOBAL PLIS +∞ --- */
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
-    .container { max-width: 800px; margin: 40px auto; padding: 20px; }
-    
-    /* Loading Spinner */
-    #loadingSpinner { text-align: center; padding: 60px 20px; color: #1e3f8a; background: #fff; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-    
-    /* Kat Detay Kou a */
-    .course-detail-card { background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.06); border: 1px solid #f0f0f0; display: none; }
-    .course-detail-card img.banner { width: 100%; height: 350px; object-fit: cover; display: block; }
-    
-    .course-content { padding: 30px; }
-    .course-badge { display: inline-block; background-color: #e0f2fe; color: #0369a1; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; }
-    .course-title { font-size: 28px; color: #111; margin: 0 0 15px; font-weight: bold; line-height: 1.3; }
-    
-    .course-meta { display: flex; gap: 20px; font-size: 15px; color: #666; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid #eee; flex-wrap: wrap; }
-    .course-meta span i { color: #ff9800; margin-right: 6px; }
-    
-    .course-description-box { background: #f8fafc; padding: 20px; border-radius: 12px; margin-bottom: 25px; border-left: 4px solid #1e3f8a; }
-    .course-description-box h3 { margin-top: 0; color: #1e3f8a; font-size: 18px; }
-    .course-description-box p { color: #444; line-height: 1.6; margin-bottom: 0; font-size: 15px; }
+      /* Preloader */
+      #globalPreloader {
+          position: fixed !important; top: 0 !important; left: 0 !important;
+          width: 100vw !important; height: 100vh !important;
+          background: #0f172a !important; z-index: 99999 !important;
+          display: flex !important; flex-direction: column !important;
+          align-items: center !important; justify-content: center !important;
+          transition: opacity 0.5s ease !important;
+      }
+      .preloader-hidden { opacity: 0 !important; pointer-events: none !important; }
+      .preloader-spinner {
+          width: 96px; height: 96px;
+          border: 4px solid transparent; border-top-color: #3b82f6; border-right-color: #facc15;
+          border-radius: 50%; animation: spinLoader 1s linear infinite;
+      }
+      .preloader-text {
+          color: #93c5fd; font-family: sans-serif; font-weight: 700;
+          font-size: 14px; letter-spacing: 2px; text-transform: uppercase; margin-top: 16px;
+      }
+      @keyframes spinLoader { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* Aksyon ak Pèman */
-    #actionSection { background: #fff; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 20px; text-align: center; }
-    
-    .btn { padding: 14px 24px; border-radius: 8px; font-size: 16px; font-weight: bold; text-align: center; cursor: pointer; border: none; transition: all 0.3s ease; display: inline-block; width: 100%; box-sizing: border-box; }
-    .btn-google { background-color: #db4437; color: white; box-shadow: 0 4px 12px rgba(219, 68, 55, 0.3); }
-    .btn-google:hover { transform: translateY(-3px); background-color: #c53929; }
-    .btn-pay { background-color: #ff7a3d; color: white; box-shadow: 0 4px 12px rgba(255, 122, 61, 0.3); }
-    .btn-pay:hover { transform: translateY(-3px); background-color: #e8682e; }
-    .btn-free { background-color: #10b981; color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
-    .btn-free:hover { transform: translateY(-3px); background-color: #059669; }
-
-    /* Fòm Pèman ki jere pa JS */
-    .payment-input-group { margin: 15px 0; text-align: left; }
-    .payment-input-group label { display: block; font-weight: bold; margin-bottom: 8px; color: #333; }
-    .payment-input-group input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; box-sizing: border-box; }
-    
-    .payment-logos { display: flex; justify-content: center; gap: 15px; margin-top: 20px; align-items: center; }
-    .payment-logos img { height: 40px; border-radius: 8px; border: 1px solid #eee; padding: 2px; background: #fff; }
-
-    @media (max-width: 600px) {
-      .course-detail-card img.banner { height: 200px; }
-      .course-title { font-size: 22px; }
-    }
+      /* Lazy Loading (Skeleton Effect) */
+      .image-container {
+          background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+          background-size: 200% 100%;
+          animation: skeletonLoading 1.5s infinite;
+          overflow: hidden;
+          position: relative;
+          width: 100%;
+      }
+      @keyframes skeletonLoading {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+      }
+      .async-image {
+          opacity: 0;
+          transition: opacity 0.5s ease-in-out;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+      }
+      .async-image.loaded {
+          opacity: 1;
+      }
   </style>
 </head>
+
 <body>
-  
+  <!-- PRELOADER -->
+  <div id="globalPreloader">
+      <div class="preloader-spinner"></div>
+      <p class="preloader-text">Global Plis ap chaje...</p>
+  </div>
+
   <header class="main-header">
-  <div class="header-top-bar">
-    <div class="brand-container">
-      <img src="image/1768017763381.png" alt="Global Plis Logo" class="main-logo" onerror="this.src='https://via.placeholder.com/150x40?text=Global+Plis'">
+    <div class="header-top-bar">
+      <button id="menuBtn" class="nav-toggle" aria-label="Ouvri Menu">☰</button>
+      <div class="brand-container" style="color: white; font-weight: bold; font-size: 1.2rem;">
+        🌐 GLOBAL PLIS
+      </div>
+      <button id="loginBtn" class="login-pill" onclick="document.getElementById('authModal').style.display='flex'"><span>🔐</span> Konekte</button>
     </div>
-<button id="loginBtn" class="login-pill" onclick="document.getElementById('authModal').style.display='flex'"><span>🔐</span> Enskri</button>
 
-  </div>
+    <nav class="tabs-container">
+      <div class="tabs">
+        <button class="tab" data-tab="konkou" onclick="chanjeOnglet('konkou')">Konkou</button>
+        <button class="tab" data-tab="accueil" onclick="chanjeOnglet('accueil')">Imobilye</button>
+        <button class="tab" data-tab="productCategories" onclick="chanjeOnglet('productCategories')">Store</button>
+        <button class="tab active" data-tab="sèv" onclick="chanjeOnglet('sèv')">Sèvis +</button>
+      </div>
+    </nav>
 
-</header>
+    <!-- SIDE MENU -->
+    <div id="sideMenu" class="side-menu">
+      <div class="menu-header">
+        <span>☰ Menu Global Plis</span>
+        <button id="closeMenu" aria-label="Fèmen Menu">✕</button>
+      </div>
+      <div class="menu-content">
+        <div class="menu-section">
+          <h3>ℹ️ Apropos</h3>
+          <p>Global Plus se yon platfòm polivalan ki bay sèvis vann, achte, lwe kay...</p>
+        </div>
+        <div class="menu-section">
+          <h3>📞 Kontak</h3>
+          <p>WhatsApp: +509 40 48 84 01<br>Email: storetechnologie9@email.com</p>
+        </div>
+      </div>
+    </div>
+    <div id="menuOverlay" class="menu-overlay"></div>
+  </header>
 
-<div class="container">
-  <div id="loadingSpinner">
-    <i class="fas fa-circle-notch fa-spin" style="font-size: 40px; margin-bottom: 15px;"></i>
-    <p style="font-size: 18px; font-weight: bold;">Ap chaje enfòmasyon kou a...</p>
-  </div>
+  <main>
+    <!-- KONKOU -->
+    <section id="konkou" class="tab-content" style="display: none;">
+      <section class="contest-section">
+        <div class="maintenance-card">
+          <div class="card-icon">⏳</div>
+          <h2>Pa gen konkou pou kounye a</h2>
+          <div class="card-actions">
+            <button class="btn-secondary" onclick="chanjeOnglet('accueil')">🏠 Ale nan Imobilye</button>
+            <button class="btn-secondary" onclick="chanjeOnglet('productCategories')">🛒 Vizite Store la</button>
+          </div>
+        </div>
+      </section>
+    </section>
 
-  <div class="course-detail-card" id="courseDetailCard">
-    <img id="kouImaj" class="banner" src="" alt="Imaj Kou a">
-    
-    <div class="course-content">
-      <span class="course-badge" id="kouBadge"></span>
-      <h1 class="course-title" id="kouTit"></h1>
+    <!-- IMOBILYE -->
+    <section id="accueil" class="tab-content" style="display: none;">
+      <div class="immo-header">
+        <h2>🏠 Jwenn Espas Rèv Ou</h2>
+      </div>
+      <div id="immo-list" class="immo-grid"></div>
+    </section>
+
+    <!-- STORE -->
+    <section id="productCategories" class="tab-content" style="display: none;">
       
-      <div class="course-meta">
-        <span><i class="fas fa-clock"></i> <strong id="kouDire"></strong></span>
-        <span><i class="fas fa-chart-line"></i> <strong id="kouNivo"></strong></span>
-        <span><i class="fas fa-tag"></i> <strong id="kouPri" style="color: #1e3f8a; font-size: 16px;"></strong></span>
+      <!-- ADMIN PANEL -->
+      <div id="adminPanel" style="display: none; padding: 15px; background: #f0f8ff; border: 1px solid #cce7ff; margin-bottom: 20px;">
+        <h3>⚙️ Ajoute Pwodui (Admin)</h3>
+        <input type="text" id="pname" placeholder="Non pwodui" class="popup-inputs">
+        <input type="text" id="pprice" placeholder="Pri pwodui" class="popup-inputs">
+        <input type="text" id="description" placeholder="Deskripsyon" class="popup-inputs">
+        <select id="pcategory" class="popup-inputs">
+          <option value="Sponsorisé">Sponsorisé</option>
+          <option value="Mache">Mache</option>
+          <option value="Immobilier">Immobilier</option>
+          <option value="Abiman & Tekstil">Abiman & Tekstil</option>
+          <option value="Zouti">Zouti</option>
+        </select>
+        <input type="file" id="pfile">
+        <button onclick="addProduct()" class="buttons">Ajoute Pwodui</button>
       </div>
 
-      <div class="course-description-box">
-        <h3>🎯 Objektif Kou a</h3>
-        <p id="kouObjektif"></p>
+      <input type="text" id="searchService" placeholder="Rechèch pwodui..." class="search-bar">
+
+      <div class="category">
+        <h2 class="tabo">Sponsorisé</h2>
+        <div class="product-row" id="sponsoriseRow"></div>
+      </div>
+      <div class="category">
+        <h2 class="tabo">Mache</h2>
+        <div class="product-row" id="macheRow"></div>
+      </div>
+      <div class="category">
+        <h2 class="tabo">Immobilier</h2>
+        <div class="product-row" id="immobilierRow"></div>
+      </div>
+      <div class="category">
+        <h2 class="tabo">Abiman & Tekstil</h2>
+        <div class="product-row" id="abimanRow"></div>
+      </div>
+      <div class="category">
+        <h2 class="tabo">Zouti</h2>
+        <div class="product-row" id="zoutiRow"></div>
       </div>
 
-      <div class="course-description-box" style="border-left-color: #ff7a3d;">
-        <h3>📖 Deskripsyon ak Eksplikasyon</h3>
-        <p id="kouDeskripsyon"></p>
+      <button id="cartBtn">🛒 <span id="cartCount">0</span></button>
+      <div id="cartPopup">
+        <h3>Panier</h3>
+        <div id="cartItems"></div>
+        <div id="totalPrice">Total: 0 HTG</div>
+        <button id="whatsappBtn">Voye pa WhatsApp</button>
       </div>
+    </section>
 
-      <div id="actionSection"></div>
+    <!-- SÈVIS + (Kou) -->
+    <section id="sèv" class="tab-content active">
+      <section class="course-section" style="padding: 20px;">
+        <div class="course-grid" id="courseWrapper" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;"></div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="footer-container">
+    <div class="footer-bottom">
+      <p>&copy; 2026 Global Plis +∞. Fòme yon lòt jenerasyon pou Ayiti.</p>
+    </div>
+  </footer>
+
+  <!-- MODAL AUTHENTIFICATION -->
+  <div id="authModal" class="popups" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
+    <div style="background:#fff; padding:30px; border-radius:12px; width:90%; max-width:400px; text-align:center; position:relative;">
+      <span onclick="document.getElementById('authModal').style.display='none'" style="position:absolute; right:15px; top:10px; cursor:pointer; font-size:24px;">&times;</span>
       
+      <h3 id="authTitle">Konekte</h3>
+      <button id="googleAuthBtn" class="btn btn-google" style="width:100%; margin-bottom:15px;"><i class="fab fa-google"></i> Kontinye ak Google</button>
+      <hr>
+      <input type="text" id="authName" placeholder="Non konplè w" style="display:none; width:100%; padding:10px; margin-bottom:10px;">
+      <input type="email" id="authEmail" placeholder="Imel ou" style="width:100%; padding:10px; margin-bottom:10px;">
+      <input type="password" id="authPassword" placeholder="Modpas" style="width:100%; padding:10px; margin-bottom:10px;">
+      
+      <button id="manualAuthBtn" class="btn" style="background:#1e3f8a; color:white; width:100%;">Konekte</button>
+      <br><br>
+      <a href="#" id="forgotPasswordBtn">Modpas bliye?</a>
+      <p><span id="authToggleText">Ou poko gen kont?</span> <a href="#" id="toggleAuthMode">Kreye youn kounye a</a></p>
     </div>
   </div>
-</div>
-<script type="module" src="kou.js"></script>
-<script type="module" src="/index.js"></script>
-<script type="module" src="/firebase-j.js"></script>
 
-<div id="authModal" class="popups" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
-  <div style="background:#fff; padding:30px; border-radius:12px; width:90%; max-width:400px; text-align:center; position:relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
-    <span onclick="document.getElementById('authModal').style.display='none'" style="position:absolute; right:15px; top:10px; cursor:pointer; font-size:24px; font-weight:bold; color:#666;">&times;</span>
-    
-    <h3 id="authTitle" style="color:#1e3f8a; margin-top:0;">Konekte</h3>
-    
-    <button id="googleAuthBtn" class="btn btn-google" style="width:100%; margin-bottom:20px; font-size:15px;">
-      <i class="fab fa-google"></i> Kontinye ak Google
-    </button>
-    
-    <div style="display:flex; align-items:center; margin-bottom:20px;">
-      <div style="flex:1; height:1px; background:#ccc;"></div>
-      <span style="padding:0 10px; color:#888; font-size:12px;">OSWA</span>
-      <div style="flex:1; height:1px; background:#ccc;"></div>
-    </div>
-    
-    <input type="text" id="authName" placeholder="Non konplè w" style="display:none; width:100%; padding:12px; margin-bottom:12px; border:1px solid #cbd5e1; border-radius:8px; box-sizing:border-box;">
-    
-    <input type="email" id="authEmail" placeholder="Imel ou" style="width:100%; padding:12px; margin-bottom:12px; border:1px solid #cbd5e1; border-radius:8px; box-sizing:border-box;">
-    
-    <input type="password" id="authPassword" placeholder="Modpas (6 karaktè min.)" style="width:100%; padding:12px; margin-bottom:20px; border:1px solid #cbd5e1; border-radius:8px; box-sizing:border-box;">
-    
-    <button id="manualAuthBtn" class="btn" style="background:#1e3f8a; color:white; width:100%; border:none;">Konekte</button>
-    
-    <p style="margin-top:20px; font-size:14px; color:#555;">
-      <span id="authToggleText">Ou poko gen kont?</span> 
-      <a href="#" id="toggleAuthMode" style="color:#ff7a3d; font-weight:bold; text-decoration:none;">Kreye youn kounye a</a>
-    </p>
+  <div id="toast" style="position:fixed; bottom:20px; right:20px; background:#333; color:#fff; padding:15px; border-radius:5px; display:none; z-index:9999;"></div>
 
-  </div>
-</div>
-<div id="toast" style="position:fixed; bottom:20px; right:20px; background:#333; color:#fff; padding:15px 25px; border-radius:5px; display:none; z-index:9999; text-align: center;"></div>
+  <script type="module">
+    // 🔹 IMPORT SOTI NAN FIREBASE-J.JS AK SDK YO
+    import { db, auth, provider } from "./firebase-j.js";
+    import { ref, push, set, onValue, remove, get } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
+    import { 
+      signInWithPopup, 
+      onAuthStateChanged, 
+      signOut, 
+      createUserWithEmailAndPassword, 
+      signInWithEmailAndPassword, 
+      sendEmailVerification,
+      sendPasswordResetEmail 
+    } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+    /* ================= GLOBAL ================= */
+    window.currentUser = null;
+    let allProducts = [];
+    let cart = [];
+    let isSignUpMode = false; 
+
+    const loginBtn = document.getElementById("loginBtn");
+    const adminPanel = document.getElementById("adminPanel");
+    const authModal = document.getElementById("authModal");
+
+    window.showToast = function(message, duration = 3000) {
+      const toast = document.getElementById("toast");
+      toast.innerText = message;
+      toast.style.display = "block";
+      setTimeout(() => { toast.style.display = "none"; }, duration);
+    }
+
+    window.chanjeOnglet = function(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+      const target = document.getElementById(tabId);
+      if(target) target.style.display = 'block';
+      const tabBtn = document.querySelector(`.tab[data-tab="${tabId}"]`);
+      if(tabBtn) tabBtn.classList.add('active');
+    };
+
+    /* ================= JERE SISTÈM KONEKSYON AN ================= */
+    document.getElementById("toggleAuthMode")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      isSignUpMode = !isSignUpMode;
+      document.getElementById("authTitle").innerText = isSignUpMode ? "Kreye yon Kont" : "Konekte";
+      document.getElementById("authName").style.display = isSignUpMode ? "block" : "none";
+      document.getElementById("manualAuthBtn").innerText = isSignUpMode ? "Enskri kounye a" : "Konekte";
+      document.getElementById("authToggleText").innerText = isSignUpMode ? "Ou gentan gen yon kont?" : "Ou poko gen kont?";
+      e.target.innerText = isSignUpMode ? "Konekte" : "Kreye youn kounye a";
+    });
+
+    document.getElementById("googleAuthBtn")?.addEventListener("click", () => {
+      signInWithPopup(auth, provider).then(() => {
+        authModal.style.display = "none";
+      }).catch((error) => showToast("Erè Google: " + error.message));
+    });
+
+    /* ================= LOJIK BLIYE MODPAS ================= */
+    document.getElementById("forgotPasswordBtn")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("authEmail").value.trim();
+      if (!email) return showToast("Tanpri rantre imel ou nan chan an dabò pou n voye lyen an ba ou.");
+
+      sendPasswordResetEmail(auth, email)
+        .then(() => showToast("Nou voye yon lyen pou re-inisyalize modpas ou nan imel ou. Tcheke bwat lèt ou!", 6000))
+        .catch((err) => {
+          if (err.code === "auth/user-not-found") showToast("Pa gen okenn kont ki anrejistre ak imel sa a.");
+          else showToast("Erè: " + err.message);
+        });
+    });
+
+    /* ================= MANOEL AUTHENTICATION ================= */
+    document.getElementById("manualAuthBtn")?.addEventListener("click", () => {
+      const domennOtorize = ["globalplisht.onrender.com", "localhost", "127.0.0.1"];
+      const domennAktyel = window.location.hostname;
+      
+      if (!domennOtorize.includes(domennAktyel) && domennAktyel !== "") {
+        return showToast("Erè Sekirite: Domèn sa a pa gen otorizasyon pou konekte oswa kreye kont sou sistèm nan.");
+      }
+
+      const email = document.getElementById("authEmail").value.trim();
+      const pass = document.getElementById("authPassword").value.trim();
+      const name = document.getElementById("authName").value.trim();
+
+      if (!email || !pass) return showToast("Tanpri mete imel ak modpas ou.");
+      if (pass.length < 6) return showToast("Modpas la dwe gen omwen 6 karaktè.");
+
+      const btn = document.getElementById("manualAuthBtn");
+      btn.innerText = "Ap chaje..."; btn.disabled = true;
+
+      if (isSignUpMode) {
+        if (!name) { btn.innerText = "Enskri kounye a"; btn.disabled = false; return showToast("Tanpri mete non w."); }
+        
+        createUserWithEmailAndPassword(auth, email, pass)
+          .then(async (userCred) => {
+            await sendEmailVerification(userCred.user);
+            await set(ref(db, `users/${userCred.user.uid}`), { non: name, email: email, role: "user", kreyeNan: Date.now() });
+            await signOut(auth);
+            
+            authModal.style.display = "none";
+            showToast("Kont ou kreye! Tanpri tcheke bwat lèt ou (spam tou) pou verifye imel la.", 6000);
+            document.getElementById("toggleAuthMode").click();
+          })
+          .catch(err => {
+            if (err.code === 'auth/email-already-in-use') showToast("Imel sa a gen yon kont deja.");
+            else showToast("Erè: " + err.message);
+          })
+          .finally(() => { btn.innerText = "Enskri kounye a"; btn.disabled = false; });
+      } else {
+        signInWithEmailAndPassword(auth, email, pass)
+          .then(async (userCred) => {
+            if (!userCred.user.emailVerified) {
+              const kounyeA = Date.now();
+              const dnyeRevoye = localStorage.getItem(`lastEmailSent_${email}`);
+              const limitTan = 60000;
+              let mesaj = "Ou poko verifye imel ou. Tanpri tcheke bwat lèt ou.";
+
+              if (!dnyeRevoye || (kounyeA - dnyeRevoye) > limitTan) {
+                let chwa = confirm(`${mesaj}\n\nÈske w vle nou revoye yon lòt lyen verifikasyon ba ou kounye a?`);
+                if (chwa) {
+                  await sendEmailVerification(userCred.user);
+                  localStorage.setItem(`lastEmailSent_${email}`, kounyeA);
+                  showToast("Nou revoye yon nouvo mesaj verifikasyon! Tcheke bwat lèt ak spam ou.", 6000);
+                }
+              } else {
+                const segonnKiRete = Math.ceil((limitTan - (kounyeA - dnyeRevoye)) / 1000);
+                showToast(`${mesaj} Ou ka mande yon lòt nan ${segonnKiRete} segonn.`, 5000);
+              }
+              await signOut(auth);
+              btn.innerText = "Konekte"; btn.disabled = false;
+              return;
+            }
+            authModal.style.display = "none"; 
+            showToast("Ou konekte ak siksè!");
+          })
+          .catch(err => { showToast("Imel oswa modpas la pa bon."); })
+          .finally(() => { if(btn.innerText === "Ap chaje...") { btn.innerText = "Konekte"; btn.disabled = false; }});
+      }
+    });
+
+    if (loginBtn) {
+      loginBtn.addEventListener("click", () => {
+        if (window.currentUser) { if (confirm("Ou vle dekonekte?")) signOut(auth); } 
+        else { authModal.style.display = "flex"; }
+      });
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        let displayName = user.displayName || "Itilizatè";
+        const userRef = ref(db, `users/${user.uid}`);
+        const snap = await get(userRef);
+        
+        if (!snap.exists()) {
+          await set(userRef, { non: displayName, email: user.email, role: "user", kreyeNan: Date.now() });
+          window.currentUser = { uid: user.uid, role: "user", email: user.email };
+        } else {
+          const data = snap.val();
+          displayName = data.non || displayName;
+          window.currentUser = { uid: user.uid, role: data.role, email: user.email };
+        }
+
+        loginBtn.innerHTML = `<span>👤</span> Sòti (${displayName.split(" ")[0]})`;
+        if(adminPanel) adminPanel.style.display = (window.currentUser.role === "admin") ? "block" : "none";
+        
+        renderProducts();
+      } else {
+        window.currentUser = null;
+        loginBtn.innerHTML = `<span>🔐</span> Konekte`;
+        if(adminPanel) adminPanel.style.display = "none";
+        renderProducts();
+      }
+    });
+
+    /* ================= STORE ================= */
+    window.addProduct = () => {
+      if (!window.currentUser || window.currentUser.role !== "admin") return showToast("Sèlman administratè a ki ka ajoute pwodui.");
+      const name = document.getElementById('pname').value.trim();
+      const price = document.getElementById('pprice').value.trim();
+      const desc = document.getElementById('description').value.trim();
+      const file = document.getElementById('pfile').files[0];
+      let category = document.getElementById('pcategory').value;
+      if (!name || !price || !desc || !file) return showToast("Tout chan yo oblije ranpli");
+      
+      const btnSubmit = document.querySelector("#adminPanel button");
+      btnSubmit.innerText = "Ap chaje..."; btnSubmit.disabled = true;
+      
+      const reader = new FileReader();
+      reader.onload = () => {
+        push(ref(db, "products"), {
+          name, price, description: desc, category, img: reader.result, premium: category === "Sponsorisé", time: Date.now()
+        }).then(() => {
+          showToast("✅ Pwodui ajoute ak siksè!");
+          document.getElementById('pname').value = ""; document.getElementById('pprice').value = "";
+          document.getElementById('description').value = ""; document.getElementById('pfile').value = "";
+        });
+        btnSubmit.innerText = "Ajoute Pwodui"; btnSubmit.disabled = false;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    window.deleteProduct = id => {
+      if (!window.currentUser || window.currentUser.role !== "admin") return;
+      if (confirm("Èske w sèten ou vle efase pwodui sa nèt?")) remove(ref(db, "products/" + id));
+    };
+
+    function renderCategory(rowId, category, list = allProducts) {
+      if (category === "Sponsorisé") return; 
+      const row = document.getElementById(rowId);
+      if (!row) return;
+      row.innerHTML = "";
+      
+      let products = list.filter(p => p.category === category);
+      products.sort((a, b) => b.time - a.time);
+      
+      products.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "product-card";
+        
+        card.innerHTML = `
+          <div class="image-container click-to-view" style="height: 160px; cursor:pointer; border-radius: 8px 8px 0 0;" title="Klike pou wè detay">
+            <img src="${p.img}" loading="lazy" class="async-image" onload="this.classList.add('loaded')">
+          </div>
+          <div class="click-to-view" style="cursor:pointer; font-weight: bold; margin-top: 10px;">${p.name}</div>
+          <div style="margin-bottom: 10px;">${p.price} HTG</div>
+          <button class="big-btn" onclick="addToCart({name:'${p.name}', price:'${p.price}'})">Ajoute</button>
+        `;
+        
+        // Lyen an korije kounye a
+        const goToProduct = () => window.location.href = `store/pwodui/produit.html?id=${p.id}`;
+        card.querySelectorAll(".click-to-view").forEach(el => el.onclick = goToProduct);
+        
+        if (window.currentUser?.role === "admin") {
+          const del = document.createElement("button");
+          del.textContent = "❌ Efase";
+          del.style.marginTop = "5px";
+          del.onclick = () => deleteProduct(p.id);
+          card.appendChild(del);
+        }
+        
+        row.appendChild(card);
+      });
+    }
+
+    let sponsorTimer = null;
+    function startSponsorRotation() {
+      const row = document.getElementById("sponsoriseRow");
+      if (!row) return;
+      if (sponsorTimer) clearInterval(sponsorTimer);
+      
+      let sponsors = allProducts.filter(p => p.category === "Sponsorisé").sort((a, b) => b.time - a.time);
+      if (sponsors.length === 0) { row.innerHTML = ""; return; }
+      
+      function render(list) {
+        row.innerHTML = "";
+        list.slice(0, 4).forEach(p => {
+          const card = document.createElement("div"); 
+          card.className = "product-card";
+          
+          card.innerHTML = `
+            <div class="image-container click-to-view" style="height: 160px; cursor:pointer; border-radius: 8px 8px 0 0;" title="Klike pou wè detay">
+              <img src="${p.img}" loading="lazy" class="async-image" onload="this.classList.add('loaded')">
+            </div>
+            <div class="click-to-view" style="cursor:pointer; font-weight: bold; margin-top: 10px;">${p.name}</div>
+            <div style="margin-bottom: 10px;">${p.price} HTG</div>
+            <button class="big-btn" onclick="addToCart({name:'${p.name}', price:'${p.price}'})">Ajoute</button>
+          `;
+          
+          // Lyen an korije kounye a
+          const goToProduct = () => window.location.href = `store/pwodui/produit.html?id=${p.id}`;
+          card.querySelectorAll(".click-to-view").forEach(el => el.onclick = goToProduct);
+          
+          if (window.currentUser?.role === "admin") {
+            const del = document.createElement("button"); 
+            del.textContent = "❌ Efase"; 
+            del.style.marginTop = "5px";
+            del.onclick = () => deleteProduct(p.id); 
+            card.appendChild(del);
+          }
+          
+          row.appendChild(card);
+        });
+      }
+      
+      render(sponsors);
+      sponsorTimer = setInterval(() => { const first = sponsors.shift(); sponsors.push(first); render(sponsors); }, 5000);
+    }
+
+    window.renderProducts = function() {
+      onValue(ref(db, "products"), snap => {
+        allProducts = [];
+        if (snap.exists()) { snap.forEach(s => { allProducts.push({ id: s.key, ...s.val() }); }); }
+        renderCategory("macheRow", "Mache"); renderCategory("immobilierRow", "Immobilier");
+        renderCategory("abimanRow", "Abiman & Tekstil"); renderCategory("zoutiRow", "Zouti");
+        startSponsorRotation();
+      });
+    }
+
+    window.addToCart = function(p) { cart.push(p); renderCart(); showToast(`${p.name} ajoute nan panyen w lan!`); }
+
+    function renderCart() {
+      const cartItems = document.getElementById('cartItems'); 
+      const totalPrice = document.getElementById('totalPrice'); 
+      const cartCount = document.getElementById('cartCount');
+      cartItems.innerHTML = ""; let total = 0;
+      cart.forEach((p, i) => {
+        total += Number(p.price);
+        const div = document.createElement("div");
+        div.innerHTML = `${p.name} (${p.price} HTG) <button style="color:red; cursor:pointer; border:none; background:none;">✖</button>`;
+        div.querySelector("button").onclick = () => { cart.splice(i, 1); renderCart(); };
+        cartItems.appendChild(div);
+      });
+      totalPrice.innerText = "Total: " + total + " HTG"; cartCount.innerText = cart.length;
+    }
+
+    document.getElementById('cartBtn').onclick = () => document.getElementById('cartPopup').classList.toggle("show");
+    document.getElementById('whatsappBtn').onclick = () => {
+      if (cart.length === 0) return showToast("Panyen an vid!");
+      let msg = "Bonjou, mwen vle kòmande sou Global Plis:\n\n"; let total = 0;
+      cart.forEach(p => { msg += `▪️ ${p.name} - ${p.price} HTG\n`; total += Number(p.price); });
+      msg += `\nTotal: ${total} HTG`; window.open("https://wa.me/50940488401?text=" + encodeURIComponent(msg));
+    };
+
+    const searchInput = document.getElementById("searchService");
+    if (searchInput) {
+      searchInput.addEventListener("input", e => {
+        const term = e.target.value.toLowerCase().trim();
+        if (!term) return renderProducts();
+        const filtered = allProducts.filter(p => p.name.toLowerCase().includes(term));
+        ["macheRow", "immobilierRow", "abimanRow", "zoutiRow"].forEach(id => {
+            const row = document.getElementById(id);
+            if(row) row.innerHTML = "";
+        });
+        const map = { "Mache": "macheRow", "Immobilier": "immobilierRow", "Abiman & Tekstil": "abimanRow", "Zouti": "zoutiRow" };
+        filtered.forEach(p => renderCategory(map[p.category], p.category, filtered));
+      });
+    }
+
+    // --- LOJIK KOU YO AK LAZY LOADING CSS (Lyen korije) ---
+    const courseWrapper = document.getElementById("courseWrapper");
+    if (courseWrapper) {
+      courseWrapper.innerHTML = `
+        <div style="width: 100%; text-align: center; padding: 40px; color: #1e3f8a;">
+          <p>⏳ Ap chaje kou yo... Tanpri tann.</p>
+        </div>
+      `;
+
+      onValue(ref(db, "kou"), (snapshot) => {
+        courseWrapper.innerHTML = ""; 
+        
+        if (!snapshot.exists()) {
+          courseWrapper.innerHTML = "<p>Pa gen kou ki disponib pou kounye a.</p>";
+          return;
+        }
+        
+        Object.entries(snapshot.val()).forEach(([id, kou]) => {
+          courseWrapper.innerHTML += `
+            <div class="course-card" style="width:300px; border:1px solid #ddd; border-radius:16px; background:#fff; overflow:hidden; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+              <a href="kou/detay/globalplis/kou.html?id=${id}" style="display:block; text-decoration:none; color:inherit;">
+                  <div class="image-container" style="height: 190px;">
+                    <img src="${kou.imajUrl}" alt="${kou.non}" loading="lazy" class="async-image" onload="this.classList.add('loaded')">
+                  </div>
+                  
+                  <div class="course-content" style="padding: 15px;">
+                    <span class="course-badge" style="background:#e0e7ff; color:#3730a3; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:bold;">${kou.badge || "FÒMASYON"}</span>
+                    <h2 class="course-title" style="margin:10px 0; font-size:18px;">${kou.non}</h2>
+                    <p class="course-objective" style="font-size:14px; color:#555; margin-bottom:15px;"><strong>Objektif:</strong> ${kou.objektif}</p>
+                    <div class="course-meta" style="margin-bottom:15px; font-size:13px; color:#666;">
+                      <span>⏰ ${kou.dire || "N/A"}</span> | <span>📈 ${kou.nivo || "Tout nivo"}</span>
+                    </div>
+                    <div class="btn-group" style="display:flex; justify-content:space-between; align-items:center;">
+                      <span class="btn btn-price" style="font-weight:bold; color:#1e3f8a;">${kou.pri} HTG</span>
+                      <span class="btn btn-enroll" style="background:#3b82f6; color:#fff; padding:8px 12px; border-radius:6px; font-size:14px;">Detay / Enskri</span>
+                    </div>
+                  </div>
+              </a>
+            </div>
+          `;
+        });
+      }, (error) => {
+        courseWrapper.innerHTML = "<p style='color:red;'>Koneksyon an echwe. Tanpri verifye entènèt ou.</p>";
+      });
+    }
+
+    // --- ANIMASYON MENU AK PRELOADER INIT ---
+    window.addEventListener("DOMContentLoaded", () => {
+      setTimeout(() => {
+        const p = document.getElementById('globalPreloader');
+        if(p) { p.classList.add('preloader-hidden'); setTimeout(()=> p.style.display='none', 500); }
+      }, 1000);
+
+      const menuBtn = document.getElementById('menuBtn');
+      const sideMenu = document.getElementById('sideMenu');
+      const menuOverlay = document.getElementById('menuOverlay');
+      if(menuBtn) menuBtn.onclick = () => { sideMenu.classList.add('active'); menuOverlay.classList.add('active'); };
+      if(document.getElementById('closeMenu')) document.getElementById('closeMenu').onclick = menuOverlay.onclick = () => { 
+        sideMenu.classList.remove('active'); menuOverlay.classList.remove('active'); 
+      };
+
+      renderProducts();
+    });
+  </script>
 </body>
 </html>
