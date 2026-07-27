@@ -24,7 +24,7 @@ onValue(ref(db, `kou/${courseId}`), (snapshot) => {
   const kou = snapshot.val();
   
   // Mete done yo nan HTML la
-  document.getElementById('kouImaj').src = kou.imajUrl;
+  document.getElementById('kouImaj').src = kou.imaj;
   document.getElementById('kouBadge').innerText = kou.badge || "FÒMASYON";
   document.getElementById('kouTit').innerText = kou.non;
   document.getElementById('kouDire').innerText = kou.dire;
