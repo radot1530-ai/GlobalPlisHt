@@ -192,9 +192,10 @@ function loadCourseContent() {
                     </div>
                 </li>`;
 
+            // KOREKSYON VIDEYO: Proteksyon anpeche download & klik dwat
             let videoHtml = "";
             if (modData.videos && isUnlocked) {
-                videoHtml = `<video id="vid_${modNum}" src="${modData.videos[0]}" controls controlsList="nodownload" class="w-full aspect-video bg-black rounded-lg mb-3"></video>`;
+                videoHtml = `<video id="vid_${modNum}" src="${modData.videos[0]}" controls controlsList="nodownload no-download noremoteplayback" disablePictureInPicture oncontextmenu="return false;" class="w-full aspect-video bg-black rounded-lg mb-3"></video>`;
                 let playlist = `<div class="flex flex-wrap gap-2 mb-4">`;
                 modData.videos.forEach((v, i) => {
                     playlist += `<button onclick="document.getElementById('vid_${modNum}').src='${v}'; document.getElementById('vid_${modNum}').play();" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded text-xs font-bold transition">▶ Pati ${i+1}</button>`;
@@ -202,7 +203,7 @@ function loadCourseContent() {
                 playlist += `</div>`;
                 videoHtml += playlist;
             } else if (modData.video && isUnlocked) {
-                videoHtml = `<video src="${modData.video}" controls controlsList="nodownload" class="w-full aspect-video bg-black rounded-lg mb-4"></video>`;
+                videoHtml = `<video src="${modData.video}" controls controlsList="nodownload no-download noremoteplayback" disablePictureInPicture oncontextmenu="return false;" class="w-full aspect-video bg-black rounded-lg mb-4"></video>`;
             }
 
             let quizBtn = "";
@@ -210,7 +211,6 @@ function loadCourseContent() {
                 if(isPassed) {
                     quizBtn = `<button class="bg-green-100 text-green-700 font-bold py-2 px-4 rounded w-full border border-green-300 pointer-events-none">✔ Egzamen Reyisi</button>`;
                 } else {
-                    // KOREKSYON QUIZ: Remplace apostwòf yo (.replace(/'/g, "%27")) pou yo pa kase HTML la
                     const encodedQuiz = encodeURIComponent(JSON.stringify(modData.quiz)).replace(/'/g, "%27");
                     quizBtn = `<button onclick="openQuiz('${modNum}', '${encodedQuiz}')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full shadow transition">Pase Egzamen Modil ${modNum}</button>`;
                 }
@@ -253,7 +253,6 @@ function updateStats(passed, total) {
     }
 }
 
-// KOREKSYON QUIZ: Konvèti toujou an Array epi filtre sou eleman ki pa null yo
 window.openQuiz = (modNum, encodedQuiz) => {
     try {
         let parsedData = JSON.parse(decodeURIComponent(encodedQuiz));
@@ -296,13 +295,11 @@ window.closeQuiz = () => {
     if(quizModal) quizModal.classList.add('hidden');
 };
 
-// KOREKSYON QUIZ: Sote kesyon ki pa egziste (null) nan kalkil la
 window.submitQuiz = async () => {
     let score = 0;
     let answered = 0;
     const modNum = document.getElementById('currentModNum').innerText;
 
-    // Filtre pou wè presizman konbyen kesyon valab ki genyen
     const validQuestions = currentQuizData.filter(item => item !== null && item !== undefined);
 
     currentQuizData.forEach((item, k) => {
