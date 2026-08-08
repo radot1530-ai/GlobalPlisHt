@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>Apropos | Global Plis +∞</title>  <meta name="description" content="Dekouvri Global Plis +∞, yon platfòm ayisyen ki mete teknoloji, fòmasyon, e-commerce, immobilier ak solisyon dijital nan menm ekosistèm lan.">
+  <meta name="keywords" content="Global Plis, Global Plis Ayiti, teknoloji Ayiti, fòmasyon Ayiti, e-commerce Ayiti, immobilier Ayiti, informatique Ayiti">
+  <meta name="author" content="Global Plis +∞">  <meta property="og:title" content="Apropos | Global Plis +∞">
+  <meta property="og:description" content="Dekouvri vizyon, misyon ak sèvis Global Plis +∞.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://globalplisht.onrender.com/apropos.html">  <link rel="canonical" href="https://globalplisht.onrender.com/apropos.html">  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f7fb;
+      color: #172033;
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ================= HEADER ================= */
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(15, 23, 42, 0.97);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(0,0,0,.12);
+    }
+
+    .header-inner {
+      width: min(1150px, 92%);
+      margin: auto;
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: white;
+      font-size: 1.12rem;
+      font-weight: 800;
+      letter-spacing: .3px;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      box-shadow: 0 5px 15px rgba(37,99,235,.35);
+    }
+
+    .back-btn {
+      color: #dbeafe;
+      border: 1px solid rgba(255,255,255,.14);
+      padding: 9px 15px;
+      border-radius: 10px;
+      font-size: .9rem;
+      transition: .25s;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,.1);
+      transform: translateY(-1px);
+    }
+
+    /* ================= HERO ================= */
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 85% 20%, rgba(59,130,246,.28), transparent 28%),
+        radial-gradient(circle at 10% 90%, rgba(250,204,21,.12), transparent 25%),
+        linear-gradient(135deg, #0f172a, #172554);
+      color: white;
+      padding: 85px 20px 90px;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero::before {
+      width: 300px;
+      height: 300px;
+      right: -100px;
+      top: -130px;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .hero::after {
+      width: 180px;
+      height: 180px;
+      left: -80px;
+      bottom: -90px;
+      border: 1px solid rgba(255,255,255,.06);
+    }
+
+    .hero-content {
+      width: min(1000px, 92%);
+      margin: auto;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 13px;
+      border-radius: 50px;
+      background: rgba(59,130,246,.14);
+      border: 1px solid rgba(147,197,253,.25);
+      color: #bfdbfe;
+      font-size: .82rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      line-height: 1.08;
+      margin-bottom: 20px;
+      font-weight: 900;
+    }
+
+    .hero h1 span {
+      color: #60a5fa;
+    }
+
+    .hero p {
+      max-width: 760px;
+      margin: auto;
+      color: #dbeafe;
+      font-size: clamp(1rem, 2vw, 1.18rem);
+    }
+
+    /* ================= MAIN ================= */
+
+    .container {
+      width: min(1100px, 92%);
+      margin: auto;
+    }
+
+    .section {
+      padding: 75px 0;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto 42px;
+    }
+
+    .section-label {
+      color: #2563eb;
+      font-size: .78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+    }
+
+    .section-header h2 {
+      font-size: clamp(1.7rem, 4vw, 2.5rem);
+      color: #0f172a;
+      margin-bottom: 12px;
+    }
+
+    .section-header p {
+      color: #64748b;
+    }
+
+    /* ================= INTRO ================= */
+
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 35px;
+      align-items: center;
+    }
+
+    .intro-text h2 {
+      font-size: 2rem;
+      margin-bottom: 17px;
+      color: #0f172a;
+    }
+
+    .intro-text p {
+      color: #526074;
+      margin-bottom: 15px;
+    }
+
+    .highlight {
+      border-left: 4px solid #3b82f6;
+      background: white;
+      padding: 18px 20px;
+      border-radius: 0 14px 14px 0;
+      margin-top: 22px;
+      box-shadow: 0 8px 25px rgba(15,23,42,.06);
+    }
+
+    .highlight strong {
+      color: #1d4ed8;
+    }
+
+    .vision-card {
+      min-height: 320px;
+      border-radius: 24px;
+      padding: 35px;
+      color: white;
+      background:
+        radial-gradient(circle at top right, rgba(96,165,250,.35), transparent 35%),
+        linear-gradient(145deg, #1e3a8a, #0f172a);
+      box-shadow: 0 20px 50px rgba(15,23,42,.18);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vision-icon {
+      width: 62px;
+      height: 62px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,.12);
+      font-size: 1.7rem;
+      margin-bottom: 22px;
+    }
+
+    .vision-card h3 {
+      font-size: 1.55rem;
+      margin-bottom: 10px;
+    }
+
+    .vision-card p {
+      color: #dbeafe;
+    }
+
+    /* ================= MISSION / VISION ================= */
+
+    .two-cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 25px;
+    }
+
+    .info-card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid #e8edf5;
+      box-shadow: 0 8px 28px rgba(15,23,42,.055);
+      transition: .3s;
+    }
+
+    .info-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(15,23,42,.1);
+    }
+
+    .info-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 15px;
+      background: #eff6ff;
+      color: #2563eb;
+      display: grid;
+      place-items: center;
+      font-size: 1.3rem;
+      margin-bottom: 18px;
+    }
+
+    .info-card h3 {
+      margin-bottom: 10px;
+      color: #0f172a;
+    }
+
+    .info-card p {
+      color: #64748b;
+    }
+
+    /* ================= SERVICES ================= */
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .service-card {
+      background: white;
+      border-radius: 18px;
+      padding: 25px 20px;
+      border: 1px solid #e7ebf2;
+      transition: .3s;
+    }
+
+    .service-card:hover {
+      transform: translateY(-5px);
+      border-color: #bfdbfe;
+      box-shadow: 0 14px 30px rgba(37,99,235,.09);
+    }
+
+    .service-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: #eff6ff;
+      color: #2563eb;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+    }
+
+    .service-card h3 {
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+    }
+
+    .service-card p {
+      font-size: .88rem;
+      color: #64748b;
+    }
+
+    /* ================= VALUES ================= */
+
+    .values {
+      background: #eef4ff;
+    }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .value-card {
+      background: white;
+      border-radius: 18px;
+      padding: 27px;
+      text-align: center;
+    }
+
+    .value-card .number {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+
+    .value-card h3 {
+      margin-bottom: 8px;
+    }
+
+    .value-card p {
+      color: #64748b;
+      font-size: .9rem;
+    }
+
+    /* ================= TECHNOLOGY ================= */
+
+    .tech-section {
+      background: #0f172a;
+      color: white;
+    }
+
+    .tech-section .section-label {
+      color: #60a5fa;
+    }
+
+    .tech-section .section-header h2 {
+      color: white;
+    }
+
+    .tech-section .section-header p {
+      color: #94a3b8;
+    }
+
+    .tech-box {
+      max-width: 850px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    .tech-item {
+      padding: 22px 12px;
+      text-align: center;
+      border-radius: 15px;
+      background: rgba(255,255,255,.055);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .tech-item i {
+      color: #60a5fa;
+      font-size: 1.5rem;
+      margin-bottom: 9px;
+    }
+
+    .tech-item span {
+      display: block;
+      font-size: .85rem;
+      color: #dbeafe;
+    }
+
+    /* ================= CTA ================= */
+
+    .cta {
+      padding: 75px 20px;
+      background: #f8fafc;
+    }
+
+    .cta-box {
+      width: min(950px, 100%);
+      margin: auto;
+      border-radius: 25px;
+      padding: 50px 30px;
+      text-align: center;
+      background:
+        radial-gradient(circle at 90% 10%, rgba(96,165,250,.28), transparent 25%),
+        linear-gradient(135deg, #1d4ed8, #172554);
+      color: white;
+      box-shadow: 0 20px 50px rgba(29,78,216,.18);
+    }
+
+    .cta-box h2 {
+      font-size: clamp(1.7rem, 4vw, 2.5rem);
+      margin-bottom: 12px;
+    }
+
+    .cta-box p {
+      max-width: 650px;
+      margin: 0 auto 25px;
+      color: #dbeafe;
+    }
+
+    .cta-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      transition: .25s;
+    }
+
+    .cta-primary {
+      background: white;
+      color: #1d4ed8;
+    }
+
+    .cta-secondary {
+      border: 1px solid rgba(255,255,255,.3);
+      color: white;
+      background: rgba(255,255,255,.08);
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    /* ================= FOOTER ================= */
+
+    footer {
+      background: #0b1120;
+      color: white;
+      padding-top: 50px;
+    }
+
+    .footer-content {
+      width: min(1050px, 92%);
+      margin: auto;
+      display: grid;
+      grid-template-columns: 1.3fr 1fr 1fr;
+      gap: 40px;
+      padding-bottom: 40px;
+    }
+
+    .footer-section h3 {
+      margin-bottom: 15px;
+    }
+
+    .footer-section p {
+      color: #94a3b8;
+      font-size: .9rem;
+    }
+
+    .footer-links {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 8px;
+    }
+
+    .footer-links a {
+      color: #cbd5e1;
+      font-size: .9rem;
+    }
+
+    .footer-links a:hover {
+      color: #60a5fa;
+    }
+
+    .socials {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .socials a {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: rgba(255,255,255,.08);
+      color: #dbeafe;
+      transition: .25s;
+    }
+
+    .socials a:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.08);
+      text-align: center;
+      padding: 18px;
+      color: #64748b;
+      font-size: .8rem;
+    }
+
+    /* ================= RESPONSIVE ================= */
+
+    @media (max-width: 850px) {
+      .intro-grid,
+      .two-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .values-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tech-box {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .header-inner {
+        min-height: 62px;
+      }
+
+      .brand {
+        font-size: 1rem;
+      }
+
+      .brand-icon {
+        width: 34px;
+        height: 34px;
+      }
+
+      .back-btn {
+        padding: 8px 11px;
+        font-size: .8rem;
+      }
+
+      .hero {
+        padding: 65px 15px 70px;
+      }
+
+      .section {
+        padding: 55px 0;
+      }
+
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tech-box {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr;
+        gap: 25px;
+      }
+
+      .vision-card {
+        min-height: 280px;
+        padding: 27px;
+      }
+    }
+  </style></head><body>  <!-- ================= HEADER ================= -->  <header class="header">
+    <div class="header-inner">  <a href="index.html" class="brand">
+    <span class="brand-icon">🌐</span>
+    <span>GLOBAL PLIS +∞</span>
+  </a>
+
+  <a href="index.html" class="back-btn">
+    <i class="fa-solid fa-arrow-left"></i>
+    Retounen
+  </a>
+
+</div>
+
+  </header>  <!-- ================= HERO ================= -->  <section class="hero"><div class="hero-content">
+
+  <div class="hero-badge">
+    <i class="fa-solid fa-circle-info"></i>
+    APRANN KONNEN GLOBAL PLIS
+  </div>
+
+  <h1>
+    Nou se <span>Global Plis +∞</span>
+  </h1>
+
+  <p>
+    Yon platfòm k ap chèche mete teknoloji, aprantisaj,
+    sèvis dijital ak opòtinite nan men plis moun ann Ayiti.
+  </p>
+
+</div>
+
+  </section>  <main><!-- ================= QUI SOMMES-NOUS ================= -->
+
+<section class="section">
+
+  <div class="container">
+
+    <div class="intro-grid">
+
+      <div class="intro-text">
+
+        <div class="section-label">Ki moun nou ye?</div>
+
+        <h2>
+          Yon platfòm ki fèt pou kreye plis opòtinite.
+        </h2>
+
+        <p>
+          <strong>Global Plis +∞</strong> se yon pwojè teknolojik
+          ki fèt ak objektif pou rasanble plizyè kalite sèvis
+          ak solisyon sou yon sèl platfòm.
+        </p>
+
+        <p>
+          Nou enterese sitou nan fason teknoloji kapab ede moun
+          aprann, kreye, vann, devlope pwojè epi jwenn nouvo
+          opòtinite nan yon anviwònman dijital ki pi aksesib.
+        </p>
+
+        <div class="highlight">
+          <strong>+∞ vle di plis toujou.</strong><br>
+          Nou pa vle limite Global Plis ak yon sèl sèvis.
+          Platfòm lan fèt pou kapab grandi, evolye epi ajoute
+          nouvo solisyon avèk tan.
+        </div>
+
+      </div>
+
+
+      <div class="vision-card">
+
+        <div class="vision-icon">
+          <i class="fa-solid fa-lightbulb"></i>
+        </div>
+
+        <h3>
+          Teknoloji pou kreye plis.
+        </h3>
+
+        <p>
+          Nou kwè teknoloji pa sèlman fèt pou konsome.
+          Li kapab sèvi kòm yon zouti pou aprann, konstwi,
+          antreprenarya epi kreye nouvo posiblite.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= MISSION / VISION ================= -->
+
+<section class="section">
+
+  <div class="container">
+
+    <div class="section-header">
+
+      <div class="section-label">
+        Direksyon nou
+      </div>
+
+      <h2>
+        Misyon ak vizyon
+      </h2>
+
+      <p>
+        De prensip ki gide fason Global Plis ap devlope.
+      </p>
+
+    </div>
+
+
+    <div class="two-cards">
+
+      <div class="info-card">
+
+        <div class="info-icon">
+          <i class="fa-solid fa-bullseye"></i>
+        </div>
+
+        <h3>Misyon nou</h3>
+
+        <p>
+          Bay moun aksè ak fòmasyon, sèvis ak zouti dijital
+          ki kapab ede yo devlope konpetans yo, reyalize pwojè
+          yo epi pwofite plis opòtinite nan teknoloji.
+        </p>
+
+      </div>
+
+
+      <div class="info-card">
+
+        <div class="info-icon">
+          <i class="fa-solid fa-rocket"></i>
+        </div>
+
+        <h3>Vizyon nou</h3>
+
+        <p>
+          Devlope yon ekosistèm dijital ayisyen ki kapab
+          evolye avèk bezwen itilizatè yo epi ki ankouraje
+          aprantisaj, inovasyon ak kreyasyon.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= SERVICES ================= -->
+
+<section class="section">
+
+  <div class="container">
+
+    <div class="section-header">
+
+      <div class="section-label">
+        Ekosistèm Global Plis
+      </div>
+
+      <h2>
+        Kisa Global Plis ap mete ansanm?
+      </h2>
+
+      <p>
+        Platfòm lan gen plizyè branch ki kapab grandi
+        endepandamman pandan yo rete konekte.
+      </p>
+
+    </div>
+
+
+    <div class="services-grid">
+
+      <div class="service-card">
+
+        <div class="service-icon">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+
+        <h3>Fòmasyon</h3>
+
+        <p>
+          Kou ak resous pou ede itilizatè yo devlope
+          nouvo konpetans, sitou nan domèn teknoloji.
+        </p>
+
+      </div>
+
+
+      <div class="service-card">
+
+        <div class="service-icon">
+          <i class="fa-solid fa-cart-shopping"></i>
+        </div>
+
+        <h3>Store</h3>
+
+        <p>
+          Yon espas pou prezante pwodwi ak kreye
+          nouvo posiblite pou komès dijital.
+        </p>
+
+      </div>
+
+
+      <div class="service-card">
+
+        <div class="service-icon">
+          <i class="fa-solid fa-house"></i>
+        </div>
+
+        <h3>Immobilier</h3>
+
+        <p>
+          Yon branch ki kapab sèvi pou prezante opòtinite
+          ki gen rapò ak kay, tè ak byen immobilier.
+        </p>
+
+      </div>
+
+
+      <div class="service-card">
+
+        <div class="service-icon">
+          <i class="fa-solid fa-code"></i>
+        </div>
+
+        <h3>Teknoloji</h3>
+
+        <p>
+          Devlopman pwojè, solisyon dijital ak zouti
+          teknolojik ki kapab itil kominote a.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= VALUES ================= -->
+
+<section class="section values">
+
+  <div class="container">
+
+    <div class="section-header">
+
+      <div class="section-label">
+        Sa nou kwè
+      </div>
+
+      <h2>
+        Prensip nou yo
+      </h2>
+
+      <p>
+        Global Plis ap chèche grandi sou baz kèk valè
+        ki mete itilizatè a ak kreyasyon an premye.
+      </p>
+
+    </div>
+
+
+    <div class="values-grid">
+
+      <div class="value-card">
+
+        <div class="number">💡</div>
+
+        <h3>Inovasyon</h3>
+
+        <p>
+          Nou ankouraje lide, eksperimantasyon ak
+          nouvo fason pou rezoud pwoblèm.
+        </p>
+
+      </div>
+
+
+      <div class="value-card">
+
+        <div class="number">🎓</div>
+
+        <h3>Aprantisaj</h3>
+
+        <p>
+          Nou kwè pataje konesans kapab bay moun
+          plis kapasite pou yo avanse.
+        </p>
+
+      </div>
+
+
+      <div class="value-card">
+
+        <div class="number">🚀</div>
+
+        <h3>Pwogrè</h3>
+
+        <p>
+          Objektif la se pa rete menm kote.
+          Global Plis fèt pou kontinye evolye.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= TECHNOLOGY ================= -->
+
+<section class="section tech-section">
+
+  <div class="container">
+
+    <div class="section-header">
+
+      <div class="section-label">
+        Konstriksyon dijital
+      </div>
+
+      <h2>
+        Yon platfòm ki fèt ak teknoloji
+      </h2>
+
+      <p>
+        Global Plis ap itilize teknoloji entènèt modèn
+        pou konstwi yon eksperyans ki aksesib sou telefòn
+        ak òdinatè.
+      </p>
+
+    </div>
+
+
+    <div class="tech-box">
+
+      <div class="tech-item">
+        <i class="fa-brands fa-html5"></i>
+        <span>HTML</span>
+      </div>
+
+      <div class="tech-item">
+        <i class="fa-brands fa-css3-alt"></i>
+        <span>CSS</span>
+      </div>
+
+      <div class="tech-item">
+        <i class="fa-brands fa-js"></i>
+        <span>JavaScript</span>
+      </div>
+
+      <div class="tech-item">
+        <i class="fa-solid fa-database"></i>
+        <span>Firebase</span>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= QUOTE ================= -->
+
+<section class="section">
+
+  <div class="container">
+
+    <div class="highlight"
+         style="
+         max-width:850px;
+         margin:0 auto;
+         padding:30px;
+         border-left-width:5px;
+         text-align:center;
+         font-size:1.08rem;
+         ">
+
+      <p style="color:#334155; margin-bottom:10px;">
+        <em>
+          "Nou kwè teknoloji se youn nan fason ki ka fè
+          Ayiti amelyore, lè nou bay jèn yo zouti pou yo avanse."
+        </em>
+      </p>
+
+      <strong>
+        — Global Plis +∞
+      </strong>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= CTA ================= -->
+
+<section class="cta">
+
+  <div class="cta-box">
+
+    <h2>
+      Dekouvri Global Plis
+    </h2>
+
+    <p>
+      Eksplore fòmasyon yo, dekouvri Store la epi suiv
+      evolisyon lòt solisyon k ap vini sou platfòm lan.
+    </p>
+
+    <div class="cta-buttons">
+
+      <a href="index.html" class="cta-btn cta-primary">
+        <i class="fa-solid fa-house"></i>
+        Vizite platfòm lan
+      </a>
+
+      <a href="https://wa.me/50940488401"
+         target="_blank"
+         rel="noopener"
+         class="cta-btn cta-secondary">
+        <i class="fa-brands fa-whatsapp"></i>
+        Kontakte nou
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+  </main>  <!-- ================= FOOTER ================= -->  <footer><div class="footer-content">
+
+  <div class="footer-section">
+
+    <h3>Global Plis +∞</h3>
+
+    <p>
+      Nou kwè teknoloji se youn nan fason ki ka fè
+      Ayiti amelyore, lè nou bay jèn yo zouti pou yo avanse.
+    </p>
+
+  </div>
+
+
+  <div class="footer-section">
+
+    <h3>Sa Nou Ofri</h3>
+
+    <ul class="footer-links">
+
+      <li>
+        <a href="index.html">
+          🎓 Fòmasyon
+        </a>
+      </li>
+
+      <li>
+        <a href="index.html">
+          🏗️ Immobilier
+        </a>
+      </li>
+
+      <li>
+        <a href="index.html">
+          🛒 E-commerce
+        </a>
+      </li>
+
+      <li>
+        <a href="index.html">
+          💻 Teknoloji
+        </a>
+      </li>
+
+    </ul>
+
+  </div>
+
+
+  <div class="footer-section">
+
+    <h3>Konekte Ak Nou</h3>
+
+    <div class="socials">
+
+      <a href="https://wa.me/50940488401"
+         target="_blank"
+         rel="noopener"
+         aria-label="WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+      </a>
+
+      <a href="https://www.instagram.com/globalplis?igsh=YjQzaXM3MnkzdTlx"
+         target="_blank"
+         rel="noopener"
+         aria-label="Instagram">
+        <i class="fa-brands fa-instagram"></i>
+      </a>
+
+      <a href="https://www.facebook.com/globalplisht?mibextid=ZbWKwL"
+         target="_blank"
+         rel="noopener"
+         aria-label="Facebook">
+        <i class="fa-brands fa-facebook"></i>
+      </a>
+
+      <a href="https://www.tiktok.com/@globalplisht000"
+         target="_blank"
+         rel="noopener"
+         aria-label="TikTok">
+        <i class="fa-brands fa-tiktok"></i>
+      </a>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<div class="footer-bottom">
+
+  <p>
+    &copy; 2026 Global Plis +∞.
+    Fòme yon lòt jenerasyon pou Ayiti.
+    Tout dwa rezève.
+  </p>
+
+</div>
+
+  </footer></body>
+</html>
