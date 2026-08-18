@@ -35,10 +35,10 @@ onAuthStateChanged(auth, (user) => {
         currentUser = user;
         const nameEl = document.getElementById('userName');
         const emailEl = document.getElementById('userEmail');
-
+        
         if(nameEl) nameEl.innerText = user.displayName || "Elèv Global Plis";
         if(emailEl) emailEl.innerText = user.email || user.uid.substring(0,8)+"...";
-
+        
         verifyEnrollment();
     } else {
         window.location.href = "/index.html";
@@ -54,8 +54,6 @@ window.logout = () => {
 
 function verifyEnrollment() {
     onValue(ref(db, `enskripsyon/${currentUser.uid}/${courseId}`), (snap) => {
-
-        // Retire kouch chajman an
         const authOverlay = document.getElementById('authOverlay');
         if (authOverlay) authOverlay.classList.add('hidden');
 
@@ -68,11 +66,11 @@ function verifyEnrollment() {
         const data = snap.val();
         userProgressData = data.progress || { module1: false }; 
         const activeDevice = data.active_device;
-
+        
         const deviceLockSection = document.getElementById('deviceLockSection');
         const deviceActiveSection = document.getElementById('deviceActiveSection');
         const modulesContainer = document.getElementById('modulesContainer');
-
+        
         if(!activeDevice) {
             if(deviceLockSection) deviceLockSection.classList.remove('hidden');
             if(deviceActiveSection) deviceActiveSection.classList.add('hidden');
@@ -94,7 +92,6 @@ function verifyEnrollment() {
 }
 
 window.linkDevice = async () => {
-    // Nou pran kòd elèv la antre a, nou retire espas epi mete l an majiskil
     const inputVal = document.getElementById('inputId').value.trim().toUpperCase();
 
     if(!inputVal) {
@@ -102,31 +99,24 @@ window.linkDevice = async () => {
     }
 
     try {
-        // 1. Nou al verifye si kòd sa egziste anndan etidyan_manyel
         const codeRef = ref(db, `etidyan_manyel/${inputVal}`);
         const snapshot = await get(codeRef);
 
         if (snapshot.exists()) {
             const codeData = snapshot.val();
 
-            // 2. Verifye si kòd la se pou menm kou elèv la ap eseye gade a
             if(codeData.kou_id !== courseId) {
                 return alert(`❌ Kòd sa fèt pou kou "${codeData.kou_id}", li pa pou kou sa w ap eseye gade a.`);
             }
 
-            // 3. Verifye si kòd la poko itilize sou yon lòt aparèy
             if(codeData.device_token && codeData.device_token !== localDeviceId) {
                 return alert("❌ Kòd sa a gentan ap itilize sou yon lòt telefòn oswa navigatè. Si se ou, mande Admin nan debloke l pou ou.");
             }
 
-            // 4. Si tout bagay anfòm, nou anrejistre aparèy la pou elèv la
-            // Nou mete li ni nan pwofil elèv la (enskripsyon) ni sou kòd la li menm (etidyan_manyel)
             const updates = {};
             updates[`enskripsyon/${currentUser.uid}/${courseId}/active_device`] = localDeviceId;
-
-            // Nou aktive kou a pou elèv la toujou (estati valide)
             updates[`enskripsyon/${currentUser.uid}/${courseId}/estati`] = "valide";
-
+            
             await update(ref(db), updates);
             await update(codeRef, { device_token: localDeviceId });
 
@@ -152,21 +142,84 @@ window.unlinkDevice = async () => {
     }
 };
 
+// ==========================================
+// YOUTUBE & MEDIA HELPER FUNCTIONS
+// ==========================================
+function isYouTubeUrl(url) {
+    return url && (url.includes('youtube.com') || url.includes('youtu.be'));
+}
+
+function getYouTubeEmbedUrl(url) {
+    let videoId = '';
+    if (url.includes('youtu.be/')) {
+        videoId = url.split('youtu.be/')[1].split('?')[0];
+    } else if (url.includes('youtube.com/watch')) {
+        const urlParams = new URLSearchParams(url.split('?')[1]);
+        videoId = urlParams.get('v');
+    } else if (url.includes('youtube.com/embed/')) {
+        videoId = url.split('embed/')[1].split('?')[0];
+    } else if (url.includes('youtube.com/shorts/')) {
+        videoId = url.split('shorts/')[1].split('?')[0];
+    }
+    // enablejsapi=1 pèmèt nou kanpe videyo a ak postMessage pita
+    return `https://www.youtube.com/embed/${videoId}?enablejsapi=1&rel=0`;
+}
+
+// Fonksyon sa jere modifikasyon videyo nan yon playlist epi re-atache listener yo
+window.changeMedia = (modNum, encodedUrl) => {
+    const url = decodeURIComponent(encodedUrl);
+    const container = document.getElementById(`mediaContainer_${modNum}`);
+    
+    if(isYouTubeUrl(url)) {
+        container.innerHTML = `<iframe src="${getYouTubeEmbedUrl(url)}" class="w-full aspect-video rounded-lg mb-3 border-0" allowfullscreen allow="autoplay; encrypted-media"></iframe>`;
+    } else {
+        container.innerHTML = `<video src="${url}" autoplay controls controlsList="nodownload" class="w-full aspect-video bg-black rounded-lg mb-3"></video>`;
+        attachMediaListeners(); // Mete listener pou nouvo videyo a
+    }
+};
+
+// Fonksyon sa evite plizyè videyo jwe an menm tan
+function attachMediaListeners() {
+    const videos = document.querySelectorAll('video');
+    videos.forEach(vid => {
+        vid.removeEventListener('play', pauseOtherMedia); // Evite atache l 2 fwa
+        vid.addEventListener('play', pauseOtherMedia);
+    });
+}
+
+function pauseOtherMedia(e) {
+    // 1. Kanpe tout lòt HTML5 Videyo yo
+    document.querySelectorAll('video').forEach(vid => {
+        if (vid !== e.target) {
+            vid.pause();
+        }
+    });
+    // 2. Kanpe tout videyo YouTube yo (voye yon kòmand atravè iframe la)
+    document.querySelectorAll('iframe').forEach(iframe => {
+        iframe.contentWindow.postMessage(JSON.stringify({
+            event: 'command',
+            func: 'pauseVideo',
+            args: []
+        }), '*');
+    });
+}
+// ==========================================
+
 function loadCourseContent() {
     onValue(ref(db, `kou_kontni/${courseId}`), (snap) => {
         if(!snap.exists()) return;
-
+        
         const modules = snap.val();
         const container = document.getElementById('modulesContainer');
         const syllabus = document.getElementById('syllabusList');
-
+        
         if(container) container.innerHTML = "";
         if(syllabus) syllabus.innerHTML = "";
-
+        
         const modKeys = Object.keys(modules).sort((a, b) => {
             return parseInt(a.replace('module','')) - parseInt(b.replace('module',''));
         });
-
+        
         totalModulesCount = modKeys.length;
         let passedCount = 0;
 
@@ -175,13 +228,13 @@ function loadCourseContent() {
             const modData = modules[key];
             const isPassed = userProgressData[`module${modNum}`] === true;
             const isUnlocked = modNum === "1" || userProgressData[`unlocked${modNum}`] === true;
-
+            
             if(isPassed) passedCount++;
 
             let vidCount = modData.videos ? modData.videos.length : (modData.video ? 1 : 0);
             let pdfBadge = modData.pdf ? `<span class="bg-red-100 text-red-600 px-2 py-0.5 rounded text-[10px] font-bold">PDF</span>` : '';
             let quizBadge = modData.quiz ? `<span class="bg-blue-100 text-blue-600 px-2 py-0.5 rounded text-[10px] font-bold">Quiz</span>` : '';
-
+            
             if(syllabus) syllabus.innerHTML += `
                 <li class="flex justify-between items-center border-b border-slate-100 pb-2">
                     <span class="font-bold text-slate-600">Modil ${modNum}: ${modData.tit || 'Pati '+modNum}</span>
@@ -192,18 +245,29 @@ function loadCourseContent() {
                     </div>
                 </li>`;
 
-            // KOREKSYON VIDEYO: Proteksyon anpeche download & klik dwat
             let videoHtml = "";
-            if (modData.videos && isUnlocked) {
-                videoHtml = `<video id="vid_${modNum}" src="${modData.videos[0]}" controls controlsList="nodownload no-download noremoteplayback" disablePictureInPicture oncontextmenu="return false;" class="w-full aspect-video bg-black rounded-lg mb-3"></video>`;
+            if (modData.videos && isUnlocked && modData.videos.length > 0) {
+                const firstUrl = modData.videos[0];
+                let initialMedia = isYouTubeUrl(firstUrl) 
+                    ? `<iframe src="${getYouTubeEmbedUrl(firstUrl)}" class="w-full aspect-video rounded-lg mb-3 border-0" allowfullscreen allow="autoplay; encrypted-media"></iframe>`
+                    : `<video src="${firstUrl}" controls controlsList="nodownload" class="w-full aspect-video bg-black rounded-lg mb-3"></video>`;
+                
+                videoHtml = `<div id="mediaContainer_${modNum}">${initialMedia}</div>`;
+                
                 let playlist = `<div class="flex flex-wrap gap-2 mb-4">`;
                 modData.videos.forEach((v, i) => {
-                    playlist += `<button onclick="document.getElementById('vid_${modNum}').src='${v}'; document.getElementById('vid_${modNum}').play();" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded text-xs font-bold transition">▶ Pati ${i+1}</button>`;
+                    const safeUrl = encodeURIComponent(v);
+                    playlist += `<button onclick="changeMedia('${modNum}', '${safeUrl}')" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded text-xs font-bold transition">▶ Pati ${i+1}</button>`;
                 });
                 playlist += `</div>`;
                 videoHtml += playlist;
+                
             } else if (modData.video && isUnlocked) {
-                videoHtml = `<video src="${modData.video}" controls controlsList="nodownload no-download noremoteplayback" disablePictureInPicture oncontextmenu="return false;" class="w-full aspect-video bg-black rounded-lg mb-4"></video>`;
+                let initialMedia = isYouTubeUrl(modData.video)
+                    ? `<iframe src="${getYouTubeEmbedUrl(modData.video)}" class="w-full aspect-video rounded-lg mb-4 border-0" allowfullscreen allow="autoplay; encrypted-media"></iframe>`
+                    : `<video src="${modData.video}" controls controlsList="nodownload" class="w-full aspect-video bg-black rounded-lg mb-4"></video>`;
+                
+                videoHtml = `<div id="mediaContainer_${modNum}">${initialMedia}</div>`;
             }
 
             let quizBtn = "";
@@ -211,7 +275,7 @@ function loadCourseContent() {
                 if(isPassed) {
                     quizBtn = `<button class="bg-green-100 text-green-700 font-bold py-2 px-4 rounded w-full border border-green-300 pointer-events-none">✔ Egzamen Reyisi</button>`;
                 } else {
-                    const encodedQuiz = encodeURIComponent(JSON.stringify(modData.quiz)).replace(/'/g, "%27");
+                    const encodedQuiz = encodeURIComponent(JSON.stringify(modData.quiz));
                     quizBtn = `<button onclick="openQuiz('${modNum}', '${encodedQuiz}')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full shadow transition">Pase Egzamen Modil ${modNum}</button>`;
                 }
             }
@@ -232,13 +296,16 @@ function loadCourseContent() {
         });
 
         updateStats(passedCount, totalModulesCount);
+        
+        // Aplike tracker yo sou tout videyo yon fwa yo fin chaje nan DOM lan
+        setTimeout(() => { attachMediaListeners(); }, 500);
     });
 }
 
 function updateStats(passed, total) {
     if(total === 0) return;
     const percentage = Math.round((passed / total) * 100);
-
+    
     const pBar = document.getElementById('progressBar');
     const pText = document.getElementById('progressText');
     if(pBar) pBar.style.width = percentage + "%";
@@ -254,57 +321,40 @@ function updateStats(passed, total) {
 }
 
 window.openQuiz = (modNum, encodedQuiz) => {
-    try {
-        let parsedData = JSON.parse(decodeURIComponent(encodedQuiz));
-        currentQuizData = Array.isArray(parsedData) ? parsedData : Object.values(parsedData);
-
-        document.getElementById('currentModNum').innerText = modNum;
-
-        const content = document.getElementById('quizContent');
-        content.innerHTML = "";
-
-        currentQuizData.forEach((item, k) => {
-            if(!item) return;
-
-            content.innerHTML += `
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-3 text-left">
-                    <p class="font-bold text-slate-700 mb-3 text-sm">${k + 1}. ${item.q}</p>
-                    <div class="space-y-2">
-                        <label class="flex items-center gap-3 p-3 bg-white rounded-lg border border-slate-200 cursor-pointer hover:bg-blue-50">
-                            <input type="radio" name="q${k}" value="a" class="w-4 h-4 text-blue-600"> 
-                            <span class="text-sm font-medium text-slate-600">${item.a}</span>
-                        </label>
-                        <label class="flex items-center gap-3 p-3 bg-white rounded-lg border border-slate-200 cursor-pointer hover:bg-blue-50">
-                            <input type="radio" name="q${k}" value="b" class="w-4 h-4 text-blue-600"> 
-                            <span class="text-sm font-medium text-slate-600">${item.b}</span>
-                        </label>
-                    </div>
-                </div>`;
-        });
-
-        const quizModal = document.getElementById('quizModal');
-        if(quizModal) quizModal.classList.remove('hidden');
-    } catch(e) {
-        console.error("Erè nan ouvèti quiz la:", e);
-        alert("Gen yon pwoblèm nan done quiz sa a.");
-    }
+    currentQuizData = JSON.parse(decodeURIComponent(encodedQuiz));
+    document.getElementById('currentModNum').innerText = modNum;
+    
+    const content = document.getElementById('quizContent');
+    content.innerHTML = "";
+    
+    currentQuizData.forEach((item, k) => {
+        content.innerHTML += `
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-3">
+                <p class="font-bold text-slate-700 mb-3 text-sm">${k + 1}. ${item.q}</p>
+                <div class="space-y-2">
+                    <label class="flex items-center gap-3 p-3 bg-white rounded-lg border border-slate-200 cursor-pointer hover:bg-blue-50">
+                        <input type="radio" name="q${k}" value="a" class="w-4 h-4"> 
+                        <span class="text-sm font-medium text-slate-600">${item.a}</span>
+                    </label>
+                    <label class="flex items-center gap-3 p-3 bg-white rounded-lg border border-slate-200 cursor-pointer hover:bg-blue-50">
+                        <input type="radio" name="q${k}" value="b" class="w-4 h-4"> 
+                        <span class="text-sm font-medium text-slate-600">${item.b}</span>
+                    </label>
+                </div>
+            </div>`;
+    });
+    
+    document.getElementById('quizModal').classList.remove('hidden');
 };
 
-window.closeQuiz = () => {
-    const quizModal = document.getElementById('quizModal');
-    if(quizModal) quizModal.classList.add('hidden');
-};
+window.closeQuiz = () => document.getElementById('quizModal').classList.add('hidden');
 
 window.submitQuiz = async () => {
     let score = 0;
     let answered = 0;
     const modNum = document.getElementById('currentModNum').innerText;
-
-    const validQuestions = currentQuizData.filter(item => item !== null && item !== undefined);
-
+    
     currentQuizData.forEach((item, k) => {
-        if(!item) return;
-
         const checked = document.querySelector(`input[name="q${k}"]:checked`);
         if(checked) {
             answered++;
@@ -312,13 +362,13 @@ window.submitQuiz = async () => {
         }
     });
 
-    if(answered < validQuestions.length) return alert("Tanpri reponn tout kesyon yo!");
+    if(answered < currentQuizData.length) return alert("Tanpri reponn tout kesyon yo!");
 
-    const passingScore = Math.ceil(validQuestions.length * 0.8);
+    const passingScore = Math.ceil(currentQuizData.length * 0.8);
 
     if(score >= passingScore) {
-        alert(`🎉 Konpliman! Ou fè ${score}/${validQuestions.length}. Modil swivan an debloke!`);
-
+        alert(`🎉 Konpliman! Ou fè ${score}/${currentQuizData.length}. Modil swivan an debloke!`);
+        
         const updates = {};
         updates[`progress/module${modNum}`] = true; 
         const nextMod = parseInt(modNum) + 1;
@@ -327,6 +377,6 @@ window.submitQuiz = async () => {
         await update(ref(db, `enskripsyon/${currentUser.uid}/${courseId}`), updates);
         closeQuiz();
     } else {
-        alert(`Ou fè ${score}/${validQuestions.length}. Ou bezwen ${passingScore} pou w pase. Relve defi a ankò!`);
+        alert(`Ou fè ${score}/${currentQuizData.length}. Ou bezwen ${passingScore} pou w pase. Relve defi a ankò!`);
     }
 };
