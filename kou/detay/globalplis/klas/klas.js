@@ -9,6 +9,9 @@ let totalModulesCount = 0;
 let userProgressData = {};
 let currentQuizData = [];
 
+// NOUVO: Yon ti espas nan memwa pou n sove done quiz yo san n pa mete yo nan HTML la dirèk
+window.courseQuizzes = {}; 
+
 let localDeviceId = localStorage.getItem('gp_device');
 if(!localDeviceId) {
     localDeviceId = 'dev_' + Math.random().toString(36).substr(2, 9);
@@ -45,7 +48,6 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// Fonksyon dekoneksyon 
 window.logout = () => {
     signOut(auth).then(() => {
         window.location.href = "/index.html";
@@ -161,11 +163,9 @@ function getYouTubeEmbedUrl(url) {
     } else if (url.includes('youtube.com/shorts/')) {
         videoId = url.split('shorts/')[1].split('?')[0];
     }
-    // enablejsapi=1 pèmèt nou kanpe videyo a ak postMessage pita
     return `https://www.youtube.com/embed/${videoId}?enablejsapi=1&rel=0`;
 }
 
-// Fonksyon sa jere modifikasyon videyo nan yon playlist epi re-atache listener yo
 window.changeMedia = (modNum, encodedUrl) => {
     const url = decodeURIComponent(encodedUrl);
     const container = document.getElementById(`mediaContainer_${modNum}`);
@@ -174,27 +174,24 @@ window.changeMedia = (modNum, encodedUrl) => {
         container.innerHTML = `<iframe src="${getYouTubeEmbedUrl(url)}" class="w-full aspect-video rounded-lg mb-3 border-0" allowfullscreen allow="autoplay; encrypted-media"></iframe>`;
     } else {
         container.innerHTML = `<video src="${url}" autoplay controls controlsList="nodownload" class="w-full aspect-video bg-black rounded-lg mb-3"></video>`;
-        attachMediaListeners(); // Mete listener pou nouvo videyo a
+        attachMediaListeners(); 
     }
 };
 
-// Fonksyon sa evite plizyè videyo jwe an menm tan
 function attachMediaListeners() {
     const videos = document.querySelectorAll('video');
     videos.forEach(vid => {
-        vid.removeEventListener('play', pauseOtherMedia); // Evite atache l 2 fwa
+        vid.removeEventListener('play', pauseOtherMedia);
         vid.addEventListener('play', pauseOtherMedia);
     });
 }
 
 function pauseOtherMedia(e) {
-    // 1. Kanpe tout lòt HTML5 Videyo yo
     document.querySelectorAll('video').forEach(vid => {
         if (vid !== e.target) {
             vid.pause();
         }
     });
-    // 2. Kanpe tout videyo YouTube yo (voye yon kòmand atravè iframe la)
     document.querySelectorAll('iframe').forEach(iframe => {
         iframe.contentWindow.postMessage(JSON.stringify({
             event: 'command',
@@ -272,11 +269,14 @@ function loadCourseContent() {
 
             let quizBtn = "";
             if(modData.quiz) {
+                // Sove done quiz la anndan memwa paj la olye nou mete l nan HTML la dirèkteman
+                window.courseQuizzes[modNum] = modData.quiz;
+                
                 if(isPassed) {
                     quizBtn = `<button class="bg-green-100 text-green-700 font-bold py-2 px-4 rounded w-full border border-green-300 pointer-events-none">✔ Egzamen Reyisi</button>`;
                 } else {
-                    const encodedQuiz = encodeURIComponent(JSON.stringify(modData.quiz));
-                    quizBtn = `<button onclick="openQuiz('${modNum}', '${encodedQuiz}')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full shadow transition">Pase Egzamen Modil ${modNum}</button>`;
+                    // Nou pase sèlman nimewo modil la kounye a
+                    quizBtn = `<button onclick="openQuiz('${modNum}')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full shadow transition">Pase Egzamen Modil ${modNum}</button>`;
                 }
             }
 
@@ -297,7 +297,6 @@ function loadCourseContent() {
 
         updateStats(passedCount, totalModulesCount);
         
-        // Aplike tracker yo sou tout videyo yon fwa yo fin chaje nan DOM lan
         setTimeout(() => { attachMediaListeners(); }, 500);
     });
 }
@@ -320,8 +319,12 @@ function updateStats(passed, total) {
     }
 }
 
-window.openQuiz = (modNum, encodedQuiz) => {
-    currentQuizData = JSON.parse(decodeURIComponent(encodedQuiz));
+// Chanjman isit la: Nou resevwa sèlman nimewo modil la (modNum) epi nou chache quiz la nan memwa a
+window.openQuiz = (modNum) => {
+    currentQuizData = window.courseQuizzes[modNum];
+    
+    if(!currentQuizData) return alert("Egzamen sa poko disponib byen.");
+    
     document.getElementById('currentModNum').innerText = modNum;
     
     const content = document.getElementById('quizContent');
